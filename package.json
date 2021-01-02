@@ -1,0 +1,48 @@
+{
+  "name": "dracula",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "npm run compile && npm run typechain",
+    "compile": "npx hardhat compile",
+    "typechain": "npx hardhat compile && npx hardhat typechain",
+    "test": "npx hardhat test",
+    "deploy:ganache": "npm run build && npx hardhat run --network ganache scripts/deploy.js",
+    "deploy:ganachelocal": "npm run build && npx hardhat run --network localhost scripts/deploy.js",
+    "deploy:testnet": "npm run build && npx hardhat run --network ropsten scripts/deploy.js",
+    "deploy": "npm run build && npx hardhat run --network mainnet scripts/deploy.js",
+    "verify:testnet": "npx hardhat verify --network ropsten",
+    "verify": "npx hardhat verify --network mainnet"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.1",
+    "@nomiclabs/hardhat-etherscan": "^2.1.0",
+    "@nomiclabs/hardhat-ganache": "*",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/contracts": "^3.3.0",
+    "@typechain/ethers-v5": "^4.0.0",
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.14.19",
+    "chai": "^4.2.0",
+    "dotenv": "*",
+    "ethereum-waffle": "^3.2.1",
+    "ethereumjs-util": "^7.0.7",
+    "ethers": "^5.0.24",
+    "hardhat": "^2.0.6",
+    "hardhat-gas-reporter": "^1.0.4",
+    "hardhat-typechain": "^0.3.4",
+    "mocha": "^8.2.1",
+    "solc": "0.6.12",
+    "ts-generator": "*",
+    "ts-node": "^9.1.1",
+    "typechain": "^4.0.1",
+    "typescript": "^4.1.3"
+  }
+}
