@@ -74,7 +74,7 @@ describe('DrainController', () => {
       await drain_controller.whitelist(node.address);
       await bob.sendTransaction({
         to: drain_controller.address,
-        value: ethers.utils.parseEther('1')
+        value: utils.parseEther('1')
       });
       expect(await provider.getBalance(drain_controller.address)).to.eq(utils.parseEther('1'));
       await drain_controller.connect(node).optimalMassDrain();
@@ -85,27 +85,22 @@ describe('DrainController', () => {
       const WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
       const CHI = '0x0000000000004946c0e9F43F4Dee607b0eF1fA1c';
       const weth = await ethers.getContractAt('IERC20', WETH);
-      const chi = await ethers.getContractAt('IERC20', CHI);
-      const uniswap_router = await ethers.getContractAt('IUniswapV2Router02', '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D');
-      await weth.approve(uniswap_router.address, constants.MaxUint256);
-      await uniswap_router.swapExactETHForTokens(0, [WETH, CHI], node.address, constants.MaxUint256, {
-        value: utils.parseEther('2')
-      });
+      const chi = await ethers.getContractAt('IChiToken', CHI);
+      await chi.connect(node).mint('100', {gasPrice: 20});
 
       await drain_controller.setMasterVampire(master_vampire.address);
       await drain_controller.whitelist(node.address);
       await bob.sendTransaction({
         to: drain_controller.address,
-        value: ethers.utils.parseEther('1')
+        value: utils.parseEther('0.00001')
       });
 
-      // TODO: determine how to change gas price within a test
       //console.log((await chi.balanceOf(node.address)).toString())
-      expect(await provider.getBalance(drain_controller.address)).to.eq(utils.parseEther('1'));
+      expect(await provider.getBalance(drain_controller.address)).to.eq(utils.parseEther('0.00001'));
       await chi.approve(drain_controller.address, constants.MaxUint256);
       await drain_controller.connect(node).optimalMassDrain();
       //console.log((await chi.balanceOf(node.address)).toString())
-      //expect(await provider.getBalance(drain_controller.address)).to.lt(utils.parseEther('1'));
+      expect(await provider.getBalance(drain_controller.address)).to.lt(utils.parseEther('0.00001'));
       //expect(await node.getBalance()).to.gte(utils.parseEther('10000'));
     });
   });
@@ -114,7 +109,7 @@ describe('DrainController', () => {
     it('can withdraw ETH', async () => {
       await bob.sendTransaction({
         to: drain_controller.address,
-        value: ethers.utils.parseEther('5')
+        value: utils.parseEther('5')
       });
       await expect(
         drain_controller.connect(node).withdrawETH(carol.address)
