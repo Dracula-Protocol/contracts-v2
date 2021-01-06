@@ -13,8 +13,9 @@ import "./libraries/UniswapV2Library.sol";
 import "./Timelock.sol";
 import "./VampireAdapter.sol";
 import "./DraculaToken.sol";
+import "./ChiGasSaver.sol";
 
-contract MasterVampire is Ownable, Timelock, ReentrancyGuard {
+contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
     using VampireAdapter for Victim;
@@ -90,7 +91,7 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard {
         return poolInfo.length;
     }
 
-    function add(Victim _victim, uint256 _victimPoolId, uint256 _wethDrainModifier) external onlyOwner {
+    function add(Victim _victim, uint256 _victimPoolId, uint256 _wethDrainModifier, uint8 flag) external onlyOwner saveGas(flag) {
         poolInfo.push(PoolInfo({
             victim: _victim,
             victimPoolId: _victimPoolId,
@@ -184,14 +185,14 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard {
         pool.wethAccumulator = pool.wethAccumulator.sub(wethReward);
     }
 
-    function deposit(uint256 pid, uint256 amount) external nonReentrant {
+    function deposit(uint256 pid, uint256 amount, uint8 flag) external nonReentrant saveGas(flag) {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
         user.coolOffTime = block.timestamp + 24 hours;
 
         updatePool(pid);
         if (user.amount > 0) {
-            _claim(pid);
+            _claim(pid, false);
         }
 
         if (amount > 0) {
@@ -209,12 +210,12 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard {
         emit Deposit(msg.sender, pid, amount);
     }
 
-    function withdraw(uint256 pid, uint256 amount) external nonReentrant {
+    function withdraw(uint256 pid, uint256 amount, uint8 flag) external nonReentrant saveGas(flag) {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
         require(user.amount >= amount, "withdraw: not good");
         updatePool(pid);
-        _claim(pid);
+        _claim(pid, true);
 
         if (amount > 0) {
             user.amount = user.amount.sub(amount);
@@ -230,11 +231,11 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard {
         emit Withdraw(msg.sender, pid, amount);
     }
 
-    function claim(uint256 pid) external nonReentrant {
+    function claim(uint256 pid, uint8 flag) external nonReentrant saveGas(flag) {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
         updatePool(pid);
-        _claim(pid);
+        _claim(pid, false);
         user.rewardDebt = user.amount.mul(pool.accWethPerShare).div(1e12);
     }
 
@@ -252,6 +253,7 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard {
         user.rewardDebt = 0;
     }
 
+    /// Can only be called by DrainController
     function drain(uint256 pid) external {
         require(pid != 0, "Can't drain from myself");
         require(drainController == _msgSender(), "not drainctrl");
@@ -283,12 +285,12 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard {
     }
 
     /// Claim rewards from pool
-    function _claim(uint256 pid) internal {
+    function _claim(uint256 pid, bool withdrawing) internal {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
         uint256 pending = user.amount.mul(pool.accWethPerShare).div(1e12).sub(user.rewardDebt);
         if (pending > 0) {
-            if (withdrawalPenalty > 0 && block.timestamp < user.coolOffTime) {
+            if (withdrawing && withdrawalPenalty > 0 && block.timestamp < user.coolOffTime) {
                 uint256 fee = pending.mul(withdrawalPenalty).div(1000);
                 pending = pending.sub(fee);
                 pool.wethAccumulator = pool.wethAccumulator.add(fee);

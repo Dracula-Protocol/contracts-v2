@@ -71,7 +71,7 @@ describe('MasterVampire', () => {
     await master_vampire.updateDrainController(draincontroller.address);
 
     const mock_token = await deployContract(alice, ERC20Mock, ['MockToken', 'MCK', alice.address, 0]);
-    const lp = await deployContract(alice, ERC20Mock, ['LPToken', 'LP', alice.address, utils.parseEther('10000000')]);
+    const lp = await deployContract(alice, ERC20Mock, ['LPToken', 'LP', alice.address, utils.parseEther('3000')]);
     await lp.transfer(bob.address, utils.parseEther('1000'));
     await lp.transfer(carol.address, utils.parseEther('1000'));
 
@@ -89,8 +89,8 @@ describe('MasterVampire', () => {
 
     // Deploy the Mock Adapter and add the pools to MV
     const mock_adapter = await deployContract(alice, MockAdapter);
-    await master_vampire.add(drceth.address, 0, 100); // dummy DRC/ETH pool
-    await master_vampire.add(mock_adapter.address, 0, 100);
+    await master_vampire.add(drceth.address, 0, 100, 0); // dummy DRC/ETH pool
+    await master_vampire.add(mock_adapter.address, 0, 100, 0);
 
     // These need to be set in MockAdapter
     //console.log("MasterVampire: ", master_vampire.address);
@@ -142,7 +142,7 @@ describe('MasterVampire', () => {
     // Deposit the Mock LP into the Mock Adapter pool
     await lp.approve(master_vampire.address, utils.parseEther('1000'));
     await master_vampire.updateWithdrawPenalty('500'); // 50% penalty
-    await master_vampire.deposit(1, utils.parseEther('1000'));
+    await master_vampire.deposit(1, utils.parseEther('1000'), 0);
 
     // Cool off time should be 24 hours after deposit
     const user_info = await master_vampire.userInfo(1, alice.address);
@@ -156,14 +156,16 @@ describe('MasterVampire', () => {
 
     // Withdrawing before cool off incurs penalty
     let pending_weth = await master_vampire.pendingWeth(1, alice.address);
-    await master_vampire.claim(1);
+    await master_vampire.withdraw(1, utils.parseEther('1000'), 0);
     expect(await weth.balanceOf(alice.address)).to.lt(pending_weth);
 
     // Withdrawing after cool off incurs NO penalty
+    await lp.approve(master_vampire.address, utils.parseEther('1000'));
+    await master_vampire.deposit(1, utils.parseEther('1000'), 0);
     await advanceBlocks(2);
     await advanceBlockAndTime(current_block_time.add(duration.hours(24)).toNumber());
     pending_weth = await master_vampire.pendingWeth(1, alice.address);
-    await master_vampire.claim(1);
+    await master_vampire.withdraw(1, utils.parseEther('1000'), 0);
     expect(await weth.balanceOf(alice.address)).to.gte(pending_weth);
   });
 
@@ -174,7 +176,7 @@ describe('MasterVampire', () => {
 
     // Deposit the Mock LP into the Mock Adapter pool
     await lp.approve(master_vampire.address, utils.parseEther('1000'));
-    await master_vampire.deposit(1, utils.parseEther('1000'));
+    await master_vampire.deposit(1, utils.parseEther('1000'), 0);
 
     // Advanced blocks
     await advanceBlocks(4);
