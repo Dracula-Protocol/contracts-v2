@@ -11,7 +11,7 @@ import "./VampireAdapter.sol";
 import "./interfaces/IUniswapV2Pair.sol";
 import "./interfaces/IUniswapV2Factory.sol";
 import "./libraries/UniswapV2Library.sol";
-import "./ChiGasSaver.sol";
+import "./interfaces/IChiToken.sol";
 
 interface IMasterVampire {
     function drain(uint256 pid) external;
@@ -31,7 +31,7 @@ interface IDrainDistributor {
 /**
 * @title Controls the "drain" of pool rewards
 */
-contract DrainController is Ownable, ChiGasSaver {
+contract DrainController is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
     using VampireAdapter for Victim;
@@ -42,6 +42,7 @@ contract DrainController is Ownable, ChiGasSaver {
     IMasterVampire public masterVampire;
     IDrainDistributor public drainDistributor;
     uint256 public wethThreshold;
+    uint256 public maxGasPrice = 60; // This is the maximum gas price in Gwei that this contract will refund
 
     mapping(address => bool) internal whitelistedNode;
 
@@ -60,22 +61,28 @@ contract DrainController is Ownable, ChiGasSaver {
      * @notice Calculates estimated gas cost of a function and attempts to refund that amount to caller
      */
     modifier refundGasCost() {
-        uint gasStart = gasleft();
-        address payable self = address(this);
-        if (self.balance == 0) {
-            _;
-        } else {
-            _;
-            // Add intrinsic gas and transfer gas.
-            uint256 usedGas = 85000 + gasStart - gasleft();
-            uint gasCost = usedGas * tx.gasprice;
-            // Refund gas cost
-            if (self.balance < gasCost) {
-                tx.origin.transfer(self.balance);
-                return;
-            }
-            tx.origin.transfer(gasCost);
+        uint256 gasStart = gasleft();
+        uint256 ethBalance = address(this).balance;
+        uint256 weiGasPriceMax = maxGasPrice.mul(10**9); // The maximum gas price in Wei units
+        uint256 weiGasPrice = tx.gasprice; // The gas price for the current transaction
+        if (maxGasPrice > 0 && weiGasPrice > weiGasPriceMax){
+            // User should not spend more than the gas price max
+            weiGasPrice = weiGasPriceMax;
         }
+        _;
+        uint256 usedGas = 85000 + gasStart - gasleft();
+        uint gasCost = usedGas * weiGasPrice;
+        // Refund total gas cost if contract has enough funds
+        if (ethBalance >= gasCost) {
+            msg.sender.transfer(gasCost);
+            return;
+        }
+
+        // Otherwise send what we can and try use chi to save some gas
+        msg.sender.transfer(ethBalance);
+        uint256 remainingGasSpent = (gasCost - ethBalance) / weiGasPrice;
+        IChiToken chi = IChiToken(0x0000000000004946c0e9F43F4Dee607b0eF1fA1c);
+        chi.freeFromUpTo(msg.sender, (remainingGasSpent + 14154) / 41947);
     }
 
     /**
@@ -127,6 +134,13 @@ contract DrainController is Ownable, ChiGasSaver {
     }
 
     /**
+     * @notice Change the maximum gas price in Gwei for refunds
+     */
+    function setMaxGasPrice(uint256 maxGasPrice_) external onlyOwner {
+        maxGasPrice = maxGasPrice_;
+    }
+
+    /**
      * @notice Determines if drain can be performed
      */
     function isDrainable() public view returns(bool) {
@@ -148,7 +162,7 @@ contract DrainController is Ownable, ChiGasSaver {
     /**
      * @notice Determines which pools can be drained based on value of rewards available
      */
-    function optimalMassDrain() external onlyWhitelister saveGas(1) refundGasCost {
+    function optimalMassDrain() external onlyWhitelister refundGasCost {
         uint256 poolLength = masterVampire.poolLength();
         uint32 numDrained;
         for (uint pid = 1; pid < poolLength; ++pid) {
