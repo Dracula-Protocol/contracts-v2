@@ -113,4 +113,13 @@ contract DrainDistributor is Ownable {
         require(drainController_ != address(0));
         drainController = drainController_;
     }
+
+    /**
+     * @notice Changes the address of the reward pool
+     * @param rewardPool_ the new address
+     */
+    function changeRewardPool(address rewardPool_) external onlyOwner {
+        require(rewardPool_ != address(0));
+        rewardPool = rewardPool_;
+    }
 }
