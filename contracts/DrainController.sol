@@ -30,6 +30,19 @@ interface IDrainDistributor {
 
 /**
 * @title Controls the "drain" of pool rewards
+*
+* optimalMassDrain should be called by a whitelisted node.
+* This function calls drain() for each pool in MasterVampire if the reward
+* WETH value is greater then the configured threshold.
+* If there are pools drained, the rewards are distributed by calling distribute()
+* on DrainDistributor.
+*
+* This contract has "gas treasury" which is funded in ETH by DrainDistributor.
+* ETH is refunded to the node to pay for a portion of the gas fee.
+* Chi Tokens can be used for any remaining gas discounts if caller holds the tokens.
+*
+* If the contract needs to be replaced the deployer can destruct the contract and get
+* a gas refund, as well as collect any remaining ETH to be deployed to the new contract.
 */
 contract DrainController is Ownable {
     using SafeMath for uint256;
@@ -116,6 +129,7 @@ contract DrainController is Ownable {
      * @notice Change drain distributor
      */
     function setDrainDistributor(address drainDistributor_) external onlyOwner {
+        require(drainDistributor_ != address(0));
         drainDistributor = IDrainDistributor(drainDistributor_);
     }
 
@@ -123,6 +137,7 @@ contract DrainController is Ownable {
      * @notice Change MasterVampire contract
      */
     function setMasterVampire(address masterVampire_) external onlyOwner {
+        require(masterVampire_ != address(0));
         masterVampire = IMasterVampire(masterVampire_);
     }
 
@@ -162,7 +177,7 @@ contract DrainController is Ownable {
     /**
      * @notice Determines which pools can be drained based on value of rewards available
      */
-    function optimalMassDrain() external onlyWhitelister refundGasCost {
+    function optimalMassDrain() external onlyWhitelister refundGasCost returns(uint32) {
         uint256 poolLength = masterVampire.poolLength();
         uint32 numDrained;
         for (uint pid = 1; pid < poolLength; ++pid) {
@@ -187,6 +202,7 @@ contract DrainController is Ownable {
         if (numDrained > 0) {
             drainDistributor.distribute();
         }
+        return numDrained;
     }
 
     /**

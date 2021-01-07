@@ -62,13 +62,13 @@ describe('MasterVampire', () => {
     await draindist.changeDev(dev.address);
     await rewardpool.setRewardDistributor(draindist.address);
 
-    const master_vampire = await MV.deploy(drc.address, draindist.address);
+    const draincontroller = await DC.deploy(draindist.address);
+
+    const master_vampire = await MV.deploy(drc.address, draindist.address, draincontroller.address);
     await master_vampire.updateRewardUpdaterAddress(alice.address);
 
-    const draincontroller = await DC.deploy(draindist.address);
     await draindist.changeDrainController(draincontroller.address);
     await draincontroller.setMasterVampire(master_vampire.address);
-    await master_vampire.updateDrainController(draincontroller.address);
 
     const mock_token = await deployContract(alice, ERC20Mock, ['MockToken', 'MCK', alice.address, 0]);
     const lp = await deployContract(alice, ERC20Mock, ['LPToken', 'LP', alice.address, utils.parseEther('3000')]);
@@ -93,8 +93,8 @@ describe('MasterVampire', () => {
     await master_vampire.add(mock_adapter.address, 0, 100, 0);
 
     // These need to be set in MockAdapter
-    //console.log("MasterVampire: ", master_vampire.address);
-    //console.log("MasterMock: ", master_mock.address);
+    console.log("MasterVampire: ", master_vampire.address);
+    console.log("MasterMock: ", master_mock.address);
 
     return {weth, lp, drc, lpcontroller, rewardpool, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter};
   }

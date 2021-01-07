@@ -77,10 +77,12 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
 
     constructor(
         DraculaToken _dracula,
-        address _drainAddress
+        address _drainAddress,
+        address _drainController
     ) public Timelock(msg.sender, 24 hours) {
         dracula = _dracula;
         drainAddress = _drainAddress;
+        drainController = _drainController;
         devAddress = msg.sender;
         poolRewardUpdater = msg.sender;
         IUniswapV2Factory uniswapFactory = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
