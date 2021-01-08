@@ -2,6 +2,7 @@
 
 pragma solidity 0.6.12;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -11,9 +12,9 @@ import "./interfaces/IUniswapV2Router02.sol";
 import "./DraculaToken.sol";
 
 /**
-* @title Adds permanent liquidity to DRC/ETH pool
+* @title Adds liquidity to DRC/ETH pool
 */
-contract LiquidityController {
+contract LiquidityController is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
@@ -21,7 +22,7 @@ contract LiquidityController {
     IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IUniswapV2Pair constant DRC_WETH_PAIR = IUniswapV2Pair(0x276E62C70e0B540262491199Bc1206087f523AF6);
     IUniswapV2Router02 constant UNI_ROUTER = IUniswapV2Router02(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
-    address constant DEAD = 0x000000000000000000000000000000000000dEaD;
+    address public lpDestination = 0xa896e4bd97a733F049b23d2AcEB091BcE01f298d;
 
     /// @notice Construct and approve spending for LP assets
     constructor() public {
@@ -31,7 +32,8 @@ contract LiquidityController {
 
     /**
     * @notice Transfers specified amount of WETH from caller and uses half to buy DRC.
-    *         The DRC and remaining WETH are permanently added to liquidity pool.
+    *         The DRC and remaining WETH are added to liquidity pool.
+    *         LP token is sent to a treasury.
     * @param amount the amount of WETH to transfer from caller
     */
     function addLiquidity(uint256 amount) external {
@@ -49,8 +51,17 @@ contract LiquidityController {
                                halfWethBalance,
                                1,
                                1,
-                               DEAD,
+                               lpDestination,
                                block.timestamp + 2 hours);
         DRACULA.burn(DRACULA.balanceOf(address(this)));
+    }
+
+    /**
+     * @notice Changes the address where LP token is sent
+     * @param lpDestination_ the new address
+     */
+    function changeLPDestination(address lpDestination_) external onlyOwner {
+        require(lpDestination_ != address(0), "invalid destination");
+        lpDestination = lpDestination_;
     }
 }
