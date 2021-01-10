@@ -69,7 +69,9 @@ export async function advanceBlockTo(target: any): Promise<void> {
 
 export async function advanceBlockAndTime(time: number) {
   const current_block_time = (await latestBlockTimestamp()).toNumber();
+  console.log("current:", current_block_time)
   const forward_time = current_block_time + time;
+  console.log("forward_time:", forward_time)
   await network.provider.request({
     method: "evm_mine",
     params: [forward_time]

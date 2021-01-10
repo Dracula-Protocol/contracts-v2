@@ -64,7 +64,7 @@ describe('MasterVampire', () => {
 
     const draincontroller = await DC.deploy(draindist.address);
 
-    const master_vampire = await MV.deploy(drc.address, draindist.address, draincontroller.address);
+    const master_vampire = await MV.deploy(draindist.address, draincontroller.address);
     await master_vampire.updateRewardUpdaterAddress(alice.address);
 
     await draindist.changeDrainController(draincontroller.address);
@@ -104,11 +104,6 @@ describe('MasterVampire', () => {
       const {weth, lp, drc, lpcontroller, rewardpool, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
       await master_vampire.updateDistributionPeriod(666);
       expect(await master_vampire.distributionPeriod()).to.eq(666);
-    });
-    it('can set DRC/WETH reward share', async () => {
-      const {weth, lp, drc, lpcontroller, rewardpool, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
-      await master_vampire.updateDrcWethRewardShare(33);
-      expect(await master_vampire.drcWethShare()).to.eq(33);
     });
     it('can set dev address', async () => {
       const {weth, lp, drc, lpcontroller, rewardpool, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
