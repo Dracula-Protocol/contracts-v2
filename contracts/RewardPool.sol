@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -8,18 +8,16 @@ import "@openzeppelin/contracts/math/Math.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "./IRewardDistributor.sol";
-import "./DraculaToken.sol";
+import "./IRewardSupplier.sol";
 
 /// @title A reward pool that does not mint
 /// @dev The rewards are transferred to the pool by calling `fundPool`.
-///      Only the reward distributor can notify.
-contract RewardPool is IRewardDistributor, ReentrancyGuard {
+///      Only the reward supplier can notify.
+contract RewardPool is IRewardSupplier, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
-    using SafeERC20 for DraculaToken;
 
-    DraculaToken public dracula;
+    IERC20 public stakingToken;
     IERC20 public rewardToken;
     uint256 public rewardsDuration;
 
@@ -27,9 +25,8 @@ contract RewardPool is IRewardDistributor, ReentrancyGuard {
     uint256 public rewardRate;
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
-    uint256 public burnRate = 1; // default 1%
     uint256 public totalStaked;
-    mapping(address => uint256) private stakedBalances;
+    mapping(address => uint256) public stakedBalances;
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
 
@@ -49,30 +46,28 @@ contract RewardPool is IRewardDistributor, ReentrancyGuard {
     }
 
     constructor(
-        address _rewardToken,
-        DraculaToken _dracula,
-        uint256 _rewardsDuration,
-        address _rewardDistributor) public
-    IRewardDistributor(_rewardDistributor)
+        address rewardToken_,
+        address stakingToken_,
+        uint256 rewardsDuration_,
+        address rewardSupplier_) public
+        IRewardSupplier(rewardSupplier_)
     {
-        rewardToken = IERC20(_rewardToken);
-        dracula = _dracula;
-        rewardsDuration = _rewardsDuration;
+        rewardToken = IERC20(rewardToken_);
+        stakingToken = IERC20(stakingToken_);
+        rewardsDuration = rewardsDuration_;
     }
 
+    /// @notice Staked balance for account
     function balanceOf(address account) external view returns (uint256) {
         return stakedBalances[account];
     }
 
-    function setBurnRate(uint256 _burnRate) external onlyOwner {
-        require(_burnRate <= 10, "Invalid burn rate value");
-        burnRate = _burnRate;
-    }
-
+    /// @notice Last time rewards were applicable
     function lastTimeRewardApplicable() public view returns (uint256) {
         return Math.min(block.timestamp, periodFinish);
     }
 
+    /// @notice Reward per token staked
     function rewardPerToken() public view returns (uint256) {
         if (totalStaked == 0) {
             return rewardPerTokenStored;
@@ -87,6 +82,7 @@ contract RewardPool is IRewardDistributor, ReentrancyGuard {
             );
     }
 
+    /// @notice Total rewards to distribute for the duration
     function rewardForDuration() external view returns (uint256) {
         return rewardRate.mul(rewardsDuration);
     }
@@ -106,7 +102,7 @@ contract RewardPool is IRewardDistributor, ReentrancyGuard {
         require(amount > 0, "Cannot stake 0");
         totalStaked = totalStaked.add(amount);
         stakedBalances[msg.sender] = stakedBalances[msg.sender].add(amount);
-        dracula.safeTransferFrom(msg.sender, address(this), amount);
+        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
         emit Staked(msg.sender, amount);
     }
 
@@ -121,27 +117,22 @@ contract RewardPool is IRewardDistributor, ReentrancyGuard {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
+            uint256 contractBalance = rewardToken.balanceOf(address(this));
+            if (contractBalance < reward) {
+                reward = contractBalance; // Prevents contract from locking up
+            }
             rewardToken.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
     }
 
     /// @notice Withdraw specified amount
-    /// @dev A configurable percentage is burnt on withdrawal
-    function withdraw(uint256 amount) internal nonReentrant updateReward(msg.sender) {
+    function withdraw(uint256 amount) internal virtual nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
         uint256 amount_send = amount;
-
-        if (burnRate > 0) {
-            uint256 amount_burn = amount.mul(burnRate).div(100);
-            amount_send = amount.sub(amount_burn);
-            require(amount == amount_send + amount_burn, "Burn value invalid");
-            dracula.burn(amount_burn);
-        }
-
         totalStaked = totalStaked.sub(amount);
         stakedBalances[msg.sender] = stakedBalances[msg.sender].sub(amount);
-        dracula.safeTransfer(msg.sender, amount_send);
+        stakingToken.safeTransfer(msg.sender, amount_send);
         emit Withdrawn(msg.sender, amount_send);
     }
 
@@ -150,7 +141,7 @@ contract RewardPool is IRewardDistributor, ReentrancyGuard {
     function fundPool(uint256 reward)
         external
         override
-        onlyRewardDistributor
+        onlyRewardSupplier
         updateReward(address(0))
     {
         // overflow fix according to https://sips.synthetix.io/sips/sip-77

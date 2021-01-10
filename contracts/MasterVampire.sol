@@ -1,18 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity 0.6.12;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "./interfaces/IUniswapV2Pair.sol";
-import "./interfaces/IUniswapV2Factory.sol";
-import "./libraries/UniswapV2Library.sol";
 import "./Timelock.sol";
 import "./VampireAdapter.sol";
-import "./DraculaToken.sol";
 import "./ChiGasSaver.sol";
 
 contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
@@ -43,18 +39,14 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
 //     \/ `\__|`\___/`|__/`  \/
 //   jgs`      \(/|\)/       `
 //              " ` "
-    DraculaToken public dracula;
     IERC20 constant weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IUniswapV2Pair drcWethPair;
 
     address public drainController;
     address public drainAddress;
     address public poolRewardUpdater;
     address public devAddress;
-    uint256 public drcWethShare = 30;
-    uint256 public distributionPeriod = 6519;
+    uint256 public distributionPeriod = 6519; // Block in 24 hour period
     uint256 public withdrawalPenalty = 10;
-    uint256 public constant DEV_FEE = 8;
     uint256 public constant REWARD_START_BLOCK = 11008888; // Wed Oct 07 2020 13:28:00 UTC
 
     PoolInfo[] public poolInfo;
@@ -76,17 +68,13 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
     }
 
     constructor(
-        DraculaToken _dracula,
         address _drainAddress,
         address _drainController
-    ) public Timelock(msg.sender, 24 hours) {
-        dracula = _dracula;
+    ) public Timelock(msg.sender, 12 hours) {
         drainAddress = _drainAddress;
         drainController = _drainController;
         devAddress = msg.sender;
         poolRewardUpdater = msg.sender;
-        IUniswapV2Factory uniswapFactory = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
-        drcWethPair = IUniswapV2Pair(uniswapFactory.getPair(address(weth), address(dracula)));
     }
 
     function poolLength() external view returns (uint256) {
@@ -106,10 +94,6 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
 
     function updateDistributionPeriod(uint256 _distributionPeriod) external onlyRewardUpdater {
         distributionPeriod = _distributionPeriod;
-    }
-
-    function updateDrcWethRewardShare(uint256 _drcWethShare) external onlyRewardUpdater {
-        drcWethShare = _drcWethShare;
     }
 
     function updateWithdrawPenalty(uint256 _withdrawalPenalty) external onlyRewardUpdater {
@@ -146,7 +130,7 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
         uint256 accWethPerShare = pool.accWethPerShare;
-        uint256 lpSupply = _pid == 0 ? drcWethPair.balanceOf(address(this)) : pool.victim.lockedAmount(pool.victimPoolId);
+        uint256 lpSupply = pool.victim.lockedAmount(pool.victimPoolId);
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
             uint256 blocksToReward = block.number.sub(pool.lastRewardBlock);
             uint256 wethReward = blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod);
@@ -174,7 +158,7 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
             return;
         }
 
-        uint256 lpSupply = pid == 0 ? drcWethPair.balanceOf(address(this)) : pool.victim.lockedAmount(pool.victimPoolId);
+        uint256 lpSupply = pool.victim.lockedAmount(pool.victimPoolId);
         if (lpSupply == 0) {
             pool.lastRewardBlock = block.number;
             return;
@@ -198,13 +182,8 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
         }
 
         if (amount > 0) {
-            if (pid == 0) {
-                IERC20(address(drcWethPair)).safeTransferFrom(address(msg.sender), address(this), amount);
-            } else {
-                pool.victim.lockableToken(pool.victimPoolId).safeTransferFrom(address(msg.sender), address(this), amount);
-                pool.victim.deposit(pool.victimPoolId, amount);
-            }
-
+            pool.victim.lockableToken(pool.victimPoolId).safeTransferFrom(address(msg.sender), address(this), amount);
+            pool.victim.deposit(pool.victimPoolId, amount);
             user.amount = user.amount.add(amount);
         }
 
@@ -221,12 +200,8 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
 
         if (amount > 0) {
             user.amount = user.amount.sub(amount);
-            if (pid == 0) {
-                IERC20(address(drcWethPair)).safeTransfer(address(msg.sender), amount);
-            } else {
-                pool.victim.withdraw(pool.victimPoolId, amount);
-                pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), amount);
-            }
+            pool.victim.withdraw(pool.victimPoolId, amount);
+            pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), amount);
         }
 
         user.rewardDebt = user.amount.mul(pool.accWethPerShare).div(1e12);
@@ -244,12 +219,8 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
     function emergencyWithdraw(uint256 pid) external nonReentrant {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
-        if (pid == 0) {
-            IERC20(address(drcWethPair)).safeTransfer(address(msg.sender), user.amount);
-        } else {
-            pool.victim.withdraw(pool.victimPoolId, user.amount);
-            pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), user.amount);
-        }
+        pool.victim.withdraw(pool.victimPoolId, user.amount);
+        pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, pid, user.amount);
         user.amount = 0;
         user.rewardDebt = 0;
@@ -271,18 +242,14 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
         }
 
         uint256 wethReward = victim.sellRewardForWeth(claimedReward, address(this));
+        // Take a % of the drained reward to be redistributed to other contracts
         uint256 wethDrainAmount = wethReward.mul(pool.wethDrainModifier).div(1000);
         if (wethDrainAmount > 0) {
-            require(drcWethShare < pool.wethDrainModifier, "drcWethShare !< wethDrainModifier");
             weth.transfer(drainAddress, wethDrainAmount);
             wethReward = wethReward.sub(wethDrainAmount);
         }
 
-        PoolInfo storage drcWethPool = poolInfo[0];
-        uint256 drcWethPoolAmount = wethReward.mul(drcWethShare).div(1000);
-        drcWethPool.wethAccumulator = drcWethPool.wethAccumulator.add(drcWethPoolAmount);
-        wethReward = wethReward.sub(drcWethPoolAmount);
-
+        // Remainder of rewards go to users of the drained pool
         pool.wethAccumulator = pool.wethAccumulator.add(wethReward);
     }
 
