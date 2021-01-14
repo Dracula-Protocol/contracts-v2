@@ -17,6 +17,7 @@ import "./DraculaToken.sol";
 contract LiquidityController is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
+    using SafeERC20 for DraculaToken;
 
     DraculaToken constant DRACULA = DraculaToken(0xb78B3320493a4EFaa1028130C5Ba26f0B6085Ef8);
     IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -31,11 +32,11 @@ contract LiquidityController is Ownable {
     }
 
     /**
-    * @notice Transfers specified amount of WETH from caller and uses half to buy DRC.
-    *         The DRC and remaining WETH are added to liquidity pool.
-    *         LP token is sent to a treasury.
-    * @param amount the amount of WETH to transfer from caller
-    */
+     * @notice Transfers specified amount of WETH from caller and uses half to buy DRC.
+     *         The DRC and remaining WETH are added to liquidity pool.
+     *         LP token is sent to a treasury.
+     * @param amount the amount of WETH to transfer from caller
+     */
     function addLiquidity(uint256 amount) external {
         require(amount > 0, "amount == 0");
         WETH.safeTransferFrom(msg.sender, address(this), amount);
@@ -46,13 +47,13 @@ contract LiquidityController is Ownable {
         DRC_WETH_PAIR.swap(amountOutput, uint256(0), address(this), new bytes(0));
 
         UNI_ROUTER.addLiquidity(address(DRACULA),
-                               address(WETH),
-                               amountOutput,
-                               halfWethBalance,
-                               1,
-                               1,
-                               lpDestination,
-                               block.timestamp + 2 hours);
+                                address(WETH),
+                                amountOutput,
+                                halfWethBalance,
+                                amountOutput,
+                                1,
+                                lpDestination,
+                                block.timestamp + 2 hours);
         DRACULA.burn(DRACULA.balanceOf(address(this)));
     }
 
@@ -63,5 +64,14 @@ contract LiquidityController is Ownable {
     function changeLPDestination(address lpDestination_) external onlyOwner {
         require(lpDestination_ != address(0), "invalid destination");
         lpDestination = lpDestination_;
+    }
+
+    /**
+     * @notice Provides a way to withdraw any remaining WETH and DRC
+     * @param to Address to send
+     */
+    function collectDust(address to) external onlyOwner {
+        WETH.safeTransfer(to, WETH.balanceOf(address(this)));
+        DRACULA.safeTransfer(to, DRACULA.balanceOf(address(this)));
     }
 }
