@@ -23,7 +23,7 @@ contract MockAdapter is IVampireAdapter {
 
     // Note: these are dynamic and must be set to the deployed contracts from the unit tests
     IMockMasterChef constant mockChef = IMockMasterChef(0x8464135c8F25Da09e49BC8782676a84730C318bC);
-    address constant masterVampire = 0xa513E6E4b8f2a923D98304ec87F64353C4D5C853;
+    address constant masterVampire = 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318;
 
     // Victim info
     function rewardToken() external view override returns (IERC20) {

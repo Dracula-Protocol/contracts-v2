@@ -29,51 +29,55 @@ describe('DrainDistributor', () => {
     const weth = await ethers.getContractAt('IWETH', WETH);
     const drc = await ethers.getContractAt('IERC20', DRC);
     const lpcontroller = await deployContract(alice, LiquidityController);
-    const rewardpool = await deployContract(alice, RewardPool, [weth.address, drc.address, REWARD_DURATION, alice.address]);
+    const rewardpool1 = await deployContract(alice, RewardPool, [weth.address, drc.address, REWARD_DURATION, alice.address]);
+    const rewardpool2 = await deployContract(alice, RewardPool, [weth.address, drc.address, REWARD_DURATION, alice.address]);
 
-    const drain_distributor = await deployContract(alice, DrainDistributor, [rewardpool.address, lpcontroller.address]);
+    const drain_distributor = await deployContract(alice, DrainDistributor, [rewardpool1.address, rewardpool2.address, lpcontroller.address]);
     await drain_distributor.changeDev(dev.address);
-    await rewardpool.setRewardDistributor(drain_distributor.address);
+    await rewardpool1.addRewardSupplier(drain_distributor.address);
+    await rewardpool2.addRewardSupplier(drain_distributor.address);
 
-    return {weth, lpcontroller, rewardpool, drain_distributor};
+    return {weth, lpcontroller, rewardpool1, rewardpool2, drain_distributor};
   }
 
   describe('setters & getters', () => {
     it('can set dev', async () => {
-      const {weth, lpcontroller, rewardpool, drain_distributor} = await loadFixture(fixture);
+      const {weth, lpcontroller, rewardpool1, rewardpool2, drain_distributor} = await loadFixture(fixture);
       await drain_distributor.changeDev(carol.address);
       expect(await drain_distributor.devFund()).to.eq(carol.address);
     });
     it('can set LP controller', async () => {
-      const {weth, lpcontroller, rewardpool, drain_distributor} = await loadFixture(fixture);
+      const {weth, lpcontroller, rewardpool1, rewardpool2, drain_distributor} = await loadFixture(fixture);
       await drain_distributor.changeLp(bob.address);
       expect(await drain_distributor.lpController()).to.eq(bob.address);
     });
     it('can set drain controller', async () => {
-      const {weth, lpcontroller, rewardpool, drain_distributor} = await loadFixture(fixture);
+      const {weth, lpcontroller, rewardpool1, rewardpool2, drain_distributor} = await loadFixture(fixture);
       await drain_distributor.changeDrainController(node.address);
       expect(await drain_distributor.drainController()).to.eq(node.address);
     });
     it('can set distribution', async () => {
-      const {weth, lpcontroller, rewardpool, drain_distributor} = await loadFixture(fixture);
+      const {weth, lpcontroller, rewardpool1, rewardpool2, drain_distributor} = await loadFixture(fixture);
       expect(await drain_distributor.gasShare()).to.eq(50);
       expect(await drain_distributor.devShare()).to.eq(150);
-      expect(await drain_distributor.rewardPoolShare()).to.eq(400);
+      expect(await drain_distributor.uniRewardPoolShare()).to.eq(200);
+      expect(await drain_distributor.yflRewardPoolShare()).to.eq(200);
       expect(await drain_distributor.lpShare()).to.eq(400);
-      await drain_distributor.changeDistribution(200, 200, 300, 300);
+      await drain_distributor.changeDistribution(200, 200, 150, 150, 300);
       expect(await drain_distributor.gasShare()).to.eq(200);
       expect(await drain_distributor.devShare()).to.eq(200);
-      expect(await drain_distributor.rewardPoolShare()).to.eq(300);
+      expect(await drain_distributor.uniRewardPoolShare()).to.eq(150);
+      expect(await drain_distributor.yflRewardPoolShare()).to.eq(150);
       expect(await drain_distributor.lpShare()).to.eq(300);
       await expect(
-        drain_distributor.changeDistribution(200, 100, 300, 300)
+        drain_distributor.changeDistribution(200, 100, 300, 300, 300)
       ).to.be.reverted;
     });
   });
 
   describe('distribute', () => {
     it('can distribute rewards', async () => {
-      const {weth, lpcontroller, rewardpool, drain_distributor} = await loadFixture(fixture);
+      const {weth, lpcontroller, rewardpool1, rewardpool2, drain_distributor} = await loadFixture(fixture);
       await drain_distributor.changeDev(dev.address);
       await drain_distributor.changeDrainController(carol.address);
 
@@ -84,15 +88,17 @@ describe('DrainDistributor', () => {
       await drain_distributor.distribute();
       expect(await carol.getBalance()).to.eq(utils.parseEther('10000.05'));
       expect(await weth.balanceOf(dev.address)).to.eq(utils.parseEther('0.15'));
-      expect(await weth.balanceOf(rewardpool.address)).to.eq(utils.parseEther('0.4'));
-      expect(await weth.balanceOf(lpcontroller.address)).to.eq(utils.parseEther('0'));
+      expect(await weth.balanceOf(rewardpool1.address)).to.eq(utils.parseEther('0.2'));
+      expect(await weth.balanceOf(rewardpool2.address)).to.eq(utils.parseEther('0.2'));
+      expect(await weth.balanceOf(lpcontroller.address)).to.lte(utils.parseEther('0.001'));
 
       await weth.transfer(drain_distributor.address, utils.parseEther('1'));
       await drain_distributor.distribute();
       expect(await carol.getBalance()).to.eq(utils.parseEther('10000.1'));
       expect(await weth.balanceOf(dev.address)).to.eq(utils.parseEther('0.3'));
-      expect(await weth.balanceOf(rewardpool.address)).to.eq(utils.parseEther('0.8'));
-      expect(await weth.balanceOf(lpcontroller.address)).to.eq(utils.parseEther('0'));
+      expect(await weth.balanceOf(rewardpool1.address)).to.eq(utils.parseEther('0.4'));
+      expect(await weth.balanceOf(rewardpool2.address)).to.eq(utils.parseEther('0.4'));
+      expect(await weth.balanceOf(lpcontroller.address)).to.lte(utils.parseEther('0.001'));
     });
   });
 });

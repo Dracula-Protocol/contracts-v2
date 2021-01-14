@@ -180,7 +180,7 @@ contract DrainController is Ownable {
     function optimalMassDrain() external onlyWhitelister refundGasCost returns(uint32) {
         uint256 poolLength = masterVampire.poolLength();
         uint32 numDrained;
-        for (uint pid = 1; pid < poolLength; ++pid) {
+        for (uint pid = 0; pid < poolLength; ++pid) {
             (Victim victim, uint256 victimPoolId,,,,) = masterVampire.poolInfo(pid);
             if (address(victim) != address(0)) {
                 uint256 pendingReward = victim.pendingReward(victimPoolId);

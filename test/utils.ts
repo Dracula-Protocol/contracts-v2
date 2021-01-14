@@ -23,10 +23,12 @@ export async function latestBlock() {
 
 // Returns the time of the last mined block in seconds
 export async function latestBlockTimestamp() {
-  const block = await ethers.provider.getBlock((await ethers.provider.getBlockNumber()));
+  const block_number = await ethers.provider.getBlockNumber();
+  const block = await ethers.provider.getBlock(block_number);
   if (block) {
     return BigNumber.from(block.timestamp);
   }
+  console.log('WARN: latestBlockTimestamp: failed to get block #', block_number.toString());
   return BigNumber.from(0);
 };
 
@@ -69,11 +71,13 @@ export async function advanceBlockTo(target: any): Promise<void> {
 
 export async function advanceBlockAndTime(time: number) {
   const current_block_time = (await latestBlockTimestamp()).toNumber();
-  console.log("current:", current_block_time)
   const forward_time = current_block_time + time;
-  console.log("forward_time:", forward_time)
   await network.provider.request({
     method: "evm_mine",
+    params: []
+  });
+  await network.provider.request({
+    method: "evm_increaseTime",
     params: [forward_time]
   });
 };

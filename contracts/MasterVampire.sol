@@ -228,7 +228,6 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
 
     /// Can only be called by DrainController
     function drain(uint256 pid) external {
-        require(pid != 0, "Can't drain from myself");
         require(drainController == _msgSender(), "not drainctrl");
         PoolInfo storage pool = poolInfo[pid];
         Victim victim = pool.victim;
