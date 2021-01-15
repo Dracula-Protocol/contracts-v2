@@ -19,7 +19,7 @@ contract YfvAdapter is IVampireAdapter {
     // token 1 - weth
 
     // Victim info
-    function rewardToken() external view override returns (IERC20) {
+    function rewardToken(uint256) external view override returns (IERC20) {
         return value;
     }
 
@@ -27,12 +27,12 @@ contract YfvAdapter is IVampireAdapter {
         return valueMinorPool.poolLength();
     }
 
-    function sellableRewardAmount() external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external view override returns (uint256) {
         return uint256(-1);
     }
 
     // Victim actions, requires impersonation via delegatecall
-    function sellRewardForWeth(address, uint256 rewardAmount, address to) external override returns(uint256) {
+    function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
         value.transfer(address(valueWethPair), rewardAmount);
         (uint valueReserve, uint wethReserve,) = valueWethPair.getReserves();
         uint amountOutput = UniswapV2Library.getAmountOut(rewardAmount, valueReserve, wethReserve);

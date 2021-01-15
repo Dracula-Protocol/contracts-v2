@@ -26,7 +26,7 @@ contract UniswapAdapter is IVampireAdapter {
     }
 
     // Victim info
-    function rewardToken() external view override returns (IERC20) {
+    function rewardToken(uint256) external view override returns (IERC20) {
         return uni;
     }
 
@@ -34,12 +34,12 @@ contract UniswapAdapter is IVampireAdapter {
         return pools.length;
     }
 
-    function sellableRewardAmount() external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external view override returns (uint256) {
         return uint256(-1);
     }
 
     // Victim actions, requires impersonation via delegatecall
-    function sellRewardForWeth(address, uint256 rewardAmount, address to) external override returns(uint256) {
+    function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
         uni.transfer(address(uniWethPair), rewardAmount);
         (uint uniReserve, uint wethReserve,) = uniWethPair.getReserves();
         uint amountOutput = UniswapV2Library.getAmountOut(rewardAmount, uniReserve, wethReserve);

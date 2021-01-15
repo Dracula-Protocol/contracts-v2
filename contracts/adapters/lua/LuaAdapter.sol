@@ -18,7 +18,7 @@ contract LuaAdapter is IVampireAdapter {
     IERC20 constant weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     // Victim info
-    function rewardToken() external override view returns (IERC20) {
+    function rewardToken(uint256) external override view returns (IERC20) {
         return lua;
     }
 
@@ -26,13 +26,14 @@ contract LuaAdapter is IVampireAdapter {
         return luaMasterFarmer.poolLength();
     }
 
-    function sellableRewardAmount() external override view returns (uint256) {
+    function sellableRewardAmount(uint256) external override view returns (uint256) {
         return uint256(-1);
     }
 
     // Victim actions, requires impersonation via delegatecall
     function sellRewardForWeth(
         address,
+        uint256,
         uint256 rewardAmount,
         address to
     ) external override returns (uint256) {

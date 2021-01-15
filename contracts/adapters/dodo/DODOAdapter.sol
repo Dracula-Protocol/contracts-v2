@@ -21,7 +21,7 @@ contract DODOAdapter is IVampireAdapter {
     IERC20 constant USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
 
     // Victim info
-    function rewardToken() external view override returns (IERC20) {
+    function rewardToken(uint256) external view override returns (IERC20) {
         return DODO;
     }
 
@@ -29,12 +29,12 @@ contract DODOAdapter is IVampireAdapter {
         return DODO_MINE.poolLength();
     }
 
-    function sellableRewardAmount() external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external view override returns (uint256) {
         return uint256(-1);
     }
 
     // Victim actions, requires impersonation via delegatecall
-    function sellRewardForWeth(address, uint256 rewardAmount, address to) external override returns(uint256) {
+    function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
         require(rewardAmount > 0, "reward amount is zero");
         /*
             1. Swap DODO for USDT on DODODEX

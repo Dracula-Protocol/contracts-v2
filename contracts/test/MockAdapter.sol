@@ -26,7 +26,7 @@ contract MockAdapter is IVampireAdapter {
     address constant masterVampire = 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318;
 
     // Victim info
-    function rewardToken() external view override returns (IERC20) {
+    function rewardToken(uint256) external view override returns (IERC20) {
         return tusd;
     }
 
@@ -34,12 +34,12 @@ contract MockAdapter is IVampireAdapter {
         return mockChef.poolLength();
     }
 
-    function sellableRewardAmount() external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external view override returns (uint256) {
         return uint256(-1);
     }
 
     // Victim actions, requires impersonation via delegatecall
-    function sellRewardForWeth(address, uint256 rewardAmount, address to) external override returns(uint256) {
+    function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
         tusd.safeTransfer(address(tusdWethPair), rewardAmount);
         (uint tusdReserve, uint wethReserve,) = tusdWethPair.getReserves();
         uint amountOutput = UniswapV2Library.getAmountOut(rewardAmount, tusdReserve, wethReserve);

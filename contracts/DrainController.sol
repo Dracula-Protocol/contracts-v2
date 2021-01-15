@@ -160,12 +160,12 @@ contract DrainController is Ownable {
      */
     function isDrainable() public view returns(bool) {
         uint256 poolLength = masterVampire.poolLength();
-        for (uint pid = 1; pid < poolLength; pid++) {
+        for (uint pid = 0; pid < poolLength; pid++) {
             (Victim victim, uint256 victimPoolId,,,,) = masterVampire.poolInfo(pid);
             if (address(victim) != address(0)) {
                 uint256 pendingReward = victim.pendingReward(victimPoolId);
                 if (pendingReward > 0) {
-                    if (_rewardValue(pendingReward, victim.rewardToken()) >= wethThreshold) {
+                    if (_rewardValue(pendingReward, victim.rewardToken(victimPoolId)) >= wethThreshold) {
                        return true;
                     }
                 }
@@ -185,7 +185,7 @@ contract DrainController is Ownable {
             if (address(victim) != address(0)) {
                 uint256 pendingReward = victim.pendingReward(victimPoolId);
                 if (pendingReward > 0) {
-                    IERC20 rewardToken = victim.rewardToken();
+                    IERC20 rewardToken = victim.rewardToken(victimPoolId);
                     uint256 rewardValue_ = _rewardValue(pendingReward, rewardToken);
                     if (rewardValue_ >= wethThreshold) {
                         try masterVampire.drain(pid) {

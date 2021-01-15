@@ -6,12 +6,12 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 interface IVampireAdapter {
     // Victim info
-    function rewardToken() external view returns (IERC20);
+    function rewardToken(uint256 poolId) external view returns (IERC20);
     function poolCount() external view returns (uint256);
-    function sellableRewardAmount() external view returns (uint256);
+    function sellableRewardAmount(uint256 poolId) external view returns (uint256);
 
     // Victim actions, requires impersonation via delegatecall
-    function sellRewardForWeth(address adapter, uint256 rewardAmount, address to) external returns(uint256);
+    function sellRewardForWeth(address adapter, uint256 poolId, uint256 rewardAmount, address to) external returns(uint256);
 
     // Pool info
     function lockableToken(uint256 poolId) external view returns (IERC20);
