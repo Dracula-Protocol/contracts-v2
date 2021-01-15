@@ -15,7 +15,7 @@ contract SashimiAdapter is IVampireAdapter {
     IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     // Victim info
-    function rewardToken() external view override returns (IERC20) {
+    function rewardToken(uint256) external view override returns (IERC20) {
         return SASHIMI;
     }
 
@@ -23,12 +23,12 @@ contract SashimiAdapter is IVampireAdapter {
         return SASHIMI_MASTERCHEF.poolLength();
     }
 
-    function sellableRewardAmount() external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external view override returns (uint256) {
         return uint256(-1);
     }
 
     // Victim actions, requires impersonation via delegatecall
-    function sellRewardForWeth(address, uint256 rewardAmount, address to) external override returns(uint256) {
+    function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
         address[] memory path = new address[](2);
         path[0] = address(SASHIMI);
         path[1] = address(WETH);

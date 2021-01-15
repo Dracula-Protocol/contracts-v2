@@ -2,57 +2,17 @@
 
 pragma solidity 0.6.12;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "./Timelock.sol";
-import "./VampireAdapter.sol";
-import "./ChiGasSaver.sol";
+import "./IMasterVampire.sol";
 
-contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
-    using SafeMath for uint256;
-    using SafeERC20 for IERC20;
-    using VampireAdapter for Victim;
-
-    struct UserInfo {
-        uint256 amount;
-        uint256 rewardDebt;
-        uint256 coolOffTime;
-    }
-
-    struct PoolInfo {
-        Victim victim;
-        uint256 victimPoolId;
-        uint256 lastRewardBlock;
-        uint256 accWethPerShare;
-        uint256 wethAccumulator;
-        uint256 wethDrainModifier;
-    }
-
-//     (_                   _)
-//      /\                 /\
-//     / \'._   (\_/)   _.'/ \
-//    /_.''._'--('.')--'_.''._\
-//    | \_ / `;=/ " \=;` \ _/ |
-//     \/ `\__|`\___/`|__/`  \/
-//   jgs`      \(/|\)/       `
-//              " ` "
-    IERC20 constant weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-
-    address public drainController;
-    address public drainAddress;
-    address public poolRewardUpdater;
-    address public devAddress;
-    uint256 public distributionPeriod = 6519; // Block in 24 hour period
-    uint256 public withdrawalPenalty = 10;
-    uint256 public constant REWARD_START_BLOCK = 11008888; // Wed Oct 07 2020 13:28:00 UTC
-
-    PoolInfo[] public poolInfo;
-
-    mapping (uint256 => mapping (address => UserInfo)) public userInfo;
-
+contract MasterVampire is IMasterVampire {
+    //     (_                   _)
+    //      /\                 /\
+    //     / \'._   (\_/)   _.'/ \
+    //    /_.''._'--('.')--'_.''._\
+    //    | \_ / `;=/ " \=;` \ _/ |
+    //     \/ `\__|`\___/`|__/`  \/
+    //   jgs`      \(/|\)/       `
+    //              " ` "
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
@@ -233,18 +193,18 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
         Victim victim = pool.victim;
         uint256 victimPoolId = pool.victimPoolId;
         victim.claimReward(victimPoolId);
-        IERC20 rewardToken = victim.rewardToken();
+        IERC20 rewardToken = victim.rewardToken(pid);
         uint256 claimedReward = rewardToken.balanceOf(address(this));
 
         if (claimedReward == 0) {
             return;
         }
 
-        uint256 wethReward = victim.sellRewardForWeth(claimedReward, address(this));
+        uint256 wethReward = victim.sellRewardForWeth(pid, claimedReward, address(this));
         // Take a % of the drained reward to be redistributed to other contracts
         uint256 wethDrainAmount = wethReward.mul(pool.wethDrainModifier).div(1000);
         if (wethDrainAmount > 0) {
-            weth.transfer(drainAddress, wethDrainAmount);
+            WETH.transfer(drainAddress, wethDrainAmount);
             wethReward = wethReward.sub(wethDrainAmount);
         }
 
@@ -268,11 +228,11 @@ contract MasterVampire is Ownable, Timelock, ReentrancyGuard, ChiGasSaver {
     }
 
     function _safeWethTransfer(address to, uint256 amount) internal {
-        uint256 balance = weth.balanceOf(address(this));
+        uint256 balance = WETH.balanceOf(address(this));
         if (amount > balance) {
-            weth.transfer(to, balance);
+            WETH.transfer(to, balance);
         } else {
-            weth.transfer(to, amount);
+            WETH.transfer(to, amount);
         }
     }
 }

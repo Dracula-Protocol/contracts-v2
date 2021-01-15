@@ -31,7 +31,7 @@ describe('StabilizeAdapter', () => {
 
     expect(await stbz.balanceOf(stabilize_adapter.address)).to.gt(0);
     const stbz_balance = await stbz.balanceOf(stabilize_adapter.address);
-    await stabilize_adapter.sellRewardForWeth(stabilize_adapter.address, stbz_balance, bob.address);
+    await stabilize_adapter.sellRewardForWeth(stabilize_adapter.address, 0, stbz_balance, bob.address);
     expect(await weth.balanceOf(bob.address)).to.gt(utils.parseEther('0.9'));
     expect(await stbz.balanceOf(stabilize_adapter.address)).to.eq(0);
   });

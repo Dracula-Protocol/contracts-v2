@@ -94,8 +94,8 @@ describe('MasterVampire', () => {
     await master_vampire.add(mock_adapter.address, 0, 100, 0);
 
     // These need to be set in MockAdapter
-    console.log("MasterVampire: ", master_vampire.address);
-    console.log("MasterMock: ", master_mock.address);
+    //console.log("MasterVampire: ", master_vampire.address);
+    //console.log("MasterMock: ", master_mock.address);
 
     return {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter};
   }

@@ -8,8 +8,8 @@ contract Victim{}
 
 library VampireAdapter {
     // Victim info
-    function rewardToken(Victim victim) external view returns (IERC20) {
-        (bool success, bytes memory result) = address(victim).staticcall(abi.encodeWithSignature("rewardToken()"));
+    function rewardToken(Victim victim, uint256 poolId) external view returns (IERC20) {
+        (bool success, bytes memory result) = address(victim).staticcall(abi.encodeWithSignature("rewardToken(uint256)", poolId));
         require(success, "rewardToken() staticcall failed.");
         return abi.decode(result, (IERC20));
     }
@@ -20,15 +20,15 @@ library VampireAdapter {
         return abi.decode(result, (uint256));
     }
 
-    function sellableRewardAmount(Victim victim) external view returns (uint256) {
-        (bool success, bytes memory result) = address(victim).staticcall(abi.encodeWithSignature("sellableRewardAmount()"));
+    function sellableRewardAmount(Victim victim, uint256 poolId) external view returns (uint256) {
+        (bool success, bytes memory result) = address(victim).staticcall(abi.encodeWithSignature("sellableRewardAmount(uint256)", poolId));
         require(success, "sellableRewardAmount() staticcall failed.");
         return abi.decode(result, (uint256));
     }
 
     // Victim actions
-    function sellRewardForWeth(Victim victim, uint256 rewardAmount, address to) external returns(uint256) {
-        (bool success, bytes memory result) = address(victim).delegatecall(abi.encodeWithSignature("sellRewardForWeth(address,uint256,address)", address(victim), rewardAmount, to));
+    function sellRewardForWeth(Victim victim, uint256 poolId, uint256 rewardAmount, address to) external returns(uint256) {
+        (bool success, bytes memory result) = address(victim).delegatecall(abi.encodeWithSignature("sellRewardForWeth(address,uint256,uint256,address)", address(victim), poolId, rewardAmount, to));
         require(success, "sellRewardForWeth(uint256 rewardAmount, address to) delegatecall failed.");
         return abi.decode(result, (uint256));
     }

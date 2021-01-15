@@ -22,7 +22,7 @@ contract StabilizeAdapter is IVampireAdapter {
     // token 1 - weth
 
     // Victim info
-    function rewardToken() external view override returns (IERC20) {
+    function rewardToken(uint256) external view override returns (IERC20) {
         return STBZ;
     }
 
@@ -30,12 +30,12 @@ contract StabilizeAdapter is IVampireAdapter {
         return OPERATOR.poolLength();
     }
 
-    function sellableRewardAmount() external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external view override returns (uint256) {
         return uint256(-1);
     }
 
     // Victim actions, requires impersonation via delegatecall
-    function sellRewardForWeth(address, uint256 rewardAmount, address to) external override returns(uint256) {
+    function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
         STBZ.transfer(address(STBZ_WETH_PAIR), rewardAmount);
         (uint stbzReserve, uint wethReserve,) = STBZ_WETH_PAIR.getReserves();
         uint amountOutput = UniswapV2Library.getAmountOut(rewardAmount, stbzReserve, wethReserve);
