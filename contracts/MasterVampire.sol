@@ -212,6 +212,19 @@ contract MasterVampire is IMasterVampire {
         pool.wethAccumulator = pool.wethAccumulator.add(wethReward);
     }
 
+    /// This function allows governance to take unsupported tokens out of the contract.
+    /// It also allows for removal of airdropped tokens.
+    function recoverUnsupported(IERC20 token, uint256 amount, address to) external onlyOwner {
+        uint256 length = poolInfo.length;
+        for (uint256 pid = 0; pid < length; ++pid) {
+            PoolInfo storage pool = poolInfo[pid];
+            // cant take staked asset
+            require(token != pool.lpToken, "!pool.lpToken");
+        }
+        // transfer to
+        token.safeTransfer(to, amount);
+    }
+
     /// Claim rewards from pool
     function _claim(uint256 pid, bool withdrawing) internal {
         PoolInfo storage pool = poolInfo[pid];
