@@ -12,6 +12,7 @@ import "hardhat-gas-reporter";
 const INFURA_API_KEY = `${process.env.INFURA_API_KEY}`;
 const RINKEBY_PRIVATE_KEY = `${process.env.RINKEBY_PRIVATE_KEY}`;
 const ROPSTEN_PRIVATE_KEY = `${process.env.ROPSTEN_PRIVATE_KEY}`;
+const KOVAN_PRIVATE_KEY = `${process.env.KOVAN_PRIVATE_KEY}`;
 const MAINNET_PRIVATE_KEY = `${process.env.MAINNET_PRIVATE_KEY}`;
 const ETHERSCAN_API_KEY = `${process.env.ETHERSCAN_API_KEY}`;
 const CMC_API_KEY = `${process.env.CMC_API_KEY}`;
@@ -56,6 +57,10 @@ const config: HardhatUserConfig = {
     ropsten: {
       url: `https://ropsten.infura.io/v3/${INFURA_API_KEY}`,
       accounts: [ROPSTEN_PRIVATE_KEY]
+    },
+    kovan: {
+      url: `https://kovan.infura.io/v3/${INFURA_API_KEY}`,
+      accounts: [KOVAN_PRIVATE_KEY]
     },
     mainnet: {
       url: `https://mainnet.infura.io/v3/${INFURA_API_KEY}`,

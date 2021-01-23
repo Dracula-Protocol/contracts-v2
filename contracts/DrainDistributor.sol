@@ -28,15 +28,17 @@ contract DrainDistributor is Ownable {
 
     // Distribution
     // Percentages are using decimal base of 1000 ie: 10% = 100
-    uint256 public gasShare = 50;
-    uint256 public devShare = 150;
-    uint256 public uniRewardPoolShare = 200;
-    uint256 public yflRewardPoolShare = 200;
-    uint256 public lpShare = 400;
+    uint256 public gasShare = 100;
+    uint256 public devShare = 100;
+    uint256 public uniRewardPoolShare = 150;
+    uint256 public yflRewardPoolShare = 150;
+    uint256 public drcRewardPoolShare = 200;
+    uint256 public lpShare = 300;
 
     address public devFund = 0xa896e4bd97a733F049b23d2AcEB091BcE01f298d;
     address public uniRewardPool;
     address public yflRewardPool;
+    address public drcRewardPool;
     address public lpController;
     address payable public drainController;
 
@@ -44,13 +46,19 @@ contract DrainDistributor is Ownable {
      * @notice Construct the contract
      * @param uniRewardPool_ address of the uniswap LP reward pool
      * @param yflRewardPool_ address of the linkswap LP reward pool
+     * @param drcRewardPool_ address of the DRC->ETH reward pool
      * @param lpController_ address of the LP controller
      */
-    constructor(address uniRewardPool_, address yflRewardPool_, address lpController_) public {
-        require((gasShare + devShare + uniRewardPoolShare + yflRewardPoolShare + lpShare) == 1000, "invalid distribution");
+    constructor(address uniRewardPool_, address yflRewardPool_, address drcRewardPool_, address lpController_) public {
+        require((gasShare + devShare + uniRewardPoolShare + yflRewardPoolShare + drcRewardPoolShare + lpShare) == 1000, "invalid distribution");
         uniRewardPool = uniRewardPool_;
         yflRewardPool = yflRewardPool_;
+        drcRewardPool = drcRewardPool_;
         lpController = lpController_;
+        WETH.approve(uniRewardPool, uint256(-1));
+        WETH.approve(yflRewardPool, uint256(-1));
+        WETH.approve(drcRewardPool, uint256(-1));
+        WETH.approve(lpController, uint256(-1));
     }
 
     /**
@@ -62,26 +70,28 @@ contract DrainDistributor is Ownable {
      * @notice Distributes drained rewards
      */
     function distribute() external {
-        require((gasShare + devShare + uniRewardPoolShare + yflRewardPoolShare + lpShare) == 1000, "invalid distribution");
+        require((gasShare + devShare + uniRewardPoolShare + yflRewardPoolShare + drcRewardPoolShare + lpShare) == 1000, "invalid distribution");
         uint256 drainWethBalance = WETH.balanceOf(address(this));
         uint256 gasAmt = drainWethBalance.mul(gasShare).div(1000);
         uint256 devAmt = drainWethBalance.mul(devShare).div(1000);
         uint256 uniRewardPoolAmt = drainWethBalance.mul(uniRewardPoolShare).div(1000);
         uint256 yflRewardPoolAmt = drainWethBalance.mul(yflRewardPoolShare).div(1000);
+        uint256 drcRewardPoolAmt = drainWethBalance.mul(drcRewardPoolShare).div(1000);
         uint256 lpAmt = drainWethBalance.mul(lpShare).div(1000);
 
         // Unwrap WETH and transfer ETH to DrainController to cover drain gas fees
         WETH.withdraw(gasAmt);
         drainController.transfer(gasAmt);
+
         // Treasury
         WETH.transfer(devFund, devAmt);
+
         // Reward pools
-        WETH.approve(uniRewardPool, uniRewardPoolAmt);
         IRewardPool(uniRewardPool).fundPool(uniRewardPoolAmt);
-        WETH.approve(yflRewardPool, yflRewardPoolAmt);
         IRewardPool(yflRewardPool).fundPool(yflRewardPoolAmt);
+        IRewardPool(drcRewardPool).fundPool(drcRewardPoolAmt);
+
         // Buy-back liquidity addition
-        WETH.approve(lpController, lpAmt);
         ILpController(lpController).addLiquidity(lpAmt);
     }
 
@@ -94,15 +104,17 @@ contract DrainDistributor is Ownable {
         uint256 devShare_,
         uint256 uniRewardPoolShare_,
         uint256 yflRewardPoolShare_,
+        uint256 drcRewardPoolShare_,
         uint256 lpShare_)
         external
         onlyOwner
     {
-        require((gasShare_ + devShare_ + uniRewardPoolShare_ + yflRewardPoolShare_ + lpShare_) == 1000, "invalid distribution");
+        require((gasShare_ + devShare_ + uniRewardPoolShare_ + yflRewardPoolShare_ + drcRewardPoolShare_ + lpShare_) == 1000, "invalid distribution");
         gasShare = gasShare_;
         devShare = devShare_;
         uniRewardPoolShare = uniRewardPoolShare_;
-        yflRewardPoolShare = uniRewardPoolShare_;
+        yflRewardPoolShare = yflRewardPoolShare_;
+        drcRewardPoolShare = drcRewardPoolShare_;
         lpShare = lpShare_;
     }
 
@@ -122,6 +134,7 @@ contract DrainDistributor is Ownable {
     function changeLp(address lpController_) external onlyOwner {
         require(lpController_ != address(0));
         lpController = lpController_;
+        WETH.approve(uniRewardPool, uint256(-1));
     }
 
     /**
@@ -140,14 +153,26 @@ contract DrainDistributor is Ownable {
     function changeUniRewardPool(address rewardPool_) external onlyOwner {
         require(rewardPool_ != address(0));
         uniRewardPool = rewardPool_;
+         WETH.approve(uniRewardPool, uint256(-1));
     }
 
-     /**
+    /**
      * @notice Changes the address of the linkswap LP reward pool
      * @param rewardPool_ the new address
      */
     function changeYFLRewardPool(address rewardPool_) external onlyOwner {
         require(rewardPool_ != address(0));
         yflRewardPool = rewardPool_;
+        WETH.approve(yflRewardPool, uint256(-1));
+    }
+
+    /**
+     * @notice Changes the address of the DRC->ETH reward pool
+     * @param rewardPool_ the new address
+     */
+    function changeDRCRewardPool(address rewardPool_) external onlyOwner {
+        require(rewardPool_ != address(0));
+        drcRewardPool = rewardPool_;
+        WETH.approve(drcRewardPool, uint256(-1));
     }
 }

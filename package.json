@@ -1,7 +1,7 @@
 {
   "name": "dracula",
   "version": "1.0.0",
-  "description": "",
+  "description": "Dracula Contracts and ABI",
   "directories": {
     "test": "test"
   },
@@ -12,14 +12,22 @@
     "test": "npx hardhat test",
     "deploy:ganache": "npm run build && npx hardhat run --network ganache scripts/deploy.js",
     "deploy:ganachelocal": "npm run build && npx hardhat run --network localhost scripts/deploy.js",
-    "deploy:testnet": "npm run build && npx hardhat run --network ropsten scripts/deploy.js",
+    "deploy:testnet": "npm run build && npx hardhat run --network kovan scripts/deploy.js",
     "deploy": "npm run build && npx hardhat run --network mainnet scripts/deploy.js",
-    "verify:testnet": "npx hardhat verify --network ropsten",
+    "verify:testnet": "npx hardhat verify --network kovan",
     "verify": "npx hardhat verify --network mainnet"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dracula-Protocol/contracts-v2"
+  },
+  "bugs": {
+    "url": "https://github.com/Dracula-Protocol/contracts-v2/issues"
+  },
+  "homepage": "https://github.com/Dracula-Protocol/contracts-v2#readme",
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-etherscan": "^2.1.0",
