@@ -58,11 +58,13 @@ describe('MasterVampire', () => {
     const lpcontroller = await deployContract(alice, LiquidityController);
     const rewardpool1 = await deployContract(alice, RewardPool, [weth.address, drc.address, REWARD_DURATION, alice.address]);
     const rewardpool2 = await deployContract(alice, RewardPool, [weth.address, drc.address, REWARD_DURATION, alice.address]);
+    const rewardpool3 = await deployContract(alice, RewardPool, [weth.address, drc.address, REWARD_DURATION, alice.address]);
 
-    const draindist = await deployContract(alice, DrainDistributor, [rewardpool1.address, rewardpool2.address, lpcontroller.address]);
+    const draindist = await deployContract(alice, DrainDistributor, [rewardpool1.address, rewardpool2.address, rewardpool3.address, lpcontroller.address]);
     await draindist.changeDev(dev.address);
     await rewardpool1.addRewardSupplier(draindist.address);
     await rewardpool2.addRewardSupplier(draindist.address);
+    await rewardpool3.addRewardSupplier(draindist.address);
 
     const draincontroller = await DC.deploy(draindist.address);
 
@@ -94,20 +96,22 @@ describe('MasterVampire', () => {
     await master_vampire.add(mock_adapter.address, 0, 100, 0);
 
     // These need to be set in MockAdapter
-    //console.log("MasterVampire: ", master_vampire.address);
-    //console.log("MasterMock: ", master_mock.address);
+    console.log("MasterVampire: ", master_vampire.address);
+    console.log("MasterMock: ", master_mock.address);
 
-    return {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter};
+    return {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter};
   }
 
   describe('setters & getters', () => {
     it('can set distribution period', async () => {
-      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
+        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
       await master_vampire.updateDistributionPeriod(666);
       expect(await master_vampire.distributionPeriod()).to.eq(666);
     });
     it('can set dev address', async () => {
-      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
+        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
       await master_vampire.updateDevAddress(dev.address);
       expect(await master_vampire.devAddress()).to.eq(dev.address);
       await expect(
@@ -117,24 +121,28 @@ describe('MasterVampire', () => {
       expect(await master_vampire.devAddress()).to.eq(carol.address);
     });
     it('can set drain address', async () => {
-      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
+        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
       await master_vampire.updateDrainAddress(drain.address);
       expect(await master_vampire.drainAddress()).to.eq(drain.address);
     });
     it('can set drain controller', async () => {
-      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
+        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
       await master_vampire.updateDrainController(bob.address);
       expect(await master_vampire.drainController()).to.eq(bob.address);
     });
     it('can set reward updater', async () => {
-      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
+        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
       await master_vampire.updateRewardUpdaterAddress(bob.address);
       expect(await master_vampire.poolRewardUpdater()).to.eq(bob.address);
     });
   });
 
   it('early withdrawal penalty works', async () => {
-    const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+    const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
+        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
     // Deposit the Mock LP into the Mock Adapter pool
     await lp.approve(master_vampire.address, utils.parseEther('1000'));
     await master_vampire.updateWithdrawPenalty('500'); // 50% penalty
@@ -166,7 +174,8 @@ describe('MasterVampire', () => {
   });
 
   it('mock adapter should work with mastervampire', async () => {
-    const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+    const {weth, lp, drc, lpcontroller, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
+        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
 
     console.log("TUSD Balance (MasterMock): ", utils.formatEther((await tusd_token.balanceOf(master_mock.address))).toString());
 

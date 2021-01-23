@@ -6,10 +6,10 @@ import "./DraculaToken.sol";
 import "./RewardPool.sol";
 
 /// @title Stake DRC and earn WETH for rewards
-contract DRCPoolBurnable is RewardPool {
+contract DRCRewardPool is RewardPool {
     using SafeMath for uint256;
 
-    uint256 public burnRate = 1; // default 1%
+    uint256 public burnRate = 10; // default 1%
 
     constructor(
         address rewardToken_,
@@ -21,7 +21,7 @@ contract DRCPoolBurnable is RewardPool {
     }
 
     function setBurnRate(uint256 _burnRate) external onlyOwner {
-        require(_burnRate <= 10, "Invalid burn rate value");
+        require(_burnRate <= 100, "Invalid burn rate value");
         burnRate = _burnRate;
     }
 
@@ -32,7 +32,7 @@ contract DRCPoolBurnable is RewardPool {
         uint256 amount_send = amount;
 
         if (burnRate > 0) {
-            uint256 amount_burn = amount.mul(burnRate).div(100);
+            uint256 amount_burn = amount.mul(burnRate).div(1000);
             amount_send = amount.sub(amount_burn);
             require(amount == amount_send.add(amount_burn), "Burn value invalid");
             DraculaToken(address(stakingToken)).burn(amount_burn);

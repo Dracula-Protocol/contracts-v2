@@ -30,7 +30,7 @@ contract MasterVampire is IMasterVampire {
     constructor(
         address _drainAddress,
         address _drainController
-    ) public Timelock(msg.sender, 12 hours) {
+    ) public {
         drainAddress = _drainAddress;
         drainController = _drainController;
         devAddress = msg.sender;
@@ -46,7 +46,7 @@ contract MasterVampire is IMasterVampire {
             victim: _victim,
             victimPoolId: _victimPoolId,
             wethDrainModifier: _wethDrainModifier,
-            lastRewardBlock: block.number < REWARD_START_BLOCK ? REWARD_START_BLOCK : block.number,
+            lastRewardBlock: block.number,
             accWethPerShare: 0,
             wethAccumulator: 0
         }));
@@ -218,8 +218,9 @@ contract MasterVampire is IMasterVampire {
         uint256 length = poolInfo.length;
         for (uint256 pid = 0; pid < length; ++pid) {
             PoolInfo storage pool = poolInfo[pid];
+            IERC20 lpToken = pool.victim.lockableToken(pool.victimPoolId);
             // cant take staked asset
-            require(token != pool.lpToken, "!pool.lpToken");
+            require(token != lpToken, "!pool.lpToken");
         }
         // transfer to
         token.safeTransfer(to, amount);
