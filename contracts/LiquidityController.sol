@@ -50,7 +50,7 @@ contract LiquidityController is Ownable {
                                 address(WETH),
                                 amountOutput,
                                 halfWethBalance,
-                                amountOutput,
+                                1,
                                 1,
                                 lpDestination,
                                 block.timestamp + 2 hours);

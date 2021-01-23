@@ -9,10 +9,14 @@ async function deployVampireAdapter() {
   const VALib = await ethers.getContractFactory("VampireAdapter");
   const vampire_adapter = await VALib.deploy();
   await vampire_adapter.deployed();
+
+  console.log(' VampireAdapter deployed to: ', vampire_adapter.address);
+  console.log(' VampireAdapter deploy hash: ', vampire_adapter.deployTransaction.hash);
+
   return vampire_adapter;
 }
 
-async function deployMasterVampire(vampire_adapter, dracula_token, drain_distributor, drain_controller) {
+async function deployMasterVampire(vampire_adapter, drain_distributor, drain_controller) {
   console.log("* Deploying MasterVampire");
   const MasterVampire = await ethers.getContractFactory("MasterVampire", {
     libraries: {
@@ -20,12 +24,11 @@ async function deployMasterVampire(vampire_adapter, dracula_token, drain_distrib
     }
   });
 
-  const master_vampire = await MasterVampire.deploy(dracula_token.address,
-                                                    drain_distributor.address,
+  const master_vampire = await MasterVampire.deploy(drain_distributor.address,
                                                     drain_controller.address);
   await master_vampire.deployed();
 
-  console.log( 'MasterVampire deployed to: ', master_vampire.address);
+  console.log(' MasterVampire deployed to: ', master_vampire.address);
   console.log(' MasterVampire deploy hash: ', master_vampire.deployTransaction.hash);
 
   await drain_controller.setMasterVampire(master_vampire.address);
@@ -35,7 +38,7 @@ async function deployMasterVampire(vampire_adapter, dracula_token, drain_distrib
 
 async function deployDrainDistributor(uni_lp_reward_pool, yfl_lp_reward_pool, drc_reward_pool, lp_controller) {
   console.log("* Deploying DrainDistributor");
-  const DrainController = await ethers.getContractFactory("DrainDistributor");
+  const DrainDistributor = await ethers.getContractFactory("DrainDistributor");
 
   const drain_distributor = await DrainDistributor.deploy(uni_lp_reward_pool.address,
                                                           yfl_lp_reward_pool.address,
@@ -64,7 +67,7 @@ async function deployDrainController(vampire_adapter, drain_distributor) {
   const drain_controller = await DrainController.deploy(drain_distributor.address);
   await drain_controller.deployed();
 
-  console.log( 'DrainController deployed to: ', drain_controller.address);
+  console.log(' DrainController deployed to: ', drain_controller.address);
   console.log(' DrainController deploy hash: ', drain_controller.deployTransaction.hash);
 
   await drain_distributor.changeDrainController(drain_controller.address);
@@ -126,7 +129,6 @@ async function deployTimelock() {
   console.log(' Timelock deploy hash: ', timelock.deployTransaction.hash);
 }
 
-
 async function deployAdapters() {
   console.log("* Deploying Adapters");
   // TODO
@@ -134,7 +136,10 @@ async function deployAdapters() {
 }
 
 async function main() {
-  const dracula_token = await ethers.getContractAt('DraculaToken', DRC_ADDRESS);
+  const network = await ethers.provider.getNetwork();
+  const CHAIN_ID = network.chainId;
+  console.log("Deploying to chain: ", CHAIN_ID);
+
   const vampire_adapter= await deployVampireAdapter();
   const liquidity_controller = await deployLPController();
   const {uni_lp_reward_pool, yfl_lp_reward_pool, drc_reward_pool} = await deployRewardPools();
@@ -144,7 +149,7 @@ async function main() {
                                                          liquidity_controller);
 
   const drain_controller = await deployDrainController(vampire_adapter, drain_distributor);
-  const master_vampire = await deployMasterVampire(vampire_adapter, dracula_token, drain_distributor, drain_controller);
+  const master_vampire = await deployMasterVampire(vampire_adapter, drain_distributor, drain_controller);
 }
 
 main()
