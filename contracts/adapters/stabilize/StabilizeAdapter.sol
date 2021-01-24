@@ -73,7 +73,7 @@ contract StabilizeAdapter is IVampireAdapter {
         OPERATOR.getReward(poolId);
     }
 
-    function emergencyWithdraw(address, uint256 poolId) external override {
+    function emergencyWithdraw(address, uint256) external override {
         require(false, "not implemented");
     }
 
@@ -123,7 +123,7 @@ contract StabilizeAdapter is IVampireAdapter {
         return adapter.lpTokenValue(lockedToken.balanceOf(adapter.poolAddress(poolId)), lockedToken);
     }
 
-    function normalizedAPY(uint256 poolId) external override view returns (uint256) {
+    function normalizedAPY(uint256) external override view returns (uint256) {
         require(false, "not implemented");
     }
 }
