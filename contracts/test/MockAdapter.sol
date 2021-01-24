@@ -77,12 +77,12 @@ contract MockAdapter is IVampireAdapter {
         mockChef.deposit(poolId, 0);
     }
 
-    function emergencyWithdraw(address _adapter, uint256 poolId) external override {
+    function emergencyWithdraw(address, uint256 poolId) external override {
         mockChef.emergencyWithdraw(poolId);
     }
 
     // Service methods
-    function poolAddress(uint256 poolId) external view override returns (address) {
+    function poolAddress(uint256) external view override returns (address) {
         return address(this);
     }
 
