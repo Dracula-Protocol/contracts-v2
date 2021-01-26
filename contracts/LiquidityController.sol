@@ -26,6 +26,7 @@ contract LiquidityController is Ownable {
     IUniswapV2Router02 constant YFL_ROUTER = IUniswapV2Router02(0xA7eCe0911FE8C60bff9e99f8fAFcDBE56e07afF1);
     address public lpDestination = 0xa896e4bd97a733F049b23d2AcEB091BcE01f298d;
     uint256 public wethThreshold = 200000000000000000 wei;
+    uint256 public burnShare = 50; // Percentage using decimal base of 1000 ie: 10% = 100
 
     /// @notice Construct and approve spending for LP assets
     constructor() public {
@@ -48,6 +49,7 @@ contract LiquidityController is Ownable {
         if (wethBalance < wethThreshold) {
             return;
         }
+
         uint256 halfWethBalance = wethBalance.div(2);
         WETH.safeTransfer(address(DRC_WETH_PAIR), halfWethBalance);
         (uint drcReserve, uint wethReserve,) = DRC_WETH_PAIR.getReserves();
@@ -55,7 +57,9 @@ contract LiquidityController is Ownable {
         DRC_WETH_PAIR.swap(drcAmountOutput, uint256(0), address(this), new bytes(0));
 
         drcAmountOutput = drcAmountOutput.div(2);
+        drcAmountOutput = drcAmountOutput.sub(drcAmountOutput.mul(burnShare).div(1000));
         halfWethBalance = halfWethBalance.div(2);
+        halfWethBalance = halfWethBalance.sub(halfWethBalance.mul(burnShare).div(1000));
 
         UNI_ROUTER.addLiquidity(address(DRACULA),
                                 address(WETH),
@@ -92,6 +96,14 @@ contract LiquidityController is Ownable {
      */
     function setWETHThreshold(uint256 wethThreshold_) external onlyOwner {
         wethThreshold = wethThreshold_;
+    }
+
+    /**
+     * @notice Change the burn percent
+     */
+    function setBurnShare(uint256 burnShare_) external onlyOwner {
+        require(burnShare_ <= 500, "invalid burn rate");
+        burnShare = burnShare_;
     }
 
     /**
