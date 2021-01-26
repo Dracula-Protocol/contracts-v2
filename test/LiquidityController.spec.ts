@@ -28,6 +28,17 @@ describe('LiquidityController', () => {
   }
 
   describe('distribute', () => {
+    it('weth threshold works', async () => {
+      const {weth, lp, lpcontroller} = await loadFixture(fixture);
+      expect(await lpcontroller.wethThreshold()).to.eq(utils.parseEther('0.2'));
+      await lpcontroller.setWETHThreshold(utils.parseEther('0.3'));
+      expect(await lpcontroller.wethThreshold()).to.eq(utils.parseEther('0.3'));
+      await weth.deposit({value : utils.parseEther('5')});
+      await weth.approve(lpcontroller.address, constants.MaxUint256);
+      await lpcontroller.addLiquidity(utils.parseEther('0.01'));
+      expect(await weth.balanceOf(alice.address)).to.eq(utils.parseEther('4.99'));
+      expect(await lp.balanceOf(dev.address)).to.eq(utils.parseEther('0'));
+    });
     it('can add liquidity', async () => {
       const {weth, lp, lpcontroller} = await loadFixture(fixture);
 
@@ -38,6 +49,21 @@ describe('LiquidityController', () => {
       await lpcontroller.addLiquidity(utils.parseEther('1'));
       expect(await weth.balanceOf(alice.address)).to.eq(utils.parseEther('4'));
       expect(await lp.balanceOf(dev.address)).to.gt(utils.parseEther('0'));
+    });
+    it('destruct', async () => {
+      const {weth, lp, lpcontroller} = await loadFixture(fixture);
+      await expect(
+        lpcontroller.connect(node).kill(carol.address)
+      ).to.be.reverted;
+
+      expect(await weth.balanceOf(alice.address)).to.eq(utils.parseEther('0'));
+      expect(await weth.balanceOf(carol.address)).to.eq(utils.parseEther('0'));
+      await weth.deposit({value : utils.parseEther('5')});
+      await lpcontroller.setWETHThreshold(utils.parseEther('1'));
+      await weth.approve(lpcontroller.address, constants.MaxUint256);
+      await lpcontroller.addLiquidity(utils.parseEther('0.5'));
+      await lpcontroller.kill(carol.address);
+      expect(await weth.balanceOf(carol.address)).to.eq(utils.parseEther('0.5'));
     });
   });
 });
