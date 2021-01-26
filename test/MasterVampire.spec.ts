@@ -66,7 +66,7 @@ describe('MasterVampire', () => {
     await rewardpool2.addRewardSupplier(draindist.address);
     await rewardpool3.addRewardSupplier(draindist.address);
 
-    const draincontroller = await DC.deploy(draindist.address);
+    const draincontroller = await DC.deploy();
 
     const master_vampire = await MV.deploy(draindist.address, draincontroller.address);
     await master_vampire.updateRewardUpdaterAddress(alice.address);
@@ -197,6 +197,8 @@ describe('MasterVampire', () => {
 
     await draincontroller.whitelist(carol.address);
     await draincontroller.connect(carol).optimalMassDrain();
+    await draindist.setWETHThreshold(utils.parseEther('0.01'));
+    await draindist.distribute();
 
     console.log("After Drain:");
     console.log("  WETH Balance (MasterVampire): ", utils.formatEther(await weth.balanceOf(master_vampire.address)).toString());

@@ -73,12 +73,12 @@ export async function advanceBlockAndTime(time: number) {
   const current_block_time = (await latestBlockTimestamp()).toNumber();
   const forward_time = current_block_time + time;
   await network.provider.request({
-    method: "evm_mine",
-    params: []
-  });
-  await network.provider.request({
     method: "evm_increaseTime",
     params: [forward_time]
+  });
+  await network.provider.request({
+    method: "evm_mine",
+    params: []
   });
 };
 

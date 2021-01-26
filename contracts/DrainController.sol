@@ -24,18 +24,12 @@ interface IMasterVampire {
     function poolLength() external view returns (uint256);
 }
 
-interface IDrainDistributor {
-    function distribute() external;
-}
-
 /**
 * @title Controls the "drain" of pool rewards
 *
 * optimalMassDrain should be called by a whitelisted node.
 * This function calls drain() for each pool in MasterVampire if the reward
 * WETH value is greater then the configured threshold.
-* If there are pools drained, the rewards are distributed by calling distribute()
-* on DrainDistributor.
 *
 * This contract has "gas treasury" which is funded in ETH by DrainDistributor.
 * ETH is refunded to the node to pay for a portion of the gas fee.
@@ -53,16 +47,13 @@ contract DrainController is Ownable {
     IUniswapV2Factory constant UNI_FACTORY = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
 
     IMasterVampire public masterVampire;
-    IDrainDistributor public drainDistributor;
-    uint256 public wethThreshold;
+    uint256 public wethThreshold = 200000000000000000 wei;
     uint256 public maxGasPrice = 60; // This is the maximum gas price in Gwei that this contract will refund
 
     mapping(address => bool) internal whitelistedNode;
 
-    constructor(address drainDistributor_) public {
+    constructor() public {
         whitelistedNode[msg.sender] = true;
-        drainDistributor = IDrainDistributor(drainDistributor_);
-        wethThreshold = 200000000000000000 wei;
     }
 
     /**
@@ -123,14 +114,6 @@ contract DrainController is Ownable {
      */
     function unWhitelist(address account_) external onlyOwner {
         whitelistedNode[account_] = false;
-    }
-
-    /**
-     * @notice Change drain distributor
-     */
-    function setDrainDistributor(address drainDistributor_) external onlyOwner {
-        require(drainDistributor_ != address(0));
-        drainDistributor = IDrainDistributor(drainDistributor_);
     }
 
     /**
@@ -199,9 +182,6 @@ contract DrainController is Ownable {
             }
         }
 
-        if (numDrained > 0) {
-            drainDistributor.distribute();
-        }
         return numDrained;
     }
 

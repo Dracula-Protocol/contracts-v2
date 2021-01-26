@@ -4,6 +4,11 @@ const { waffle, network, ethers } = require("hardhat");
 const { deployContract } = waffle;
 const provider = waffle.provider;
 
+const loadFixture = waffle.createFixtureLoader(
+  provider.getWallets(),
+  provider
+);
+
 import { advanceBlockTo, latestBlockTimestamp } from './utils';
 
 import DrainController from '../artifacts/contracts/DrainController.sol/DrainController.json';
@@ -15,7 +20,9 @@ describe('DrainController', () => {
   let drain_controller: Contract;
   let master_vampire: Contract;
 
-  beforeEach(async () => {
+  async function fixture(allwallets:any) {
+    const [alice, bob, carol, dev, draindist, drc, node] = allwallets;
+
     const VALib = await ethers.getContractFactory("VampireAdapter");
     const vampire_adapter = await VALib.deploy();
     await vampire_adapter.deployed();
@@ -32,15 +39,19 @@ describe('DrainController', () => {
       }
     });
 
-    drain_controller = await DC.deploy(dev.address);
-    master_vampire = await MV.deploy(drc.address, draindist.address);
+    const drainctrl = await DC.deploy();
+    const mv = await MV.deploy(drc.address, draindist.address);
+
+    return {drainctrl, mv};
+  }
+
+  beforeEach(async () => {
+    const {drainctrl, mv} = await loadFixture(fixture);
+    drain_controller = drainctrl;
+    master_vampire = mv;
   });
 
   describe('setters & getters', () => {
-    it('can set drain distributor', async () => {
-      await drain_controller.setDrainDistributor(draindist.address);
-      expect(await drain_controller.drainDistributor()).to.eq(draindist.address);
-    });
     it('can set master vampire', async () => {
       await drain_controller.setMasterVampire(master_vampire.address);
       expect(await drain_controller.masterVampire()).to.eq(master_vampire.address);
