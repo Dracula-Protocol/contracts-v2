@@ -64,7 +64,7 @@ async function deployDrainController(vampire_adapter, drain_distributor) {
     }
   });
 
-  const drain_controller = await DrainController.deploy(drain_distributor.address);
+  const drain_controller = await DrainController.deploy();
   await drain_controller.deployed();
 
   console.log(' DrainController deployed to: ', drain_controller.address);

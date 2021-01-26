@@ -34,6 +34,7 @@ contract DrainDistributor is Ownable {
     uint256 public yflRewardPoolShare = 150;
     uint256 public drcRewardPoolShare = 200;
     uint256 public lpShare = 300;
+    uint256 public wethThreshold = 200000000000000000 wei;
 
     address public devFund = 0xa896e4bd97a733F049b23d2AcEB091BcE01f298d;
     address public uniRewardPool;
@@ -70,7 +71,7 @@ contract DrainDistributor is Ownable {
      * @notice Distributes drained rewards
      */
     function distribute() external {
-        require((gasShare + devShare + uniRewardPoolShare + yflRewardPoolShare + drcRewardPoolShare + lpShare) == 1000, "invalid distribution");
+        require(WETH.balanceOf(address(this)) >= wethThreshold);
         uint256 drainWethBalance = WETH.balanceOf(address(this));
         uint256 gasAmt = drainWethBalance.mul(gasShare).div(1000);
         uint256 devAmt = drainWethBalance.mul(devShare).div(1000);
@@ -174,5 +175,12 @@ contract DrainDistributor is Ownable {
         require(rewardPool_ != address(0));
         drcRewardPool = rewardPool_;
         WETH.approve(drcRewardPool, uint256(-1));
+    }
+
+    /**
+     * @notice Change the WETH distribute threshold
+     */
+    function setWETHThreshold(uint256 wethThreshold_) external onlyOwner {
+        wethThreshold = wethThreshold_;
     }
 }
