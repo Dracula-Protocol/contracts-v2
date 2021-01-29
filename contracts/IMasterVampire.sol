@@ -45,7 +45,8 @@ abstract contract IMasterVampire is Ownable, ReentrancyGuard, ChiGasSaver {
     uint256 public distributionPeriod = 6519; // Block in 24 hour period
     uint256 public withdrawalPenalty = 10;
 
+    // Info of each pool
     PoolInfo[] public poolInfo;
-
+    // Info of each user that stakes LP tokens
     mapping (uint256 => mapping (address => UserInfo)) public userInfo;
 }
