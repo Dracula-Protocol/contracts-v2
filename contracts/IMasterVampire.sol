@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./interfaces/IWETH.sol";
 import "./VampireAdapter.sol";
 import "./ChiGasSaver.sol";
 
@@ -36,13 +37,14 @@ abstract contract IMasterVampire is Ownable, ReentrancyGuard, ChiGasSaver {
         uint256 wethDrainModifier;
     }
 
-    IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    address public IBVETH;
 
     address public drainController;
     address public drainAddress;
     address public poolRewardUpdater;
     address public devAddress;
-    uint256 public distributionPeriod = 6519; // Block in 24 hour period
+    uint256 public distributionPeriod = 240; // Block in 24 hour period
     uint256 public withdrawalPenalty = 10;
 
     // Info of each pool

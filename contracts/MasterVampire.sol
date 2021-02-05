@@ -4,6 +4,8 @@ pragma solidity ^0.6.12;
 
 import "./IMasterVampire.sol";
 
+import "hardhat/console.sol";
+
 contract MasterVampire is IMasterVampire {
     //     (_                   _)
     //      /\                 /\
@@ -29,13 +31,20 @@ contract MasterVampire is IMasterVampire {
 
     constructor(
         address _drainAddress,
-        address _drainController
+        address _drainController,
+        address _IBVETH
     ) public {
         drainAddress = _drainAddress;
         drainController = _drainController;
         devAddress = msg.sender;
         poolRewardUpdater = msg.sender;
+        IBVETH = _IBVETH;
     }
+
+    /**
+     * @notice Allow depositing ether to the contract
+     */
+    receive() external payable {}
 
     function poolLength() external view returns (uint256) {
         return poolInfo.length;
@@ -76,6 +85,10 @@ contract MasterVampire is IMasterVampire {
 
     function updateDrainAddress(address _drainAddress) external onlyOwner {
         drainAddress = _drainAddress;
+    }
+
+    function updateIBVEthAddress(address _ibveth) external onlyOwner {
+        IBVETH = _ibveth;
     }
 
     function updateDrainController(address _drainController) external onlyOwner {
@@ -209,10 +222,13 @@ contract MasterVampire is IMasterVampire {
         }
 
         // Remainder of rewards go to users of the drained pool
+        (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("handleDrainedWETH(uint256)", wethReward));
+        require(success, "handleDrainedWETH(uint256 amount) delegatecall failed.");
+
         pool.wethAccumulator = pool.wethAccumulator.add(wethReward);
     }
 
-    /// This function allows governance to take unsupported tokens out of the contract.
+    /// This function allows owner to take unsupported tokens out of the contract.
     /// It also allows for removal of airdropped tokens.
     function recoverUnsupported(IERC20 token, uint256 amount, address to) external onlyOwner {
         uint256 length = poolInfo.length;
@@ -237,7 +253,9 @@ contract MasterVampire is IMasterVampire {
                 pending = pending.sub(fee);
                 pool.wethAccumulator = pool.wethAccumulator.add(fee);
             }
-            _safeWethTransfer(msg.sender, pending);
+
+            (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("handleClaim(uint256)", pending));
+            require(success, "handleClaim(uint256 pending) delegatecall failed.");
         }
     }
 

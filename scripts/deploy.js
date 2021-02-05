@@ -24,8 +24,11 @@ async function deployMasterVampire(vampire_adapter, drain_distributor, drain_con
     }
   });
 
+  const IBVEth = await ethers.getContractFactory("IBVEth");
+  const ibveth = await IBVEth.deploy();
   const master_vampire = await MasterVampire.deploy(drain_distributor.address,
-                                                    drain_controller.address);
+                                                    drain_controller.address,
+                                                    ibveth.address);
   await master_vampire.deployed();
 
   console.log(' MasterVampire deployed to: ', master_vampire.address);
@@ -36,14 +39,13 @@ async function deployMasterVampire(vampire_adapter, drain_distributor, drain_con
   return master_vampire;
 }
 
-async function deployDrainDistributor(uni_lp_reward_pool, yfl_lp_reward_pool, drc_reward_pool, lp_controller) {
+async function deployDrainDistributor(uni_lp_reward_pool, yfl_lp_reward_pool, drc_reward_pool) {
   console.log("* Deploying DrainDistributor");
   const DrainDistributor = await ethers.getContractFactory("DrainDistributor");
 
   const drain_distributor = await DrainDistributor.deploy(uni_lp_reward_pool.address,
                                                           yfl_lp_reward_pool.address,
-                                                          drc_reward_pool.address,
-                                                          lp_controller.address);
+                                                          drc_reward_pool.address);
   await drain_distributor.deployed();
 
   console.log(' DrainDistributor deployed to: ', drain_distributor.address);
@@ -73,19 +75,6 @@ async function deployDrainController(vampire_adapter, drain_distributor) {
   await drain_distributor.changeDrainController(drain_controller.address);
 
   return drain_controller;
-}
-
-async function deployLPController() {
-  console.log("* Deploying LiquidityController");
-  const LiquidityController = await ethers.getContractFactory("LiquidityController");
-
-  const liquidity_controller = await LiquidityController.deploy();
-  await liquidity_controller.deployed();
-
-  console.log(' LiquidityController deployed to: ', liquidity_controller.address);
-  console.log(' LiquidityController deploy hash: ', liquidity_controller.deployTransaction.hash);
-
-  return liquidity_controller;
 }
 
 async function deployRewardPools() {
@@ -131,8 +120,68 @@ async function deployTimelock() {
 
 async function deployAdapters() {
   console.log("* Deploying Adapters");
+
+  const DODO = await ethers.getContractFactory("DODOAdapter");
+  const dodo = await DODO.deploy();
+  await dodo.deployed();
+
+  console.log(' DODO deployed to: ', dodo.address);
+  console.log(' DODO deploy hash: ', dodo.deployTransaction.hash);
+
+  const Pickle = await ethers.getContractFactory("PickleAdapter");
+  const pickle = await Pickle.deploy();
+  await pickle.deployed();
+
+  console.log(' Pickle deployed to: ', pickle.address);
+  console.log(' Pickle deploy hash: ', pickle.deployTransaction.hash);
+
+  const Stabilize = await ethers.getContractFactory("StabilizeAdapter");
+  const stabilize = await Stabilize.deploy();
+  await stabilize.deployed();
+
+  console.log(' Stabilize deployed to: ', stabilize.address);
+  console.log(' Stabilize deploy hash: ', stabilize.deployTransaction.hash);
+
+  const Sushi = await ethers.getContractFactory("SushiAdapter");
+  const sushi = await Sushi.deploy();
+  await sushi.deployed();
+
+  console.log(' Sushi deployed to: ', sushi.address);
+  console.log(' Sushi deploy hash: ', sushi.deployTransaction.hash);
+
+  const TruFi = await ethers.getContractFactory("TruefiAdapter");
+  const truefi = await TruFi.deploy();
+  await truefi.deployed();
+
+  console.log(' TruFi deployed to: ', truefi.address);
+  console.log(' TruFi deploy hash: ', truefi.deployTransaction.hash);
+
+  const YAX = await ethers.getContractFactory("YAxisAdapter");
+  const yax = await YAX.deploy();
+  await yax.deployed();
+
+  console.log(' YAX deployed to: ', yax.address);
+  console.log(' YAX deploy hash: ', yax.deployTransaction.hash);
+
   // TODO
   // Update MV address in all adapters
+
+  return {dodo, pickle, stabilize, sushi, truefi, yax};
+}
+
+async function initVictimPools(master_vampire, pools, victim_address, victim_name) {
+  console.log("* Init Victim Pools");
+  const USE_CHI = 0;
+  async function addPool(master_vampire, victim_address, victim_pid, weth_drain_modifier, use_chi) {
+    await master_vampire.add(victim_address, victim_pid, weth_drain_modifier, use_chi);
+    console.log('   Added PID: ', victim_pid);
+  }
+
+  console.log(' Adding pools for: ', victim_name)
+  console.log('   Victim address: ', victim_address)
+  for (let pool of pools) {
+    await addPool(master_vampire, victim_address, pool.pid, '150', USE_CHI);
+  }
 }
 
 async function main() {
@@ -140,16 +189,32 @@ async function main() {
   const CHAIN_ID = network.chainId;
   console.log("Deploying to chain: ", CHAIN_ID);
 
-  const vampire_adapter= await deployVampireAdapter();
-  const liquidity_controller = await deployLPController();
+  const vampire_adapter = await deployVampireAdapter();
   const {uni_lp_reward_pool, yfl_lp_reward_pool, drc_reward_pool} = await deployRewardPools();
   const drain_distributor = await deployDrainDistributor(uni_lp_reward_pool,
                                                          yfl_lp_reward_pool,
-                                                         drc_reward_pool,
-                                                         liquidity_controller);
+                                                         drc_reward_pool);
 
   const drain_controller = await deployDrainController(vampire_adapter, drain_distributor);
   const master_vampire = await deployMasterVampire(vampire_adapter, drain_distributor, drain_controller);
+
+  // Temp workaround for HH bug
+  //const master_vampire2 = await deployMasterVampire(vampire_adapter, drain_distributor, drain_controller);
+
+  const {
+    dodoPIDs,
+    picklePIDs,
+    sushiPIDs,
+    luaPIDs,
+    stabilizePIDs,
+    yaxisPIDs } = require('./pools');
+
+  const {dodo, pickle, stabilize, sushi, truefi, yax} = await deployAdapters();
+  await initVictimPools(master_vampire, dodoPIDs, dodo.address, 'DODO');
+  await initVictimPools(master_vampire, picklePIDs, pickle.address, 'Pickle');
+  await initVictimPools(master_vampire, sushiPIDs, sushi.address, 'Sushi');
+  await initVictimPools(master_vampire, stabilizePIDs, sushi.address, 'Stabilize');
+  await initVictimPools(master_vampire, yaxisPIDs, sushi.address, 'yAxis');
 }
 
 main()
