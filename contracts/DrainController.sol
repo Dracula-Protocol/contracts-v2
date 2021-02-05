@@ -19,8 +19,7 @@ interface IMasterVampire {
                                                           uint256 victimPoolId,
                                                           uint256 lastRewardBlock,
                                                           uint256 accDrcPerShare,
-                                                          uint256 rewardDrainModifier,
-                                                          uint256 wethDrainModifier);
+                                                          uint256 rewardDrainModifier);
     function poolLength() external view returns (uint256);
 }
 
@@ -144,7 +143,7 @@ contract DrainController is Ownable {
     function isDrainable() public view returns(bool) {
         uint256 poolLength = masterVampire.poolLength();
         for (uint pid = 0; pid < poolLength; pid++) {
-            (Victim victim, uint256 victimPoolId,,,,) = masterVampire.poolInfo(pid);
+            (Victim victim, uint256 victimPoolId,,,) = masterVampire.poolInfo(pid);
             if (address(victim) != address(0)) {
                 uint256 pendingReward = victim.pendingReward(victimPoolId);
                 if (pendingReward > 0) {
@@ -164,7 +163,7 @@ contract DrainController is Ownable {
         uint256 poolLength = masterVampire.poolLength();
         uint32 numDrained;
         for (uint pid = 0; pid < poolLength; ++pid) {
-            (Victim victim, uint256 victimPoolId,,,,) = masterVampire.poolInfo(pid);
+            (Victim victim, uint256 victimPoolId,,,) = masterVampire.poolInfo(pid);
             if (address(victim) != address(0)) {
                 uint256 pendingReward = victim.pendingReward(victimPoolId);
                 if (pendingReward > 0) {

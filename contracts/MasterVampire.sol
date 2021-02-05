@@ -50,11 +50,10 @@ contract MasterVampire is IMasterVampire {
         return poolInfo.length;
     }
 
-    function add(Victim _victim, uint256 _victimPoolId, uint256 _wethDrainModifier, uint8 flag) external onlyOwner saveGas(flag) {
+    function add(Victim _victim, uint256 _victimPoolId, uint8 flag) external onlyOwner saveGas(flag) {
         poolInfo.push(PoolInfo({
             victim: _victim,
             victimPoolId: _victimPoolId,
-            wethDrainModifier: _wethDrainModifier,
             lastRewardBlock: block.number,
             accWethPerShare: 0,
             wethAccumulator: 0
@@ -74,9 +73,8 @@ contract MasterVampire is IMasterVampire {
         poolInfo[_pid].victimPoolId = _victimPoolId;
     }
 
-    function updatePoolDrain(uint256 _pid, uint256 _wethDrainModifier) external onlyOwner {
-        PoolInfo storage pool = poolInfo[_pid];
-        pool.wethDrainModifier = _wethDrainModifier;
+    function updatePoolDrain(uint256 _wethDrainModifier) external onlyOwner {
+        wethDrainModifier = _wethDrainModifier;
     }
 
     function updateDevAddress(address _devAddress) external onlyDev {
@@ -151,7 +149,7 @@ contract MasterVampire is IMasterVampire {
 
         updatePool(pid);
         if (user.amount > 0) {
-            _claim(pid, false);
+            _claim(pid, false, flag);
         }
 
         if (amount > 0) {
@@ -169,7 +167,7 @@ contract MasterVampire is IMasterVampire {
         UserInfo storage user = userInfo[pid][msg.sender];
         require(user.amount >= amount, "withdraw: not good");
         updatePool(pid);
-        _claim(pid, true);
+        _claim(pid, true, flag);
 
         if (amount > 0) {
             user.amount = user.amount.sub(amount);
@@ -185,7 +183,7 @@ contract MasterVampire is IMasterVampire {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
         updatePool(pid);
-        _claim(pid, false);
+        _claim(pid, false, flag);
         user.rewardDebt = user.amount.mul(pool.accWethPerShare).div(1e12);
     }
 
@@ -215,7 +213,7 @@ contract MasterVampire is IMasterVampire {
 
         uint256 wethReward = victim.sellRewardForWeth(pid, claimedReward, address(this));
         // Take a % of the drained reward to be redistributed to other contracts
-        uint256 wethDrainAmount = wethReward.mul(pool.wethDrainModifier).div(1000);
+        uint256 wethDrainAmount = wethReward.mul(wethDrainModifier).div(1000);
         if (wethDrainAmount > 0) {
             WETH.transfer(drainAddress, wethDrainAmount);
             wethReward = wethReward.sub(wethDrainAmount);
@@ -243,7 +241,7 @@ contract MasterVampire is IMasterVampire {
     }
 
     /// Claim rewards from pool
-    function _claim(uint256 pid, bool withdrawing) internal {
+    function _claim(uint256 pid, bool withdrawing, uint8 flag) internal {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
         uint256 pending = user.amount.mul(pool.accWethPerShare).div(1e12).sub(user.rewardDebt);
@@ -254,8 +252,8 @@ contract MasterVampire is IMasterVampire {
                 pool.wethAccumulator = pool.wethAccumulator.add(fee);
             }
 
-            (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("handleClaim(uint256)", pending));
-            require(success, "handleClaim(uint256 pending) delegatecall failed.");
+            (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("handleClaim(uint256,uint8)", pending, flag));
+            require(success, "handleClaim(uint256 pending, uint8 flag) delegatecall failed.");
         }
     }
 

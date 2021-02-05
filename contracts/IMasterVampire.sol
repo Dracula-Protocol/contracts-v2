@@ -34,7 +34,6 @@ abstract contract IMasterVampire is Ownable, ReentrancyGuard, ChiGasSaver {
         uint256 lastRewardBlock;
         uint256 accWethPerShare;
         uint256 wethAccumulator;
-        uint256 wethDrainModifier;
     }
 
     IWETH constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
@@ -44,8 +43,9 @@ abstract contract IMasterVampire is Ownable, ReentrancyGuard, ChiGasSaver {
     address public drainAddress;
     address public poolRewardUpdater;
     address public devAddress;
-    uint256 public distributionPeriod = 240; // Block in 24 hour period
+    uint256 public distributionPeriod = 6519; // Block in 24 hour period
     uint256 public withdrawalPenalty = 10;
+    uint256 public wethDrainModifier = 150;
 
     // Info of each pool
     PoolInfo[] public poolInfo;
