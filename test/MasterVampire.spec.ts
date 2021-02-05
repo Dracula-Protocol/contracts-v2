@@ -68,7 +68,7 @@ describe('MasterVampire', () => {
 
     const draincontroller = await DC.deploy();
 
-    const ibveth = await await deployContract(alice, IBVEth);
+    const ibveth = await await deployContract(alice, IBVEth, [DRC]);
     const master_vampire = await MV.deploy(draindist.address, draincontroller.address, ibveth.address);
     await master_vampire.updateRewardUpdaterAddress(alice.address);
 
@@ -93,8 +93,8 @@ describe('MasterVampire', () => {
     });
 
     // Deploy the Mock Adapter and add the pools to MV
-    const mock_adapter = await deployContract(alice, MockAdapter);
-    await master_vampire.add(mock_adapter.address, 0, 150, 0);
+    const mock_adapter = await deployContract(alice, MockAdapter, [master_vampire.address]);
+    await master_vampire.add(mock_adapter.address, 0, 0);
 
     // These need to be set in MockAdapter
     console.log("MasterVampire: ", master_vampire.address);
@@ -157,7 +157,7 @@ describe('MasterVampire', () => {
     expect(user_info.coolOffTime).to.gte(current_block_time);
     expect(user_info.coolOffTime).to.gte(current_block_time.add(duration.hours(23)));
 
-    await advanceBlocks(2);
+    await advanceBlocks(200);
     await draincontroller.whitelist(carol.address);
     await draincontroller.connect(carol).optimalMassDrain();
 
@@ -236,5 +236,18 @@ describe('MasterVampire', () => {
     console.log("After Claim:");
     console.log("  Pending reward (alice): ", utils.formatEther((await master_vampire.pendingWeth(0, alice.address)).toString()));
     console.log("  ETH Balance (Alice):", utils.formatEther(await alice.getBalance()).toString());
+
+
+    for (let b = 0; b < 300; b++) {
+      await advanceBlock();
+    }
+
+    console.log("Before Claim (DRC):");
+    console.log("  Pending reward (alice): ", utils.formatEther((await master_vampire.pendingWeth(0, alice.address)).toString()));
+    console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
+    await master_vampire.connect(alice).claim(0, parseInt("0x2"));
+    console.log("After Claim (DRC):");
+    console.log("  Pending reward (alice): ", utils.formatEther((await master_vampire.pendingWeth(0, alice.address)).toString()));
+    console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
   });
 });

@@ -25,7 +25,7 @@ async function deployMasterVampire(vampire_adapter, drain_distributor, drain_con
   });
 
   const IBVEth = await ethers.getContractFactory("IBVEth");
-  const ibveth = await IBVEth.deploy();
+  const ibveth = await IBVEth.deploy(DRC_ADDRESS);
   const master_vampire = await MasterVampire.deploy(drain_distributor.address,
                                                     drain_controller.address,
                                                     ibveth.address);
@@ -172,15 +172,15 @@ async function deployAdapters() {
 async function initVictimPools(master_vampire, pools, victim_address, victim_name) {
   console.log("* Init Victim Pools");
   const USE_CHI = 0;
-  async function addPool(master_vampire, victim_address, victim_pid, weth_drain_modifier, use_chi) {
-    await master_vampire.add(victim_address, victim_pid, weth_drain_modifier, use_chi);
+  async function addPool(master_vampire, victim_address, victim_pid, use_chi) {
+    await master_vampire.add(victim_address, victim_pid, use_chi);
     console.log('   Added PID: ', victim_pid);
   }
 
   console.log(' Adding pools for: ', victim_name)
   console.log('   Victim address: ', victim_address)
   for (let pool of pools) {
-    await addPool(master_vampire, victim_address, pool.pid, '150', USE_CHI);
+    await addPool(master_vampire, victim_address, pool.pid, USE_CHI);
   }
 }
 
@@ -197,9 +197,6 @@ async function main() {
 
   const drain_controller = await deployDrainController(vampire_adapter, drain_distributor);
   const master_vampire = await deployMasterVampire(vampire_adapter, drain_distributor, drain_controller);
-
-  // Temp workaround for HH bug
-  //const master_vampire2 = await deployMasterVampire(vampire_adapter, drain_distributor, drain_controller);
 
   const {
     dodoPIDs,
