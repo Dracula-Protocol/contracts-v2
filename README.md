@@ -10,8 +10,6 @@ __DrainController__ [TBD](https://etherscan.io/address/TBD)
 
 __DrainDistributor__ [TBD](https://etherscan.io/address/TBD)
 
-__LiquidityController__ [TBD](https://etherscan.io/address/TBD)
-
 __RewardPool__ [TBD](https://etherscan.io/address/TBD)
 
 __IVampireAdapter__ interface that allows __Master Vampire__ to uniformly communicate with various target pools, effectively shadowing all the differences between them. Every victim's adapter smart-contract implements this interface. The interface also contains several informational methods that will be used in Governance for automatic reward redistribution.
