@@ -108,9 +108,24 @@ const picklePIDs = [
     lp: '0x2350fc7268F3f5a6cC31f26c38f706E41547505d'
   },
   {
-    token: 'pMICUSDT',
+    token: 'pSLP-MICUSDT',
     pid: 23,
     lp: '0xC66583Dd4E25b3cfc8D881F6DbaD8288C7f5Fd30'
+  },
+  {
+    token: 'psteCRV',
+    pid: 24,
+    lp: '0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD'
+  },
+  {
+    token: 'pSLP-MICUSDT',
+    pid: 25,
+    lp: '0x0FAA189afE8aE97dE1d2F01E471297678842146d'
+  },
+  {
+    token: 'pSLP-yveCRV',
+    pid: 26,
+    lp: '0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48'
   }
 ]
 
