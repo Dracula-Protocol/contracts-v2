@@ -1,22 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.6.12;
 
-import "./interfaces/Exponential.sol";
-import "./interfaces/CarefulMath.sol";
-import "./interfaces/IIBETH.sol";
-import "./interfaces/IWETH.sol";
-import "./interfaces/CToken.sol";
-import "./interfaces/IUniswapV2Pair.sol";
-import "./interfaces/IUniswapV2Factory.sol";
-import "./libraries/UniswapV2Library.sol";
-import "./IMasterVampire.sol";
-
-import "hardhat/console.sol";
+import "../interfaces/Exponential.sol";
+import "../interfaces/CarefulMath.sol";
+import "../interfaces/IIBETH.sol";
+import "../interfaces/IWETH.sol";
+import "../interfaces/CToken.sol";
+import "../interfaces/IUniswapV2Pair.sol";
+import "../interfaces/IUniswapV2Factory.sol";
+import "../libraries/UniswapV2Library.sol";
+import "../IMasterVampire.sol";
+import "../IIBVEth.sol";
 
 /**
-* @title Handles interest bearing ETH for the Vamps in MasterVampire
+* @title Alpha Homora ibETHv2 Strategy
 */
-contract IBVEth is IMasterVampire, Exponential {
+contract IBVEthAlpha is IIBVEth, IMasterVampire, Exponential {
     IIBETH constant IBETH = IIBETH(0xeEa3311250FE4c3268F8E684f7C87A82fF183Ec1);
     IUniswapV2Pair immutable DRC_WETH_PAIR;
     IERC20 immutable dracula;
@@ -27,12 +26,12 @@ contract IBVEth is IMasterVampire, Exponential {
         DRC_WETH_PAIR = IUniswapV2Pair(uniswapFactory.getPair(address(WETH), _dracula));
     }
 
-    function handleDrainedWETH(uint256 amount) external {
+    function handleDrainedWETH(uint256 amount) external override {
         WETH.withdraw(amount);
         IBETH.deposit{value: amount}();
     }
 
-    function handleClaim(uint256 pending, uint8 flag) external {
+    function handleClaim(uint256 pending, uint8 flag) external override {
         ICToken cToken = ICToken(IBETH.cToken());
         (, uint256 redeemAmount) = divScalarByExpTruncate(pending, Exp({mantissa: cToken.exchangeRateStored()}));
         IBETH.withdraw(redeemAmount);
@@ -50,15 +49,6 @@ contract IBVEth is IMasterVampire, Exponential {
             WETH.transfer(address(DRC_WETH_PAIR), pending);
             DRC_WETH_PAIR.swap(amount0Out, amount1Out, address(this), new bytes(0));
             dracula.transfer(msg.sender, amountOutput);
-        }
-    }
-
-    function _safeETHTransfer(address payable to, uint256 amount) internal {
-        uint256 balance = address(this).balance;
-        if (amount > balance) {
-            to.transfer(balance);
-        } else {
-            to.transfer(amount);
         }
     }
 }
