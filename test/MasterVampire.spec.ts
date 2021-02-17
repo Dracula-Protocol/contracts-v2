@@ -17,7 +17,7 @@ import DraculaToken from '../artifacts/contracts/DraculaToken.sol/DraculaToken.j
 import RewardPool from '../artifacts/contracts/RewardPool.sol/RewardPool.json';
 import DrainDistributor from '../artifacts/contracts/DrainDistributor.sol/DrainDistributor.json';
 import VampireAdapter from '../artifacts/contracts/VampireAdapter.sol/VampireAdapter.json';
-import IBVEth from '../artifacts/contracts/IBVEth.sol/IBVEth.json';
+import IBVEthAlpha from '../artifacts/contracts/strategies/IBVEthAlpha.sol/IBVEthAlpha.json';
 
 const loadFixture = waffle.createFixtureLoader(
   provider.getWallets(),
@@ -33,6 +33,7 @@ describe('MasterVampire', () => {
   const WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
   const DRC = '0xb78B3320493a4EFaa1028130C5Ba26f0B6085Ef8';
   const IBETH = '0xeEa3311250FE4c3268F8E684f7C87A82fF183Ec1';
+  const UNI_ROUTER = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
 
   const REWARD_DURATION = 604800; // 7 days
 
@@ -68,7 +69,7 @@ describe('MasterVampire', () => {
 
     const draincontroller = await DC.deploy();
 
-    const ibveth = await await deployContract(alice, IBVEth, [DRC]);
+    const ibveth = await await deployContract(alice, IBVEthAlpha, [DRC]);
     const master_vampire = await MV.deploy(draindist.address, draincontroller.address, ibveth.address);
     await master_vampire.updateRewardUpdaterAddress(alice.address);
 
@@ -86,33 +87,27 @@ describe('MasterVampire', () => {
     await master_mock.connect(bob).add('100', lp.address);
 
     // Since we cannot mint existing tokens on forked mainnet, we simulate it by swapping some ETH for TUSD and giving to MasterMock
-    const uniswap_router = await ethers.getContractAt('IUniswapV2Router02', '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D');
+    const uniswap_router = await ethers.getContractAt('IUniswapV2Router02', UNI_ROUTER);
     await weth.approve(uniswap_router.address, constants.MaxUint256);
     await uniswap_router.swapExactETHForTokens(0, [WETH, TUSD], master_mock.address, constants.MaxUint256, {
       value: utils.parseEther('100')
     });
 
     // Deploy the Mock Adapter and add the pools to MV
-    const mock_adapter = await deployContract(alice, MockAdapter, [master_vampire.address]);
+    const mock_adapter = await deployContract(alice, MockAdapter, [master_vampire.address, master_mock.address]);
     await master_vampire.add(mock_adapter.address, 0, 0);
-
-    // These need to be set in MockAdapter
-    console.log("MasterVampire: ", master_vampire.address);
-    console.log("MasterMock: ", master_mock.address);
 
     return {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire, draincontroller, mock_token, tusd_token, master_mock, mock_adapter};
   }
 
   describe('setters & getters', () => {
     it('can set distribution period', async () => {
-      const {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
-        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {master_vampire} = await loadFixture(fixture);
       await master_vampire.updateDistributionPeriod(666);
       expect(await master_vampire.distributionPeriod()).to.eq(666);
     });
     it('can set dev address', async () => {
-      const {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
-        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {master_vampire} = await loadFixture(fixture);
       await master_vampire.updateDevAddress(dev.address);
       expect(await master_vampire.devAddress()).to.eq(dev.address);
       await expect(
@@ -122,28 +117,24 @@ describe('MasterVampire', () => {
       expect(await master_vampire.devAddress()).to.eq(carol.address);
     });
     it('can set drain address', async () => {
-      const {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
-        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {master_vampire} = await loadFixture(fixture);
       await master_vampire.updateDrainAddress(drain.address);
       expect(await master_vampire.drainAddress()).to.eq(drain.address);
     });
     it('can set drain controller', async () => {
-      const {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
-        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {master_vampire} = await loadFixture(fixture);
       await master_vampire.updateDrainController(bob.address);
       expect(await master_vampire.drainController()).to.eq(bob.address);
     });
     it('can set reward updater', async () => {
-      const {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
-        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+      const {master_vampire} = await loadFixture(fixture);
       await master_vampire.updateRewardUpdaterAddress(bob.address);
       expect(await master_vampire.poolRewardUpdater()).to.eq(bob.address);
     });
   });
 
   it('early withdrawal penalty works', async () => {
-    const {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
-        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+    const {lp, master_vampire, draincontroller} = await loadFixture(fixture);
 
     // Deposit the Mock LP into the Mock Adapter pool
     await lp.approve(master_vampire.address, utils.parseEther('1000'));
@@ -181,7 +172,7 @@ describe('MasterVampire', () => {
 
   it('mock adapter should work with mastervampire', async () => {
     const {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
-        draincontroller, mock_token, tusd_token, master_mock, mock_adapter} = await loadFixture(fixture);
+        draincontroller, tusd_token, master_mock} = await loadFixture(fixture);
 
     console.log("TUSD Balance (MasterMock): ", utils.formatEther((await tusd_token.balanceOf(master_mock.address))).toString());
 

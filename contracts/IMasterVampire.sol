@@ -10,13 +10,14 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./interfaces/IWETH.sol";
 import "./VampireAdapter.sol";
 import "./ChiGasSaver.sol";
+import "./PoolEnum.sol";
 
 /**
 * @title Interface for MV and adapters that follows the `Inherited Storage` pattern
 * This allows adapters to add storage variables locally without causing collisions.
 * Adapters simply need to inherit this interface so that new variables are appended.
 */
-abstract contract IMasterVampire is Ownable, ReentrancyGuard, ChiGasSaver {
+abstract contract IMasterVampire is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
     using VampireAdapter for Victim;
@@ -34,6 +35,9 @@ abstract contract IMasterVampire is Ownable, ReentrancyGuard, ChiGasSaver {
         uint256 lastRewardBlock;
         uint256 accWethPerShare;
         uint256 wethAccumulator;
+        // Base amount of shares from user deposits for victims that return shares for the pool.
+        uint256 basePoolShares;
+        uint256 baseDeposits;
     }
 
     IWETH constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);

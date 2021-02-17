@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 interface IVampireAdapter {
     // Victim info
     function rewardToken(uint256 poolId) external view returns (IERC20);
+    function rewardValue(uint256 poolId, uint256 amount) external view returns(uint256);
     function poolCount() external view returns (uint256);
     function sellableRewardAmount(uint256 poolId) external view returns (uint256);
 
@@ -16,12 +17,12 @@ interface IVampireAdapter {
     // Pool info
     function lockableToken(uint256 poolId) external view returns (IERC20);
     function lockedAmount(address user, uint256 poolId) external view returns (uint256);
-    function pendingReward(uint256 poolId) external view returns (uint256);
+    function pendingReward(address adapter, uint256 poolId, uint256 victimPoolId) external view returns (uint256);
 
     // Pool actions, requires impersonation via delegatecall
-    function deposit(address adapter, uint256 poolId, uint256 amount) external;
-    function withdraw(address adapter, uint256 poolId, uint256 amount) external;
-    function claimReward(address adapter, uint256 poolId) external;
+    function deposit(address adapter, uint256 poolId, uint256 amount) external returns (uint256);
+    function withdraw(address adapter, uint256 poolId, uint256 amount) external returns (uint256);
+    function claimReward(address adapter, uint256 poolId, uint256 victimPoolId) external;
 
     function emergencyWithdraw(address adapter, uint256 poolId) external;
 

@@ -6,10 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../../interfaces/IUniswapV2Pair.sol";
 import "../../interfaces/IUniswapV2Factory.sol";
 import "../../libraries/UniswapV2Library.sol";
-import "../../IVampireAdapter.sol";
+import "../../BaseAdapter.sol";
 import "./IMasterChef.sol";
 
-contract PickleAdapter is IVampireAdapter {
+contract PickleAdapter is BaseAdapter {
     IMasterChef constant pickleMasterChef = IMasterChef(0xbD17B1ce622d73bD438b9E658acA5996dc394b0d);
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
     IERC20 constant pickle = IERC20(0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5);
@@ -19,7 +19,7 @@ contract PickleAdapter is IVampireAdapter {
     // token 1 - weth
 
     // Victim info
-    function rewardToken(uint256) external view override returns (IERC20) {
+    function rewardToken(uint256) public view override returns (IERC20) {
         return pickle;
     }
 
@@ -51,23 +51,23 @@ contract PickleAdapter is IVampireAdapter {
         return amount;
     }
 
-    function pendingReward(uint256 poolId) external view override returns (uint256) {
-        return pickleMasterChef.pendingPickle(poolId, MASTER_VAMPIRE);
+    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
+        return pickleMasterChef.pendingPickle(victimPoolId, MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
-    function deposit(address _adapter, uint256 poolId, uint256 amount) external override {
+    function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(pickleMasterChef), uint256(-1));
         pickleMasterChef.deposit(poolId, amount);
     }
 
-    function withdraw(address, uint256 poolId, uint256 amount) external override {
+    function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         pickleMasterChef.withdraw(poolId, amount);
     }
 
-    function claimReward(address, uint256 poolId) external override {
-        pickleMasterChef.deposit(poolId, 0);
+    function claimReward(address, uint256, uint256 victimPoolId) external override {
+        pickleMasterChef.deposit(victimPoolId, 0);
     }
 
     function emergencyWithdraw(address, uint256 poolId) external override {

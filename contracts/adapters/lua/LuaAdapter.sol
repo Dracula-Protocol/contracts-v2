@@ -7,10 +7,10 @@ import "../../interfaces/IUniswapV2Pair.sol";
 import "../../interfaces/IUniswapV2Factory.sol";
 import "../../interfaces/IUniswapV2Router02.sol";
 import "../../libraries/UniswapV2Library.sol";
-import "../../IVampireAdapter.sol";
+import "../../BaseAdapter.sol";
 import "./ILuaMasterFarmer.sol";
 
-contract LuaAdapter is IVampireAdapter {
+contract LuaAdapter is BaseAdapter {
     ILuaMasterFarmer constant luaMasterFarmer = ILuaMasterFarmer(0xb67D7a6644d9E191Cac4DA2B88D6817351C7fF62);
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
     IUniswapV2Router02 constant router = IUniswapV2Router02(0x1d5C6F1607A171Ad52EFB270121331b3039dD83e);
@@ -18,7 +18,7 @@ contract LuaAdapter is IVampireAdapter {
     IERC20 constant weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     // Victim info
-    function rewardToken(uint256) external override view returns (IERC20) {
+    function rewardToken(uint256) public override view returns (IERC20) {
         return lua;
     }
 
@@ -67,8 +67,8 @@ contract LuaAdapter is IVampireAdapter {
         return amount;
     }
 
-    function pendingReward(uint256 poolId) external view override returns (uint256) {
-        return luaMasterFarmer.pendingReward(poolId, MASTER_VAMPIRE);
+    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
+        return luaMasterFarmer.pendingReward(victimPoolId, MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
@@ -76,7 +76,7 @@ contract LuaAdapter is IVampireAdapter {
         address _adapter,
         uint256 poolId,
         uint256 amount
-    ) external override {
+    ) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(luaMasterFarmer), uint256(-1));
         luaMasterFarmer.deposit(poolId, amount);
@@ -86,12 +86,12 @@ contract LuaAdapter is IVampireAdapter {
         address,
         uint256 poolId,
         uint256 amount
-    ) external override {
+    ) external override returns (uint256) {
         luaMasterFarmer.withdraw(poolId, amount);
     }
 
-    function claimReward(address, uint256 poolId) external override {
-        luaMasterFarmer.claimReward(poolId);
+    function claimReward(address, uint256, uint256 victimPoolId) external override {
+        luaMasterFarmer.claimReward(victimPoolId);
     }
 
     function emergencyWithdraw(address, uint256 poolId) external override {

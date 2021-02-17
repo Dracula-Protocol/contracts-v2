@@ -6,11 +6,11 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "../../interfaces/IUniswapV2Pair.sol";
 import "../../libraries/UniswapV2Library.sol";
-import "../../IVampireAdapter.sol";
+import "../../BaseAdapter.sol";
 import "./interfaces/IDODO.sol";
 import "./IDODOMine.sol";
 
-contract DODOAdapter is IVampireAdapter {
+contract DODOAdapter is BaseAdapter {
     using SafeERC20 for IERC20;
 
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
@@ -21,7 +21,7 @@ contract DODOAdapter is IVampireAdapter {
     IERC20 constant USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
 
     // Victim info
-    function rewardToken(uint256) external view override returns (IERC20) {
+    function rewardToken(uint256) public view override returns (IERC20) {
         return DODO;
     }
 
@@ -64,26 +64,26 @@ contract DODOAdapter is IVampireAdapter {
         return amount;
     }
 
-    function pendingReward(uint256 poolId) external view override returns (uint256) {
-        (address lpToken,,,) = DODO_MINE.poolInfos(poolId);
+    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
+        (address lpToken,,,) = DODO_MINE.poolInfos(victimPoolId);
         return DODO_MINE.getPendingReward(lpToken, MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
-    function deposit(address _adapter, uint256 poolId, uint256 amount) external override {
+    function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         IERC20 lpToken = adapter.lockableToken(poolId);
         lpToken.approve(address(DODO_MINE), uint256(-1));
         DODO_MINE.deposit(address(lpToken), amount);
     }
 
-    function withdraw(address, uint256 poolId, uint256 amount) external override {
+    function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         (address lpToken,,,) = DODO_MINE.poolInfos(poolId);
         DODO_MINE.withdraw(lpToken, amount);
     }
 
-    function claimReward(address, uint256 poolId) external override {
-        (address lpToken,,,) = DODO_MINE.poolInfos(poolId);
+    function claimReward(address, uint256, uint256 victimPoolId) external override {
+        (address lpToken,,,) = DODO_MINE.poolInfos(victimPoolId);
         DODO_MINE.claim(lpToken);
     }
 

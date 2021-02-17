@@ -5,11 +5,11 @@ pragma solidity ^0.6.12;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../../interfaces/IUniswapV2Pair.sol";
 import "../../libraries/UniswapV2Library.sol";
-import "../../IVampireAdapter.sol";
+import "../../BaseAdapter.sol";
 import "../../IMasterVampire.sol";
 import "./ITrueFarm.sol";
 
-contract TruefiAdapter is IVampireAdapter, IMasterVampire {
+contract TruefiAdapter is BaseAdapter, IMasterVampire {
     ITrueFarm[] farms;
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
     IERC20 constant TRU = IERC20(0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784);
@@ -22,7 +22,7 @@ contract TruefiAdapter is IVampireAdapter, IMasterVampire {
     }
 
     // Victim info
-    function rewardToken(uint256) external view override returns (IERC20) {
+    function rewardToken(uint256) public view override returns (IERC20) {
         return TRU;
     }
 
@@ -52,23 +52,23 @@ contract TruefiAdapter is IVampireAdapter, IMasterVampire {
         return farms[poolId].staked(user);
     }
 
-    function pendingReward(uint256 poolId) external view override returns (uint256) {
-        return farms[poolId].claimableReward(MASTER_VAMPIRE);
+    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
+        return farms[victimPoolId].claimableReward(MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
-    function deposit(address _adapter, uint256 poolId, uint256 amount) external override {
+    function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(farms[poolId]), uint256(-1));
         farms[poolId].stake(amount);
     }
 
-    function withdraw(address, uint256 poolId, uint256 amount) external override {
+    function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         farms[poolId].unstake(amount);
     }
 
-    function claimReward(address, uint256 poolId) external override {
-        farms[poolId].claim();
+    function claimReward(address, uint256, uint256 victimPoolId) external override {
+        farms[victimPoolId].claim();
     }
 
     function emergencyWithdraw(address, uint256) external override {

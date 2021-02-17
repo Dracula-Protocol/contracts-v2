@@ -9,8 +9,6 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ERC20Mock.sol";
 
-import "hardhat/console.sol";
-
 // MockMasterChef is the master of mocks.
 contract MockMasterChef is Ownable, ReentrancyGuard {
     using SafeMath for uint256;
