@@ -7,10 +7,10 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../../interfaces/IUniswapV2Pair.sol";
 import "../../interfaces/IUniswapV2Factory.sol";
 import "../../libraries/UniswapV2Library.sol";
-import "../../IVampireAdapter.sol";
+import "../../BaseAdapter.sol";
 import "./IOperator.sol";
 
-contract StabilizeAdapter is IVampireAdapter {
+contract StabilizeAdapter is BaseAdapter {
     using SafeMath for uint256;
     IOperator constant OPERATOR = IOperator(0xEe9156C93ebB836513968F92B4A67721f3cEa08a);
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
@@ -22,7 +22,7 @@ contract StabilizeAdapter is IVampireAdapter {
     // token 1 - weth
 
     // Victim info
-    function rewardToken(uint256) external view override returns (IERC20) {
+    function rewardToken(uint256) public view override returns (IERC20) {
         return STBZ;
     }
 
@@ -54,23 +54,23 @@ contract StabilizeAdapter is IVampireAdapter {
         return amount;
     }
 
-    function pendingReward(uint256 poolId) external view override returns (uint256) {
-        return OPERATOR.rewardEarned(poolId, MASTER_VAMPIRE);
+    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
+        return OPERATOR.rewardEarned(victimPoolId, MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
-    function deposit(address _adapter, uint256 poolId, uint256 amount) external override {
+    function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(OPERATOR), uint256(-1));
         OPERATOR.deposit(poolId, amount);
     }
 
-    function withdraw(address, uint256 poolId, uint256 amount) external override {
+    function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         OPERATOR.withdraw(poolId, amount);
     }
 
-    function claimReward(address, uint256 poolId) external override {
-        OPERATOR.getReward(poolId);
+    function claimReward(address, uint256, uint256 victimPoolId) external override {
+        OPERATOR.getReward(victimPoolId);
     }
 
     function emergencyWithdraw(address, uint256) external override {

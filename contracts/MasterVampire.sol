@@ -4,9 +4,7 @@ pragma solidity ^0.6.12;
 
 import "./IMasterVampire.sol";
 
-import "hardhat/console.sol";
-
-contract MasterVampire is IMasterVampire {
+contract MasterVampire is IMasterVampire, ChiGasSaver {
     //     (_                   _)
     //      /\                 /\
     //     / \'._   (\_/)   _.'/ \
@@ -20,12 +18,12 @@ contract MasterVampire is IMasterVampire {
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
     modifier onlyDev() {
-        require(devAddress == _msgSender(), "not dev");
+        require(devAddress == msg.sender, "not dev");
         _;
     }
 
     modifier onlyRewardUpdater() {
-        require(poolRewardUpdater == _msgSender(), "not reward updater");
+        require(poolRewardUpdater == msg.sender, "not reward updater");
         _;
     }
 
@@ -56,7 +54,9 @@ contract MasterVampire is IMasterVampire {
             victimPoolId: _victimPoolId,
             lastRewardBlock: block.number,
             accWethPerShare: 0,
-            wethAccumulator: 0
+            wethAccumulator: 0,
+            basePoolShares: 0,
+            baseDeposits: 0
         }));
     }
 
@@ -111,6 +111,11 @@ contract MasterVampire is IMasterVampire {
         return user.amount.mul(accWethPerShare).div(1e12).sub(user.rewardDebt);
     }
 
+    function pendingVictimReward(uint256 pid) external returns (uint256) {
+        PoolInfo storage pool = poolInfo[pid];
+        return pool.victim.pendingReward(pid, pool.victimPoolId);
+    }
+
     function poolAccWeth(uint256 pid) external view returns (uint256) {
         PoolInfo storage pool = poolInfo[pid];
         return pool.wethAccumulator;
@@ -128,7 +133,6 @@ contract MasterVampire is IMasterVampire {
         if (block.number <= pool.lastRewardBlock) {
             return;
         }
-
         uint256 lpSupply = pool.victim.lockedAmount(pool.victimPoolId);
         if (lpSupply == 0) {
             pool.lastRewardBlock = block.number;
@@ -154,7 +158,12 @@ contract MasterVampire is IMasterVampire {
 
         if (amount > 0) {
             pool.victim.lockableToken(pool.victimPoolId).safeTransferFrom(address(msg.sender), address(this), amount);
-            pool.victim.deposit(pool.victimPoolId, amount);
+            uint256 shares = pool.victim.deposit(pool.victimPoolId, amount);
+            if (shares > 0) {
+                pool.basePoolShares = pool.basePoolShares.add(shares);
+                pool.baseDeposits = pool.baseDeposits.add(amount);
+                user.poolShares = user.poolShares.add(shares);
+            }
             user.amount = user.amount.add(amount);
         }
 
@@ -171,7 +180,12 @@ contract MasterVampire is IMasterVampire {
 
         if (amount > 0) {
             user.amount = user.amount.sub(amount);
-            pool.victim.withdraw(pool.victimPoolId, amount);
+            uint256 shares = pool.victim.withdraw(pool.victimPoolId, amount);
+            if (shares > 0) {
+                pool.basePoolShares = pool.basePoolShares.sub(shares);
+                pool.baseDeposits = pool.baseDeposits.sub(amount);
+                user.poolShares = user.poolShares.sub(shares);
+            }
             pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), amount);
         }
 
@@ -195,15 +209,16 @@ contract MasterVampire is IMasterVampire {
         emit EmergencyWithdraw(msg.sender, pid, user.amount);
         user.amount = 0;
         user.rewardDebt = 0;
+        user.poolShares = 0;
     }
 
     /// Can only be called by DrainController
     function drain(uint256 pid) external {
-        require(drainController == _msgSender(), "not drainctrl");
+        require(drainController == msg.sender, "not drainctrl");
         PoolInfo storage pool = poolInfo[pid];
         Victim victim = pool.victim;
         uint256 victimPoolId = pool.victimPoolId;
-        victim.claimReward(victimPoolId);
+        victim.claimReward(pid, victimPoolId);
         IERC20 rewardToken = victim.rewardToken(pid);
         uint256 claimedReward = rewardToken.balanceOf(address(this));
 

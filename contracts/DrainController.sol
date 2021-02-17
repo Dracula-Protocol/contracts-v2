@@ -6,11 +6,7 @@ pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
-import "./interfaces/IUniswapV2Pair.sol";
 import "./VampireAdapter.sol";
-import "./interfaces/IUniswapV2Pair.sol";
-import "./interfaces/IUniswapV2Factory.sol";
-import "./libraries/UniswapV2Library.sol";
 import "./interfaces/IChiToken.sol";
 
 interface IMasterVampire {
@@ -18,9 +14,12 @@ interface IMasterVampire {
     function poolInfo(uint256 pid) external view returns (Victim victim,
                                                           uint256 victimPoolId,
                                                           uint256 lastRewardBlock,
-                                                          uint256 accDrcPerShare,
-                                                          uint256 rewardDrainModifier);
+                                                          uint256 accWethPerShare,
+                                                          uint256 wethAccumulator,
+                                                          uint256 basePoolShares,
+                                                          uint256 baseDeposits);
     function poolLength() external view returns (uint256);
+    function pendingVictimReward(uint256 pid) external returns (uint256);
 }
 
 /**
@@ -41,9 +40,6 @@ contract DrainController is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
     using VampireAdapter for Victim;
-
-    IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IUniswapV2Factory constant UNI_FACTORY = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
 
     IMasterVampire public masterVampire;
     uint256 public wethThreshold = 200000000000000000 wei;
@@ -140,14 +136,14 @@ contract DrainController is Ownable {
     /**
      * @notice Determines if drain can be performed
      */
-    function isDrainable() public view returns(bool) {
+    function isDrainable() public returns(bool) {
         uint256 poolLength = masterVampire.poolLength();
         for (uint pid = 0; pid < poolLength; pid++) {
-            (Victim victim, uint256 victimPoolId,,,) = masterVampire.poolInfo(pid);
+            (Victim victim, uint256 victimPoolId,,,,,) = masterVampire.poolInfo(pid);
             if (address(victim) != address(0)) {
-                uint256 pendingReward = victim.pendingReward(victimPoolId);
+                uint256 pendingReward = masterVampire.pendingVictimReward(pid);
                 if (pendingReward > 0) {
-                    if (_rewardValue(pendingReward, victim.rewardToken(victimPoolId)) >= wethThreshold) {
+                    if (victim.rewardValue(victimPoolId, pendingReward) >= wethThreshold) {
                        return true;
                     }
                 }
@@ -163,12 +159,12 @@ contract DrainController is Ownable {
         uint256 poolLength = masterVampire.poolLength();
         uint32 numDrained;
         for (uint pid = 0; pid < poolLength; ++pid) {
-            (Victim victim, uint256 victimPoolId,,,) = masterVampire.poolInfo(pid);
+            (Victim victim, uint256 victimPoolId,,,,,) = masterVampire.poolInfo(pid);
             if (address(victim) != address(0)) {
-                uint256 pendingReward = victim.pendingReward(victimPoolId);
+                uint256 pendingReward = victim.pendingReward(pid, victimPoolId);
                 if (pendingReward > 0) {
-                    IERC20 rewardToken = victim.rewardToken(victimPoolId);
-                    uint256 rewardValue_ = _rewardValue(pendingReward, rewardToken);
+                    //IERC20 rewardToken = victim.rewardToken(victimPoolId);
+                    uint256 rewardValue_ = victim.rewardValue(victimPoolId, pendingReward);
                     if (rewardValue_ >= wethThreshold) {
                         try masterVampire.drain(pid) {
                             // success
@@ -182,26 +178,6 @@ contract DrainController is Ownable {
         }
 
         return numDrained;
-    }
-
-    /**
-     * @notice Calculates the WETH value for an amount of specified token
-     */
-    function _rewardValue(uint256 amount, IERC20 rewardToken) internal view returns(uint256) {
-        address token = address(rewardToken);
-
-        IUniswapV2Pair pair = IUniswapV2Pair(UNI_FACTORY.getPair(address(token), address(WETH)));
-        if (address(pair) != address(0)) {
-             (uint tokenReserve, uint wethReserve,) = pair.getReserves();
-             return UniswapV2Library.getAmountOut(amount, tokenReserve, wethReserve);
-        }
-
-        require(
-            address(pair) != address(0),
-            "Neither token-weth nor weth-token pair exists");
-        pair = IUniswapV2Pair(UNI_FACTORY.getPair(address(WETH), address(token)));
-        (uint wethReserve, uint tokenReserve,) = pair.getReserves();
-        return UniswapV2Library.getAmountOut(amount, tokenReserve, wethReserve);
     }
 
     /**

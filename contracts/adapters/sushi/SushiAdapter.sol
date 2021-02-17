@@ -7,10 +7,10 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../../interfaces/IUniswapV2Pair.sol";
 import "../../interfaces/IUniswapV2Factory.sol";
 import "../../libraries/UniswapV2Library.sol";
-import "../../IVampireAdapter.sol";
+import "../../BaseAdapter.sol";
 import "./IMasterChef.sol";
 
-contract SushiAdapter is IVampireAdapter {
+contract SushiAdapter is BaseAdapter {
     using SafeMath for uint256;
     IMasterChef constant sushiMasterChef = IMasterChef(0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd);
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
@@ -22,7 +22,7 @@ contract SushiAdapter is IVampireAdapter {
     // token 1 - weth
 
     // Victim info
-    function rewardToken(uint256) external view override returns (IERC20) {
+    function rewardToken(uint256) public view override returns (IERC20) {
         return sushi;
     }
 
@@ -54,23 +54,23 @@ contract SushiAdapter is IVampireAdapter {
         return amount;
     }
 
-    function pendingReward(uint256 poolId) external view override returns (uint256) {
-        return sushiMasterChef.pendingSushi(poolId, MASTER_VAMPIRE);
+    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
+        return sushiMasterChef.pendingSushi(victimPoolId, MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
-    function deposit(address _adapter, uint256 poolId, uint256 amount) external override {
+    function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(sushiMasterChef), uint256(-1));
         sushiMasterChef.deposit(poolId, amount);
     }
 
-    function withdraw(address, uint256 poolId, uint256 amount) external override {
+    function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         sushiMasterChef.withdraw(poolId, amount);
     }
 
-    function claimReward(address, uint256 poolId) external override {
-        sushiMasterChef.deposit(poolId, 0);
+    function claimReward(address, uint256, uint256 victimPoolId) external override {
+        sushiMasterChef.deposit(victimPoolId, 0);
     }
 
     function emergencyWithdraw(address, uint256 poolId) external override {

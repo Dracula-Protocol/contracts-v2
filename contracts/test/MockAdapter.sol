@@ -8,29 +8,29 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../interfaces/IUniswapV2Pair.sol";
 import "../interfaces/IUniswapV2Factory.sol";
 import "../libraries/UniswapV2Library.sol";
-import "../IVampireAdapter.sol";
+import "../BaseAdapter.sol";
 import "./ERC20Mock.sol";
 import "./IMockMasterChef.sol";
 
 import "hardhat/console.sol";
 
-contract MockAdapter is IVampireAdapter {
+contract MockAdapter is BaseAdapter {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     IUniswapV2Pair constant tusdWethPair = IUniswapV2Pair(0xb4d0d9df2738abE81b87b66c80851292492D1404);
     IERC20 constant tusd = IERC20(0x0000000000085d4780B73119b644AE5ecd22b376);
 
-    // Note: these are dynamic and must be set to the deployed contracts from the unit tests
-    IMockMasterChef constant mockChef = IMockMasterChef(0x8464135c8F25Da09e49BC8782676a84730C318bC);
+    IMockMasterChef immutable mockChef;
     address immutable masterVampire;
 
-    constructor(address _masterVampire) public {
+    constructor(address _masterVampire, address _mockChef) public {
         masterVampire = _masterVampire;
+        mockChef = IMockMasterChef(_mockChef);
     }
 
     // Victim info
-    function rewardToken(uint256) external view override returns (IERC20) {
+    function rewardToken(uint256) public view override returns (IERC20) {
         return tusd;
     }
 
@@ -62,23 +62,23 @@ contract MockAdapter is IVampireAdapter {
         return amount;
     }
 
-    function pendingReward(uint256 poolId) external view override returns (uint256) {
-        return mockChef.pendingMock(poolId, masterVampire);
+    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
+        return mockChef.pendingMock(victimPoolId, masterVampire);
     }
 
     // Pool actions, requires impersonation via delegatecall
-    function deposit(address _adapter, uint256 poolId, uint256 amount) external override {
+    function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(mockChef), uint256(-1));
         mockChef.deposit(poolId, amount);
     }
 
-    function withdraw(address, uint256 poolId, uint256 amount) external override {
+    function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         mockChef.withdraw(poolId, amount);
     }
 
-    function claimReward(address, uint256 poolId) external override {
-        mockChef.deposit(poolId, 0);
+    function claimReward(address, uint256, uint256 victimPoolId) external override {
+        mockChef.deposit(victimPoolId, 0);
     }
 
     function emergencyWithdraw(address, uint256 poolId) external override {
