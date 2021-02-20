@@ -385,24 +385,34 @@ const luaPIDs = [
 
 const stabilizePIDs = [
   {
-    token: 'zpaUSDC',
-    pid: 5,
-    lp: '0x4dEaD8338cF5cb31122859b2Aec2b60416D491f0'
+    token: 'STBZ-ETH',
+    pid: 0,
+    lp: '0xDB28312a8d26D59978D9B86cA185707B1A26725b'
   },
   {
-    token: 'zpaUSDT',
-    pid: 6,
-    lp: '0x6B2e59b8EbE61B5ee0EF30021b7740C63F597654'
+    token: 'zs-USD',
+    pid: 14,
+    lp: '0x8e769EAA31375D13a1247dE1e64987c28Bed987E'
   },
   {
-    token: 'zpasUSD',
-    pid: 7,
-    lp: '0x89Cc19cece29acbD41F931F3dD61A10C1627E4c4'
+    token: 'zs-BTC',
+    pid: 15,
+    lp: '0x739D93f2b116E6aD754e173655c635Bd5D8d664c'
   },
   {
-    token: 'zpaDAI',
-    pid: 8,
-    lp: '0xfa8c04d342FBe24d871ea77807b1b93eC42A57ea'
+    token: 'zs-SGR',
+    pid: 16,
+    lp: '0xfea2468C55E80aB9487f6E6189C79Ce31E1f9Ea7'
+  },
+  {
+    token: 'zs-BMSGR',
+    pid: 17,
+    lp: '0x939D73E26138f4B483368F96d17D2B4dCc5bc84f'
+  },
+  {
+    token: 'zs-FRAX',
+    pid: 18,
+    lp: '0xD469BB16116443F389EfEF407D73EF7Ab0Ad96Ce'
   },
 ]
 
