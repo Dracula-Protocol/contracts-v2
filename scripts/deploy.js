@@ -24,7 +24,7 @@ async function deployMasterVampire(vampire_adapter, drain_distributor, drain_con
     }
   });
 
-  const IBVEth = await ethers.getContractFactory("IBVEth");
+  const IBVEth = await ethers.getContractFactory("IBVEthRari");
   const ibveth = await IBVEth.deploy(DRC_ADDRESS);
   const master_vampire = await MasterVampire.deploy(drain_distributor.address,
                                                     drain_controller.address,
