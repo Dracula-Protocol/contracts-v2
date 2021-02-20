@@ -85,8 +85,10 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         drainAddress = _drainAddress;
     }
 
-    function updateIBVEthAddress(address _ibveth) external onlyOwner {
+    function updateIBEthStrategy(address _ibveth) external onlyOwner {
         IBVETH = _ibveth;
+        (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("migrate()"));
+        require(success, "migrate() delegatecall failed.");
     }
 
     function updateDrainController(address _drainController) external onlyOwner {

@@ -18,6 +18,7 @@ import RewardPool from '../artifacts/contracts/RewardPool.sol/RewardPool.json';
 import DrainDistributor from '../artifacts/contracts/DrainDistributor.sol/DrainDistributor.json';
 import VampireAdapter from '../artifacts/contracts/VampireAdapter.sol/VampireAdapter.json';
 import IBVEthAlpha from '../artifacts/contracts/strategies/IBVEthAlpha.sol/IBVEthAlpha.json';
+import IBVEthRari from '../artifacts/contracts/strategies/IBVEthRari.sol/IBVEthRari.json';
 
 const loadFixture = waffle.createFixtureLoader(
   provider.getWallets(),
@@ -33,6 +34,7 @@ describe('MasterVampire', () => {
   const WETH = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
   const DRC = '0xb78B3320493a4EFaa1028130C5Ba26f0B6085Ef8';
   const IBETH = '0xeEa3311250FE4c3268F8E684f7C87A82fF183Ec1';
+  const REPT = '0xCda4770d65B4211364Cb870aD6bE19E7Ef1D65f4';
   const UNI_ROUTER = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
 
   const REWARD_DURATION = 604800; // 7 days
@@ -69,7 +71,7 @@ describe('MasterVampire', () => {
 
     const draincontroller = await DC.deploy();
 
-    const ibveth = await await deployContract(alice, IBVEthAlpha, [DRC]);
+    const ibveth = await deployContract(alice, IBVEthAlpha, [DRC]);
     const master_vampire = await MV.deploy(draindist.address, draincontroller.address, ibveth.address);
     await master_vampire.updateRewardUpdaterAddress(alice.address);
 
@@ -170,9 +172,13 @@ describe('MasterVampire', () => {
     expect(await alice.getBalance()).to.gte(BigNumber.from(alice_eth_balance_before).add(BigNumber.from(pending_weth).div(2)));
   });
 
-  it('mock adapter should work with mastervampire', async () => {
+  async function runTestWithIBEthStrategy(ibeth_strategy:any, ibeth_token:any) {
+
     const {weth, lp, drc, rewardpool1, rewardpool2, rewardpool3, draindist, master_vampire,
         draincontroller, tusd_token, master_mock} = await loadFixture(fixture);
+
+    const ibveth = await deployContract(alice, ibeth_strategy, [DRC]);
+    await master_vampire.updateIBEthStrategy(ibveth.address);
 
     console.log("TUSD Balance (MasterMock): ", utils.formatEther((await tusd_token.balanceOf(master_mock.address))).toString());
 
@@ -197,7 +203,7 @@ describe('MasterVampire', () => {
     await draindist.setWETHThreshold(utils.parseEther('0.01'));
     await draindist.distribute();
 
-    const ibeth = await ethers.getContractAt('IERC20', IBETH);
+    const ibeth = await ethers.getContractAt('IERC20', ibeth_token);
 
     console.log("After Drain:");
     console.log("  IBETH Balance (MasterVampire): ", utils.formatEther(await ibeth.balanceOf(master_vampire.address)).toString());
@@ -240,5 +246,15 @@ describe('MasterVampire', () => {
     console.log("After Claim (DRC):");
     console.log("  Pending reward (alice): ", utils.formatEther((await master_vampire.pendingWeth(0, alice.address)).toString()));
     console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
+
+  }
+
+  describe('mock adapter should work with mastervampire', () => {
+    it('alpha homora ibeth strategy', async () => {
+      await runTestWithIBEthStrategy(IBVEthAlpha, IBETH);
+    });
+    it('rari capital ibeth strategy', async () => {
+      await runTestWithIBEthStrategy(IBVEthRari, REPT);
+    });
   });
 });
