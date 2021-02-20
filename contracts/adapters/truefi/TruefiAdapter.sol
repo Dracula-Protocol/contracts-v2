@@ -10,10 +10,10 @@ import "../../IMasterVampire.sol";
 import "./ITrueFarm.sol";
 
 contract TruefiAdapter is BaseAdapter, IMasterVampire {
-    ITrueFarm[] farms;
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
     IERC20 constant TRU = IERC20(0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784);
-    IUniswapV2Pair constant TRU_WETH_PAIR = IUniswapV2Pair(0xeC6a6b7dB761A5c9910bA8fcaB98116d384b1B85);
+    IUniswapV2Pair constant TRU_WETH_PAIR = IUniswapV2Pair(0xfCEAAf9792139BF714a694f868A215493461446D);
+    ITrueFarm[] farms;
 
     constructor() public {
         farms.push(ITrueFarm(0x8FD832757F58F71BAC53196270A4a55c8E1a29D9)); // TFI-LP farm
@@ -52,23 +52,27 @@ contract TruefiAdapter is BaseAdapter, IMasterVampire {
         return farms[poolId].staked(user);
     }
 
-    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
-        return farms[victimPoolId].claimableReward(MASTER_VAMPIRE);
+    function pendingReward(address _adapter, uint256, uint256 victimPoolId) external view override returns (uint256) {
+        IVampireAdapter adapter = IVampireAdapter(_adapter);
+        ITrueFarm farm = ITrueFarm(adapter.poolAddress(victimPoolId));
+        return farm.claimableReward(MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
     function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(farms[poolId]), uint256(-1));
-        farms[poolId].stake(amount);
+        ITrueFarm(adapter.poolAddress(poolId)).stake(amount);
     }
 
-    function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
-        farms[poolId].unstake(amount);
+    function withdraw(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
+        IVampireAdapter adapter = IVampireAdapter(_adapter);
+        ITrueFarm(adapter.poolAddress(poolId)).unstake(amount);
     }
 
-    function claimReward(address, uint256, uint256 victimPoolId) external override {
-        farms[victimPoolId].claim();
+    function claimReward(address _adapter, uint256, uint256 victimPoolId) external override {
+        IVampireAdapter adapter = IVampireAdapter(_adapter);
+        ITrueFarm(adapter.poolAddress(victimPoolId)).claim();
     }
 
     function emergencyWithdraw(address, uint256) external override {

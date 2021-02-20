@@ -10,7 +10,6 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./interfaces/IWETH.sol";
 import "./VampireAdapter.sol";
 import "./ChiGasSaver.sol";
-import "./PoolEnum.sol";
 
 /**
 * @title Interface for MV and adapters that follows the `Inherited Storage` pattern
