@@ -1,11 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.6.12;
 
-import "../interfaces/Exponential.sol";
-import "../interfaces/CarefulMath.sol";
-import "../interfaces/IIBETH.sol";
+import "../interfaces/IRariFundManager.sol";
 import "../interfaces/IWETH.sol";
-import "../interfaces/CToken.sol";
 import "../interfaces/IUniswapV2Pair.sol";
 import "../interfaces/IUniswapV2Factory.sol";
 import "../libraries/UniswapV2Library.sol";
@@ -13,10 +10,10 @@ import "../IMasterVampire.sol";
 import "../IIBVEth.sol";
 
 /**
-* @title Alpha Homora ibETHv2 Strategy
+* @title Rari Capital ETH Strategy
 */
-contract IBVEthAlpha is IIBVEth, IMasterVampire, Exponential {
-    IIBETH constant IBETH = IIBETH(0xeEa3311250FE4c3268F8E684f7C87A82fF183Ec1);
+contract IBVEthRari is IIBVEth, IMasterVampire {
+    IRariFundManager constant FUND_MANAGER = IRariFundManager(0xD6e194aF3d9674b62D1b30Ec676030C23961275e);
     IUniswapV2Pair immutable DRC_WETH_PAIR;
     IERC20 immutable dracula;
 
@@ -28,13 +25,11 @@ contract IBVEthAlpha is IIBVEth, IMasterVampire, Exponential {
 
     function handleDrainedWETH(uint256 amount) external override {
         WETH.withdraw(amount);
-        IBETH.deposit{value: amount}();
+        FUND_MANAGER.deposit{value: amount}();
     }
 
     function handleClaim(uint256 pending, uint8 flag) external override {
-        ICToken cToken = ICToken(IBETH.cToken());
-        (, uint256 redeemAmount) = divScalarByExpTruncate(pending, Exp({mantissa: cToken.exchangeRateStored()}));
-        IBETH.withdraw(redeemAmount);
+        FUND_MANAGER.withdraw(pending);
 
         if ((flag & 0x2) == 0) {
             _safeETHTransfer(msg.sender, pending);
