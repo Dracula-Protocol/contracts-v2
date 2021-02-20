@@ -14,7 +14,7 @@ contract PickleAdapter is BaseAdapter {
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
     IERC20 constant pickle = IERC20(0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5);
     IERC20 constant weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IUniswapV2Pair constant pickleWethPair = IUniswapV2Pair(0xdc98556Ce24f007A5eF6dC1CE96322d65832A819);
+    IUniswapV2Pair constant pickleWethPair = IUniswapV2Pair(0x269Db91Fc3c7fCC275C2E6f22e5552504512811c);
     // token 0 - pickle
     // token 1 - weth
 
