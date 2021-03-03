@@ -10,24 +10,32 @@ import "../../libraries/UniswapV2Library.sol";
 import "../../BaseAdapter.sol";
 import "./IMasterChef.sol";
 
+
+interface ISushiBar is IERC20 {
+    function enter(uint256 amount) external;
+}
+
 contract SushiAdapter is BaseAdapter {
     using SafeMath for uint256;
-    IMasterChef constant sushiMasterChef = IMasterChef(0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd);
+    IMasterChef constant SUSHI_MASTER_CHEF = IMasterChef(0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd);
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
-    IERC20 constant sushi = IERC20(0x6B3595068778DD592e39A122f4f5a5cF09C90fE2);
-    IERC20 constant weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
-    IUniswapV2Pair constant sushiWethPair = IUniswapV2Pair(0x795065dCc9f64b5614C407a6EFDC400DA6221FB0);
+    address constant DEV_FUND = 0xa896e4bd97a733F049b23d2AcEB091BcE01f298d;
+    IERC20 constant SUSHI = IERC20(0x6B3595068778DD592e39A122f4f5a5cF09C90fE2);
+    IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    ISushiBar constant SUSHI_BAR = ISushiBar(0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272);
+    IUniswapV2Pair constant SUSHI_WETH_PAIR = IUniswapV2Pair(0x795065dCc9f64b5614C407a6EFDC400DA6221FB0);
     uint256 constant BLOCKS_PER_YEAR = 2336000;
-    // token 0 - sushi
-    // token 1 - weth
+    uint256 constant DEV_SHARE = 20; // 2%
+    // token 0 - SUSHI
+    // token 1 - WETH
 
     // Victim info
     function rewardToken(uint256) public view override returns (IERC20) {
-        return sushi;
+        return SUSHI;
     }
 
     function poolCount() external view override returns (uint256) {
-        return sushiMasterChef.poolLength();
+        return SUSHI_MASTER_CHEF.poolLength();
     }
 
     function sellableRewardAmount(uint256) external view override returns (uint256) {
@@ -36,78 +44,83 @@ contract SushiAdapter is BaseAdapter {
 
     // Victim actions, requires impersonation via delegatecall
     function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
-        sushi.transfer(address(sushiWethPair), rewardAmount);
-        (uint sushiReserve, uint wethReserve,) = sushiWethPair.getReserves();
+        uint256 devAmt = rewardAmount.mul(DEV_SHARE).div(1000);
+        SUSHI_BAR.enter(devAmt);
+        SUSHI_BAR.transfer(DEV_FUND, SUSHI_BAR.balanceOf(address(this)));
+        rewardAmount = rewardAmount.sub(devAmt);
+
+        SUSHI.transfer(address(SUSHI_WETH_PAIR), rewardAmount);
+        (uint sushiReserve, uint wethReserve,) = SUSHI_WETH_PAIR.getReserves();
         uint amountOutput = UniswapV2Library.getAmountOut(rewardAmount, sushiReserve, wethReserve);
-        sushiWethPair.swap(uint(0), amountOutput, to, new bytes(0));
+        SUSHI_WETH_PAIR.swap(uint(0), amountOutput, to, new bytes(0));
         return amountOutput;
     }
 
     // Pool info
     function lockableToken(uint256 poolId) external view override returns (IERC20) {
-        (IERC20 lpToken,,,) = sushiMasterChef.poolInfo(poolId);
+        (IERC20 lpToken,,,) = SUSHI_MASTER_CHEF.poolInfo(poolId);
         return lpToken;
     }
 
     function lockedAmount(address user, uint256 poolId) external view override returns (uint256) {
-        (uint256 amount,) = sushiMasterChef.userInfo(poolId, user);
+        (uint256 amount,) = SUSHI_MASTER_CHEF.userInfo(poolId, user);
         return amount;
     }
 
     function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
-        return sushiMasterChef.pendingSushi(victimPoolId, MASTER_VAMPIRE);
+        return SUSHI_MASTER_CHEF.pendingSushi(victimPoolId, MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
     function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
-        adapter.lockableToken(poolId).approve(address(sushiMasterChef), uint256(-1));
-        sushiMasterChef.deposit(poolId, amount);
+        adapter.lockableToken(poolId).approve(address(SUSHI_MASTER_CHEF), uint256(-1));
+        SUSHI_MASTER_CHEF.deposit(poolId, amount);
     }
 
     function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
-        sushiMasterChef.withdraw(poolId, amount);
+        SUSHI_MASTER_CHEF.withdraw(poolId, amount);
     }
 
     function claimReward(address, uint256, uint256 victimPoolId) external override {
-        sushiMasterChef.deposit(victimPoolId, 0);
+        SUSHI_MASTER_CHEF.deposit(victimPoolId, 0);
     }
 
     function emergencyWithdraw(address, uint256 poolId) external override {
-        sushiMasterChef.emergencyWithdraw(poolId);
+        SUSHI_MASTER_CHEF.emergencyWithdraw(poolId);
     }
 
     // Service methods
     function poolAddress(uint256) external view override returns (address) {
-        return address(sushiMasterChef);
+        return address(SUSHI_MASTER_CHEF);
     }
 
     function rewardToWethPool() external view override returns (address) {
-        return address(sushiWethPair);
+        return address(SUSHI_WETH_PAIR);
     }
 
     function lpTokenValue(uint256 amount, IUniswapV2Pair lpToken) public view returns(uint256) {
         (uint256 token0Reserve, uint256 token1Reserve,) = lpToken.getReserves();
         address token0 = lpToken.token0();
         address token1 = lpToken.token1();
-        if(token0 == address(weth)) {
+        if(token0 == address(WETH)) {
             return amount.mul(token0Reserve).mul(2).div(lpToken.totalSupply());
         }
 
-        if(token1 == address(weth)) {
+        if(token1 == address(WETH)) {
             return amount.mul(token1Reserve).mul(2).div(lpToken.totalSupply());
         }
 
-        if(IUniswapV2Factory(lpToken.factory()).getPair(token0, address(weth)) != address(0)) {
-            (uint256 wethReserve, uint256 token0ToWethReserve) = UniswapV2Library.getReserves(lpToken.factory(), address(weth), token0);
+        if(IUniswapV2Factory(lpToken.factory()).getPair(token0, address(WETH)) != address(0)) {
+            (uint256 wethReserve, uint256 token0ToWethReserve) = UniswapV2Library.getReserves(lpToken.factory(), address(WETH), token0);
             uint256 tmp = amount.mul(token0Reserve).mul(wethReserve).mul(2);
             return tmp.div(token0ToWethReserve).div(lpToken.totalSupply());
         }
 
         require(
-            IUniswapV2Factory(lpToken.factory()).getPair(token1, address(weth)) != address(0),
-            "Neither token0-weth nor token1-weth pair exists");
-        (uint256 wethReserve, uint256 token1ToWethReserve) = UniswapV2Library.getReserves(lpToken.factory(), address(weth), token1);
+            IUniswapV2Factory(lpToken.factory()).getPair(token1, address(WETH)) != address(0),
+            "Neither token0-WETH nor token1-WETH pair exists");
+        (uint256 wethReserve, uint256 token1ToWethReserve) = UniswapV2Library.getReserves(lpToken.factory(), address(WETH), token1);
         uint256 tmp = amount.mul(token1Reserve).mul(wethReserve).mul(2);
         return tmp.div(token1ToWethReserve).div(lpToken.totalSupply());
     }
@@ -125,12 +138,12 @@ contract SushiAdapter is BaseAdapter {
 
     function normalizedAPY(uint256 poolId) external override view returns (uint256) {
         SushiAdapter adapter = SushiAdapter(this);
-        (,uint256 allocationPoints,,) = sushiMasterChef.poolInfo(poolId);
-        uint256 sushiPerBlock = sushiMasterChef.sushiPerBlock();
-        uint256 totalAllocPoint = sushiMasterChef.totalAllocPoint();
-        uint256 multiplier = sushiMasterChef.getMultiplier(block.number - 1, block.number);
+        (,uint256 allocationPoints,,) = SUSHI_MASTER_CHEF.poolInfo(poolId);
+        uint256 sushiPerBlock = SUSHI_MASTER_CHEF.sushiPerBlock();
+        uint256 totalAllocPoint = SUSHI_MASTER_CHEF.totalAllocPoint();
+        uint256 multiplier = SUSHI_MASTER_CHEF.getMultiplier(block.number - 1, block.number);
         uint256 rewardPerBlock = multiplier.mul(sushiPerBlock).mul(allocationPoints).div(totalAllocPoint);
-        (uint256 sushiReserve, uint256 wethReserve,) = sushiWethPair.getReserves();
+        (uint256 sushiReserve, uint256 wethReserve,) = SUSHI_WETH_PAIR.getReserves();
         uint256 valuePerYear = rewardPerBlock.mul(wethReserve).mul(BLOCKS_PER_YEAR).div(sushiReserve);
         return valuePerYear.mul(1 ether).div(adapter.totalLockedValue(poolId));
     }
