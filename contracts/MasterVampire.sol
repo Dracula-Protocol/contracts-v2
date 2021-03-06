@@ -3,6 +3,7 @@
 pragma solidity ^0.6.12;
 
 import "./IMasterVampire.sol";
+import "./IIBVEth.sol";
 
 contract MasterVampire is IMasterVampire, ChiGasSaver {
     //     (_                   _)
@@ -99,7 +100,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         poolRewardUpdater = _poolRewardUpdater;
     }
 
-    function pendingWeth(uint256 _pid, address _user) external view returns (uint256) {
+    function pendingWeth(uint256 _pid, address _user) public view returns (uint256) {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][_user];
         uint256 accWethPerShare = pool.accWethPerShare;
@@ -113,7 +114,16 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         return user.amount.mul(accWethPerShare).div(1e12).sub(user.rewardDebt);
     }
 
-    function pendingVictimReward(uint256 pid) external returns (uint256) {
+    event ETHValue(uint256 amount);
+
+    function pendingWethReal(uint256 _pid, address _user) external returns (uint256) {
+        uint256 ibETH = pendingWeth(_pid, _user);
+        uint256 ethVal = IIBVEth(IBVETH).ibETHValue(ibETH);
+        emit ETHValue(ethVal);
+        return ethVal;
+    }
+
+    function pendingVictimReward(uint256 pid) external view returns (uint256) {
         PoolInfo storage pool = poolInfo[pid];
         return pool.victim.pendingReward(pid, pool.victimPoolId);
     }
@@ -123,7 +133,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         return pool.wethAccumulator;
     }
 
-    function massUpdatePools() public {
+    function massUpdatePools() external {
         uint256 length = poolInfo.length;
         for (uint256 pid = 0; pid < length; ++pid) {
             updatePool(pid);
@@ -236,11 +246,13 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
             wethReward = wethReward.sub(wethDrainAmount);
         }
 
-        // Remainder of rewards go to users of the drained pool
-        (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("handleDrainedWETH(uint256)", wethReward));
+        // Remainder of rewards go to users of the drained pool as interest-bearing ETH
+        uint256 ibethBefore = IIBVEth(IBVETH).balance(address(this));
+        (bool success,) = IBVETH.delegatecall(abi.encodeWithSignature("handleDrainedWETH(uint256)", wethReward));
         require(success, "handleDrainedWETH(uint256 amount) delegatecall failed.");
+        uint256 ibethAfter = IIBVEth(IBVETH).balance(address(this));
 
-        pool.wethAccumulator = pool.wethAccumulator.add(wethReward);
+        pool.wethAccumulator = pool.wethAccumulator.add(ibethAfter.sub(ibethBefore));
     }
 
     /// This function allows owner to take unsupported tokens out of the contract.
