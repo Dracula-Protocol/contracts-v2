@@ -27,7 +27,7 @@ contract DRCRewardPool is RewardPool {
 
     /// @notice Withdraw specified amount
     /// @dev A configurable percentage of DRC is burnt on withdrawal
-    function withdraw(uint256 amount) internal override nonReentrant updateReward(msg.sender) {
+    function _withdraw(uint256 amount) internal override nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
         uint256 amount_send = amount;
 
