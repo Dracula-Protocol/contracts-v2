@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -24,13 +24,13 @@ contract MockAdapter is BaseAdapter {
     IMockMasterChef immutable mockChef;
     address immutable masterVampire;
 
-    constructor(address _masterVampire, address _mockChef) public {
+    constructor(address _masterVampire, address _mockChef) {
         masterVampire = _masterVampire;
         mockChef = IMockMasterChef(_mockChef);
     }
 
     // Victim info
-    function rewardToken(uint256) public view override returns (IERC20) {
+    function rewardToken(uint256) public pure override returns (IERC20) {
         return tusd;
     }
 
@@ -38,7 +38,7 @@ contract MockAdapter is BaseAdapter {
         return mockChef.poolLength();
     }
 
-    function sellableRewardAmount(uint256) external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external pure override returns (uint256) {
         return uint256(-1);
     }
 
@@ -71,10 +71,12 @@ contract MockAdapter is BaseAdapter {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(mockChef), uint256(-1));
         mockChef.deposit(poolId, amount);
+        return 0;
     }
 
     function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         mockChef.withdraw(poolId, amount);
+        return 0;
     }
 
     function claimReward(address, uint256, uint256 victimPoolId) external override {
@@ -90,19 +92,22 @@ contract MockAdapter is BaseAdapter {
         return address(this);
     }
 
-    function rewardToWethPool() external view override returns (address) {
+    function rewardToWethPool() external pure override returns (address) {
         return address(tusdWethPair);
     }
 
-    function lockedValue(address, uint256) external override view returns (uint256) {
+    function lockedValue(address, uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 
-    function totalLockedValue(uint256) external override view returns (uint256) {
+    function totalLockedValue(uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 
-    function normalizedAPY(uint256) external override view returns (uint256) {
+    function normalizedAPY(uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 }

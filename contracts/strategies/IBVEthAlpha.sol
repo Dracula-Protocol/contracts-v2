@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "../interfaces/Exponential.sol";
 import "../interfaces/CarefulMath.sol";
@@ -16,11 +16,13 @@ import "../IIBVEth.sol";
 * @title Alpha Homora ibETHv2 Strategy
 */
 contract IBVEthAlpha is IIBVEth, IMasterVampire, Exponential {
+    using SafeMath for uint256;
+
     IIBETH constant IBETH = IIBETH(0xeEa3311250FE4c3268F8E684f7C87A82fF183Ec1);
     IUniswapV2Pair immutable DRC_WETH_PAIR;
     IERC20 immutable dracula;
 
-    constructor(address _dracula) public {
+    constructor(address _dracula) {
         dracula = IERC20(_dracula);
         IUniswapV2Factory uniswapFactory = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
         DRC_WETH_PAIR = IUniswapV2Pair(uniswapFactory.getPair(address(WETH), _dracula));
@@ -55,7 +57,7 @@ contract IBVEthAlpha is IIBVEth, IMasterVampire, Exponential {
     function migrate() external override {
     }
 
-    function ibToken() external view override returns(IERC20) {
+    function ibToken() external pure override returns(IERC20) {
         return IERC20(address(IBETH));
     }
 
@@ -63,11 +65,11 @@ contract IBVEthAlpha is IIBVEth, IMasterVampire, Exponential {
         return IBETH.balanceOf(account);
     }
 
-    function ethBalance(address account) external override returns(uint256) {
+    function ethBalance(address) external pure override returns(uint256) {
         return 0;
     }
 
-    function ibETHValue(uint256 amount) external override returns (uint256) {
+    function ibETHValue(uint256) external pure override returns (uint256) {
         return 0;
     }
 }

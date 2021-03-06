@@ -19,19 +19,19 @@ __VampireAdapter__ is a helper library, that makes delegate calls from __Mater V
 ## Adapters
 There are several adapters to the most popular farming contracts. Every one of them is a separate contract that implements the __IVampireAdapter__ interface.
 
-__SushiAdapter__ [TBD](https://etherscan.io/address/TBD)
+__DODOAdapter__ [TBD](https://etherscan.io/address/TBD)
 
 __LuaAdapter__ [TBD](https://etherscan.io/address/TBD)
 
-__UniswapAdapter__ [TBD](https://etherscan.io/address/TBD)
-
 __PickleAdapter__ [TBD](https://etherscan.io/address/TBD)
 
-__YfvAdapter__ [TBD](https://etherscan.io/address/TBD)
+__StabilizeAdapter__ [TBD](https://etherscan.io/address/TBD)
 
-__DODOAdapter__ [TBD](https://etherscan.io/address/TBD)
+__SushiAdapter__ [TBD](https://etherscan.io/address/TBD)
 
-__SashimiAdapter__ [TBD](https://etherscan.io/address/TBD)
+__TruFiAdapter__ [TBD](https://etherscan.io/address/TBD)
+
+__yAxisAdapter__ [TBD](https://etherscan.io/address/TBD)
 
 
 # Local Development

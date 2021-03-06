@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../../interfaces/IUniswapV2Pair.sol";
@@ -17,7 +17,7 @@ contract YAxisAdapter is BaseAdapter {
     // token 1 - WETH
 
     // Victim info
-    function rewardToken(uint256) public view override returns (IERC20) {
+    function rewardToken(uint256) public pure override returns (IERC20) {
         return YAX;
     }
 
@@ -25,7 +25,7 @@ contract YAxisAdapter is BaseAdapter {
         return YAXIS_MASTER.poolLength();
     }
 
-    function sellableRewardAmount(uint256) external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external pure override returns (uint256) {
         return uint256(-1);
     }
 
@@ -58,10 +58,12 @@ contract YAxisAdapter is BaseAdapter {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(YAXIS_MASTER), uint256(-1));
         YAXIS_MASTER.deposit(poolId, amount);
+        return 0;
     }
 
     function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         YAXIS_MASTER.withdraw(poolId, amount);
+        return 0;
     }
 
     function claimReward(address, uint256, uint256 victimPoolId) external override {
@@ -73,23 +75,26 @@ contract YAxisAdapter is BaseAdapter {
     }
 
     // Service methods
-    function poolAddress(uint256) external view override returns (address) {
+    function poolAddress(uint256) external pure override returns (address) {
         return address(YAXIS_MASTER);
     }
 
-    function rewardToWethPool() external view override returns (address) {
+    function rewardToWethPool() external pure override returns (address) {
         return address(YAX_WETH_PAIR);
     }
 
-    function lockedValue(address, uint256) external override view returns (uint256) {
+    function lockedValue(address, uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 
-    function totalLockedValue(uint256) external override view returns (uint256) {
+    function totalLockedValue(uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 
-    function normalizedAPY(uint256) external override view returns (uint256) {
+    function normalizedAPY(uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 }

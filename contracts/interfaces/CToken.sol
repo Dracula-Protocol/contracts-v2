@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.6.12;
+pragma solidity >=0.7.6;
 
 interface ICToken {
     function transfer(address dst, uint amount) external returns (bool);

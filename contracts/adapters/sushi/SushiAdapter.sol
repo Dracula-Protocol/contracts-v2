@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -21,7 +21,6 @@ contract SushiAdapter is BaseAdapter {
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
     address constant DEV_FUND = 0xa896e4bd97a733F049b23d2AcEB091BcE01f298d;
     IERC20 constant SUSHI = IERC20(0x6B3595068778DD592e39A122f4f5a5cF09C90fE2);
-    IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     ISushiBar constant SUSHI_BAR = ISushiBar(0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272);
     IUniswapV2Pair constant SUSHI_WETH_PAIR = IUniswapV2Pair(0x795065dCc9f64b5614C407a6EFDC400DA6221FB0);
     uint256 constant BLOCKS_PER_YEAR = 2336000;
@@ -30,7 +29,7 @@ contract SushiAdapter is BaseAdapter {
     // token 1 - WETH
 
     // Victim info
-    function rewardToken(uint256) public view override returns (IERC20) {
+    function rewardToken(uint256) public pure override returns (IERC20) {
         return SUSHI;
     }
 
@@ -38,7 +37,7 @@ contract SushiAdapter is BaseAdapter {
         return SUSHI_MASTER_CHEF.poolLength();
     }
 
-    function sellableRewardAmount(uint256) external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external pure override returns (uint256) {
         return uint256(-1);
     }
 
@@ -76,10 +75,12 @@ contract SushiAdapter is BaseAdapter {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(SUSHI_MASTER_CHEF), uint256(-1));
         SUSHI_MASTER_CHEF.deposit(poolId, amount);
+        return 0;
     }
 
     function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         SUSHI_MASTER_CHEF.withdraw(poolId, amount);
+        return 0;
     }
 
     function claimReward(address, uint256, uint256 victimPoolId) external override {
@@ -91,38 +92,12 @@ contract SushiAdapter is BaseAdapter {
     }
 
     // Service methods
-    function poolAddress(uint256) external view override returns (address) {
+    function poolAddress(uint256) external pure override returns (address) {
         return address(SUSHI_MASTER_CHEF);
     }
 
-    function rewardToWethPool() external view override returns (address) {
+    function rewardToWethPool() external pure override returns (address) {
         return address(SUSHI_WETH_PAIR);
-    }
-
-    function lpTokenValue(uint256 amount, IUniswapV2Pair lpToken) public view returns(uint256) {
-        (uint256 token0Reserve, uint256 token1Reserve,) = lpToken.getReserves();
-        address token0 = lpToken.token0();
-        address token1 = lpToken.token1();
-        if(token0 == address(WETH)) {
-            return amount.mul(token0Reserve).mul(2).div(lpToken.totalSupply());
-        }
-
-        if(token1 == address(WETH)) {
-            return amount.mul(token1Reserve).mul(2).div(lpToken.totalSupply());
-        }
-
-        if(IUniswapV2Factory(lpToken.factory()).getPair(token0, address(WETH)) != address(0)) {
-            (uint256 wethReserve, uint256 token0ToWethReserve) = UniswapV2Library.getReserves(lpToken.factory(), address(WETH), token0);
-            uint256 tmp = amount.mul(token0Reserve).mul(wethReserve).mul(2);
-            return tmp.div(token0ToWethReserve).div(lpToken.totalSupply());
-        }
-
-        require(
-            IUniswapV2Factory(lpToken.factory()).getPair(token1, address(WETH)) != address(0),
-            "Neither token0-WETH nor token1-WETH pair exists");
-        (uint256 wethReserve, uint256 token1ToWethReserve) = UniswapV2Library.getReserves(lpToken.factory(), address(WETH), token1);
-        uint256 tmp = amount.mul(token1Reserve).mul(wethReserve).mul(2);
-        return tmp.div(token1ToWethReserve).div(lpToken.totalSupply());
     }
 
     function lockedValue(address user, uint256 poolId) external override view returns (uint256) {

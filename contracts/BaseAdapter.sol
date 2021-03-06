@@ -1,16 +1,46 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
-import "./interfaces/IUniswapV2Pair.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./interfaces/IUniswapV2Factory.sol";
 import "./libraries/UniswapV2Library.sol";
 import "./IVampireAdapter.sol";
 
 abstract contract BaseAdapter is IVampireAdapter {
+    using SafeMath for uint256;
 
-    IERC20 constant _WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IUniswapV2Factory constant PAIR_FACTORY = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
+
+    /**
+     * @notice Calculates the WETH value of an LP token
+     */
+    function lpTokenValue(uint256 amount, IUniswapV2Pair lpToken) public virtual override view returns(uint256) {
+        (uint256 token0Reserve, uint256 token1Reserve,) = lpToken.getReserves();
+        address token0 = lpToken.token0();
+        address token1 = lpToken.token1();
+        if (token0 == address(WETH)) {
+            return amount.mul(token0Reserve).mul(2).div(lpToken.totalSupply());
+        }
+
+        if (token1 == address(WETH)) {
+            return amount.mul(token1Reserve).mul(2).div(lpToken.totalSupply());
+        }
+
+        if (IUniswapV2Factory(lpToken.factory()).getPair(token0, address(WETH)) != address(0)) {
+            (uint256 wethReserve0, uint256 token0ToWethReserve0) = UniswapV2Library.getReserves(lpToken.factory(), address(WETH), token0);
+            uint256 tmp0 = amount.mul(token0Reserve).mul(wethReserve0).mul(2);
+            return tmp0.div(token0ToWethReserve0).div(lpToken.totalSupply());
+        }
+
+        require(
+            IUniswapV2Factory(lpToken.factory()).getPair(token1, address(WETH)) != address(0),
+            "Neither token0-weth nor token1-weth pair exists");
+        (uint256 wethReserve1, uint256 token1ToWethReserve1) = UniswapV2Library.getReserves(lpToken.factory(), address(WETH), token1);
+        uint256 tmp1 = amount.mul(token1Reserve).mul(wethReserve1).mul(2);
+        return tmp1.div(token1ToWethReserve1).div(lpToken.totalSupply());
+    }
 
     /**
      * @notice Calculates the WETH value for an amount of pool reward token
@@ -18,18 +48,18 @@ abstract contract BaseAdapter is IVampireAdapter {
     function rewardValue(uint256 poolId, uint256 amount) external virtual override view returns(uint256) {
         address token = address(rewardToken(poolId));
 
-        IUniswapV2Pair pair = IUniswapV2Pair(PAIR_FACTORY.getPair(address(token), address(_WETH)));
+        IUniswapV2Pair pair = IUniswapV2Pair(PAIR_FACTORY.getPair(address(token), address(WETH)));
         if (address(pair) != address(0)) {
-                (uint tokenReserve, uint wethReserve,) = pair.getReserves();
-                return UniswapV2Library.getAmountOut(amount, tokenReserve, wethReserve);
+                (uint tokenReserve0, uint wethReserve0,) = pair.getReserves();
+                return UniswapV2Library.getAmountOut(amount, tokenReserve0, wethReserve0);
         }
 
         require(
             address(pair) != address(0),
             "Neither token-weth nor weth-token pair exists");
-        pair = IUniswapV2Pair(PAIR_FACTORY.getPair(address(_WETH), address(token)));
-        (uint wethReserve, uint tokenReserve,) = pair.getReserves();
-        return UniswapV2Library.getAmountOut(amount, tokenReserve, wethReserve);
+        pair = IUniswapV2Pair(PAIR_FACTORY.getPair(address(WETH), address(token)));
+        (uint wethReserve1, uint tokenReserve1,) = pair.getReserves();
+        return UniswapV2Library.getAmountOut(amount, tokenReserve1, wethReserve1);
     }
 
     function rewardToken(uint256) public virtual override view returns (IERC20) {

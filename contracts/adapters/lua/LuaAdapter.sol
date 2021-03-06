@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../../interfaces/IUniswapV2Pair.sol";
@@ -11,22 +11,22 @@ import "../../BaseAdapter.sol";
 import "./ILuaMasterFarmer.sol";
 
 contract LuaAdapter is BaseAdapter {
-    ILuaMasterFarmer constant luaMasterFarmer = ILuaMasterFarmer(0xb67D7a6644d9E191Cac4DA2B88D6817351C7fF62);
+    ILuaMasterFarmer constant LUA_MASTER_FARMER = ILuaMasterFarmer(0xb67D7a6644d9E191Cac4DA2B88D6817351C7fF62);
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
     IUniswapV2Router02 constant router = IUniswapV2Router02(0x1d5C6F1607A171Ad52EFB270121331b3039dD83e);
     IERC20 constant lua = IERC20(0xB1f66997A5760428D3a87D68b90BfE0aE64121cC);
     IERC20 constant weth = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     // Victim info
-    function rewardToken(uint256) public override view returns (IERC20) {
+    function rewardToken(uint256) public override pure returns (IERC20) {
         return lua;
     }
 
     function poolCount() external override view returns (uint256) {
-        return luaMasterFarmer.poolLength();
+        return LUA_MASTER_FARMER.poolLength();
     }
 
-    function sellableRewardAmount(uint256) external override view returns (uint256) {
+    function sellableRewardAmount(uint256) external override pure returns (uint256) {
         return uint256(-1);
     }
 
@@ -53,7 +53,7 @@ contract LuaAdapter is BaseAdapter {
         view
         returns (IERC20)
     {
-        (IERC20 lpToken, , , ) = luaMasterFarmer.poolInfo(poolId);
+        (IERC20 lpToken, , , ) = LUA_MASTER_FARMER.poolInfo(poolId);
         return lpToken;
     }
 
@@ -63,12 +63,12 @@ contract LuaAdapter is BaseAdapter {
         view
         returns (uint256)
     {
-        (uint256 amount, , ) = luaMasterFarmer.userInfo(poolId, user);
+        (uint256 amount, , ) = LUA_MASTER_FARMER.userInfo(poolId, user);
         return amount;
     }
 
     function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
-        return luaMasterFarmer.pendingReward(victimPoolId, MASTER_VAMPIRE);
+        return LUA_MASTER_FARMER.pendingReward(victimPoolId, MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
@@ -78,8 +78,9 @@ contract LuaAdapter is BaseAdapter {
         uint256 amount
     ) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
-        adapter.lockableToken(poolId).approve(address(luaMasterFarmer), uint256(-1));
-        luaMasterFarmer.deposit(poolId, amount);
+        adapter.lockableToken(poolId).approve(address(LUA_MASTER_FARMER), uint256(-1));
+        LUA_MASTER_FARMER.deposit(poolId, amount);
+        return 0;
     }
 
     function withdraw(
@@ -87,35 +88,39 @@ contract LuaAdapter is BaseAdapter {
         uint256 poolId,
         uint256 amount
     ) external override returns (uint256) {
-        luaMasterFarmer.withdraw(poolId, amount);
+        LUA_MASTER_FARMER.withdraw(poolId, amount);
+        return 0;
     }
 
     function claimReward(address, uint256, uint256 victimPoolId) external override {
-        luaMasterFarmer.claimReward(victimPoolId);
+        LUA_MASTER_FARMER.claimReward(victimPoolId);
     }
 
     function emergencyWithdraw(address, uint256 poolId) external override {
-        luaMasterFarmer.emergencyWithdraw(poolId);
+        LUA_MASTER_FARMER.emergencyWithdraw(poolId);
     }
 
     // Service methods
-    function poolAddress(uint256) external override view returns (address) {
-        return address(luaMasterFarmer);
+    function poolAddress(uint256) external override pure returns (address) {
+        return address(LUA_MASTER_FARMER);
     }
 
-    function rewardToWethPool() external override view returns (address) {
+    function rewardToWethPool() external override pure returns (address) {
         return address(0);
     }
 
-    function lockedValue(address, uint256) external override view returns (uint256) {
+    function lockedValue(address, uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 
-    function totalLockedValue(uint256) external override view returns (uint256) {
+    function totalLockedValue(uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 
-    function normalizedAPY(uint256) external override view returns (uint256) {
+    function normalizedAPY(uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 }

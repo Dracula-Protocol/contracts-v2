@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -47,7 +47,7 @@ contract DrainController is Ownable {
 
     mapping(address => bool) internal whitelistedNode;
 
-    constructor() public {
+    constructor() {
         whitelistedNode[msg.sender] = true;
     }
 

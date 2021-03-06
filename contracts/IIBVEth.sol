@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./interfaces/IWETH.sol";
 
 /**
 * @title Interface for interest bearing ETH strategies
 */
 abstract contract IIBVEth  {
+
+    IWETH constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+
     function handleDrainedWETH(uint256 amount) external virtual;
     function handleClaim(uint256 pending, uint8 flag) external virtual;
     function migrate() external virtual;

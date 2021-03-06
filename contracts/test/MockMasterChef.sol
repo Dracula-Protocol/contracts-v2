@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -63,7 +63,7 @@ contract MockMasterChef is Ownable, ReentrancyGuard {
         uint256 tokenPerBlock_,
         uint256 startBlock_,
         uint256 bonusEndBlock_
-    ) public {
+    ) {
         token = token_;
         rewardUpdater = _msgSender();
         tokenPerBlock = tokenPerBlock_;

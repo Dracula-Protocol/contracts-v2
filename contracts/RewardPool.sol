@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
@@ -49,7 +49,7 @@ contract RewardPool is IRewardSupplier, ReentrancyGuard {
         address rewardToken_,
         address stakingToken_,
         uint256 rewardsDuration_,
-        address rewardSupplier_) public
+        address rewardSupplier_)
         IRewardSupplier(rewardSupplier_)
     {
         rewardToken = IERC20(rewardToken_);
