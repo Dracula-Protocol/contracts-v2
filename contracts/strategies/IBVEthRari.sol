@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "../interfaces/IRariFundManager.sol";
 import "../interfaces/IWETH.sol";
@@ -13,11 +13,13 @@ import "../IIBVEth.sol";
 * @title Rari Capital ETH Strategy
 */
 contract IBVEthRari is IIBVEth, IMasterVampire {
+    using SafeMath for uint256;
+
     IRariFundManager constant FUND_MANAGER = IRariFundManager(0xD6e194aF3d9674b62D1b30Ec676030C23961275e);
     IUniswapV2Pair immutable DRC_WETH_PAIR;
     IERC20 immutable dracula;
 
-    constructor(address _dracula) public {
+    constructor(address _dracula) {
         dracula = IERC20(_dracula);
         IUniswapV2Factory uniswapFactory = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
         DRC_WETH_PAIR = IUniswapV2Pair(uniswapFactory.getPair(address(WETH), _dracula));

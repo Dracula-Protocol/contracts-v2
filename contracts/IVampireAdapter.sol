@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./interfaces/IUniswapV2Pair.sol";
 
 interface IVampireAdapter {
     // Victim info
@@ -31,6 +32,7 @@ interface IVampireAdapter {
     function rewardToWethPool() external view returns (address);
 
     // Governance info methods
+    function lpTokenValue(uint256 amount, IUniswapV2Pair lpToken) external view returns(uint256);
     function lockedValue(address user, uint256 poolId) external view returns (uint256);
     function totalLockedValue(uint256 poolId) external view returns (uint256);
     function normalizedAPY(uint256 poolId) external view returns (uint256);

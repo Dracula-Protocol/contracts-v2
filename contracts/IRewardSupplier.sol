@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 abstract contract IRewardSupplier is Ownable {
     mapping(address => bool) public suppliers;
 
-    constructor(address supplier) public {
+    constructor(address supplier) {
         suppliers[supplier] = true;
     }
 

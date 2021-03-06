@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.6.12;
+pragma solidity ^0.7.6;
 
 import "./IMasterVampire.sol";
 import "./IIBVEth.sol";
 
 contract MasterVampire is IMasterVampire, ChiGasSaver {
+    using SafeMath for uint256;
+    using SafeERC20 for IERC20;
+    using VampireAdapter for Victim;
     //     (_                   _)
     //      /\                 /\
     //     / \'._   (\_/)   _.'/ \
@@ -17,6 +20,8 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
+
+    IWETH constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
 
     modifier onlyDev() {
         require(devAddress == msg.sender, "not dev");
@@ -32,7 +37,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         address _drainAddress,
         address _drainController,
         address _IBVETH
-    ) public {
+    ) {
         drainAddress = _drainAddress;
         drainController = _drainController;
         devAddress = msg.sender;

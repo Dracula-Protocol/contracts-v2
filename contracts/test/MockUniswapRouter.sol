@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -40,7 +40,7 @@ contract MockUniswapRouter is IUniswapRouter {
 
     IERC20 univ2LpToken;
 
-    constructor(IERC20 _univ2LpToken) public {
+    constructor(IERC20 _univ2LpToken) {
         univ2LpToken = _univ2LpToken;
     }
 

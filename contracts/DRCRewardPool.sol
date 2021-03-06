@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "./DraculaToken.sol";
 import "./RewardPool.sol";
@@ -8,6 +8,7 @@ import "./RewardPool.sol";
 /// @title Stake DRC and earn WETH for rewards
 contract DRCRewardPool is RewardPool {
     using SafeMath for uint256;
+    using SafeERC20 for IERC20;
 
     uint256 public burnRate = 10; // default 1%
 
@@ -15,7 +16,7 @@ contract DRCRewardPool is RewardPool {
         address rewardToken_,
         address stakingToken_,
         uint256 rewardsDuration_,
-        address rewardSupplier_) public
+        address rewardSupplier_)
         RewardPool(rewardToken_, stakingToken_, rewardsDuration_, rewardSupplier_)
     {
     }

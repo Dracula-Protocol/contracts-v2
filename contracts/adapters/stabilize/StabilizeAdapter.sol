@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -15,14 +15,13 @@ contract StabilizeAdapter is BaseAdapter {
     IOperator constant OPERATOR = IOperator(0xEe9156C93ebB836513968F92B4A67721f3cEa08a);
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
     IERC20 constant STBZ = IERC20(0xB987D48Ed8f2C468D52D6405624EADBa5e76d723);
-    IERC20 constant WETH = IERC20(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
     IUniswapV2Pair constant STBZ_WETH_PAIR = IUniswapV2Pair(0xDB28312a8d26D59978D9B86cA185707B1A26725b);
     uint256 constant BLOCKS_PER_YEAR = 2336000;
     // token 0 - stbz
     // token 1 - weth
 
     // Victim info
-    function rewardToken(uint256) public view override returns (IERC20) {
+    function rewardToken(uint256) public pure override returns (IERC20) {
         return STBZ;
     }
 
@@ -30,7 +29,7 @@ contract StabilizeAdapter is BaseAdapter {
         return OPERATOR.poolLength();
     }
 
-    function sellableRewardAmount(uint256) external view override returns (uint256) {
+    function sellableRewardAmount(uint256) external pure override returns (uint256) {
         return uint256(-1);
     }
 
@@ -63,53 +62,29 @@ contract StabilizeAdapter is BaseAdapter {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
         adapter.lockableToken(poolId).approve(address(OPERATOR), uint256(-1));
         OPERATOR.deposit(poolId, amount);
+        return 0;
     }
 
     function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
         OPERATOR.withdraw(poolId, amount);
+        return 0;
     }
 
     function claimReward(address, uint256, uint256 victimPoolId) external override {
         OPERATOR.getReward(victimPoolId);
     }
 
-    function emergencyWithdraw(address, uint256) external override {
+    function emergencyWithdraw(address, uint256) external pure override {
         require(false, "not implemented");
     }
 
     // Service methods
-    function poolAddress(uint256) external view override returns (address) {
+    function poolAddress(uint256) external pure override returns (address) {
         return address(OPERATOR);
     }
 
-    function rewardToWethPool() external view override returns (address) {
+    function rewardToWethPool() external pure override returns (address) {
         return address(STBZ_WETH_PAIR);
-    }
-
-    function lpTokenValue(uint256 amount, IUniswapV2Pair lpToken) public view returns(uint256) {
-        (uint256 token0Reserve, uint256 token1Reserve,) = lpToken.getReserves();
-        address token0 = lpToken.token0();
-        address token1 = lpToken.token1();
-        if (token0 == address(WETH)) {
-            return amount.mul(token0Reserve).mul(2).div(lpToken.totalSupply());
-        }
-
-        if (token1 == address(WETH)) {
-            return amount.mul(token1Reserve).mul(2).div(lpToken.totalSupply());
-        }
-
-        if (IUniswapV2Factory(lpToken.factory()).getPair(token0, address(WETH)) != address(0)) {
-            (uint256 wethReserve, uint256 token0ToWethReserve) = UniswapV2Library.getReserves(lpToken.factory(), address(WETH), token0);
-            uint256 tmp = amount.mul(token0Reserve).mul(wethReserve).mul(2);
-            return tmp.div(token0ToWethReserve).div(lpToken.totalSupply());
-        }
-
-        require(
-            IUniswapV2Factory(lpToken.factory()).getPair(token1, address(WETH)) != address(0),
-            "Neither token0-weth nor token1-weth pair exists");
-        (uint256 wethReserve, uint256 token1ToWethReserve) = UniswapV2Library.getReserves(lpToken.factory(), address(WETH), token1);
-        uint256 tmp = amount.mul(token1Reserve).mul(wethReserve).mul(2);
-        return tmp.div(token1ToWethReserve).div(lpToken.totalSupply());
     }
 
     function lockedValue(address user, uint256 poolId) external override view returns (uint256) {
@@ -123,7 +98,8 @@ contract StabilizeAdapter is BaseAdapter {
         return adapter.lpTokenValue(lockedToken.balanceOf(adapter.poolAddress(poolId)), lockedToken);
     }
 
-    function normalizedAPY(uint256) external override view returns (uint256) {
+    function normalizedAPY(uint256) external override pure returns (uint256) {
         require(false, "not implemented");
+        return 0;
     }
 }

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -43,7 +43,7 @@ contract DrainDistributor is Ownable {
      * @param yflRewardPool_ address of the linkswap LP reward pool
      * @param drcRewardPool_ address of the DRC->ETH reward pool
      */
-    constructor(address uniRewardPool_, address yflRewardPool_, address drcRewardPool_) public {
+    constructor(address uniRewardPool_, address yflRewardPool_, address drcRewardPool_) {
         require((gasShare + devShare + uniRewardPoolShare + yflRewardPoolShare + drcRewardPoolShare) == 1000, "invalid distribution");
         uniRewardPool = uniRewardPool_;
         yflRewardPool = yflRewardPool_;

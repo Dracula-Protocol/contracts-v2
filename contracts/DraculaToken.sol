@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.12;
+pragma solidity ^0.7.6;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -22,7 +22,7 @@ contract DraculaToken is ERC20("Dracula Token", "DRC"), Ownable {
         emit Burned(msg.sender, _amount);
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 amount) internal override virtual { 
+    function _beforeTokenTransfer(address from, address to, uint256 amount) internal override virtual {
         _moveDelegates(_delegates[from], _delegates[to], amount);
     }
 
@@ -124,7 +124,7 @@ contract DraculaToken is ERC20("Dracula Token", "DRC"), Ownable {
         address signatory = ecrecover(digest, v, r, s);
         require(signatory != address(0), "DRC::delegateBySig: invalid signature");
         require(nonce == nonces[signatory]++, "DRC::delegateBySig: invalid nonce");
-        require(now <= expiry, "DRC::delegateBySig: signature expired");
+        require(block.timestamp <= expiry, "DRC::delegateBySig: signature expired");
         return _delegate(signatory, delegatee);
     }
 

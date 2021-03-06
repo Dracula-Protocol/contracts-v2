@@ -19,7 +19,7 @@ const CMC_API_KEY = `${process.env.CMC_API_KEY}`;
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.6.12",
+    version: "0.7.6",
     settings: {
       optimizer: {
         enabled: true,
