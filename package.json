@@ -1,21 +1,18 @@
 {
   "name": "dracula",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "Dracula Contracts and ABI",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "build": "npm run compile && npm run typechain",
-    "compile": "npx hardhat compile",
-    "typechain": "npx hardhat compile && npx hardhat typechain",
-    "test": "npx hardhat test",
-    "deploy:ganache": "npm run build && npx hardhat run --network ganache scripts/deploy.js",
-    "deploy:ganachelocal": "npm run build && npx hardhat run --network localhost scripts/deploy.js",
-    "deploy:testnet": "npm run build && npx hardhat run --network hardhat scripts/deploy.js",
-    "deploy": "npm run build && npx hardhat run --network mainnet scripts/deploy.js",
-    "verify:testnet": "npx hardhat verify --network kovan",
-    "verify": "npx hardhat verify --network mainnet"
+    "build": "hardhat compile",
+    "compile": "hardhat compile",
+    "coverage": "hardhat coverage --testfiles 'test/*.js'",
+    "test": "hardhat test",
+    "lint:contracts": "solhint contracts/**/*.sol",
+    "deploy:kovan": "hardhat deploy --network kovan --tags dracula --gasprice 1000000000",
+    "deploy:mainnet": "LIVE=true hardhat deploy --network mainnet --tags live",
+    "verify:testnet": "hardhat --network kovan etherscan-verify --api-key $ETHERSCAN_API_KEY",
+    "verify:mainnet": "hardhat --network mainnet etherscan-verify --api-key $ETHERSCAN_API_KEY"
   },
   "repository": {
     "type": "git",
@@ -25,16 +22,12 @@
     "url": "https://github.com/Dracula-Protocol/contracts-v2/issues"
   },
   "homepage": "https://github.com/Dracula-Protocol/contracts-v2#readme",
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "@openzeppelin/contracts": "3.4.0-solc-0.7"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-etherscan": "^2.1.1",
-    "@nomiclabs/hardhat-ganache": "*",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@typechain/ethers-v5": "^4.0.0",
     "@types/chai": "^4.2.15",
@@ -46,10 +39,15 @@
     "ethereumjs-util": "^7.0.9",
     "ethers": "^5.0.31",
     "hardhat": "^2.1.1",
+    "hardhat-deploy": "^0.7.0-beta.45",
+    "hardhat-deploy-ethers": "^0.3.0-beta.7",
     "hardhat-gas-reporter": "^1.0.4",
     "hardhat-typechain": "^0.3.5",
     "mocha": "^8.3.0",
+    "prettier": "^2.2.1",
     "solc": "0.7.6",
+    "solhint": "^3.3.3",
+    "solidity-coverage": "^0.7.14",
     "ts-generator": "*",
     "ts-node": "^9.1.1",
     "typechain": "^4.0.2",
