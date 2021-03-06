@@ -108,7 +108,7 @@ contract RewardPool is IRewardSupplier, ReentrancyGuard {
 
     /// @notice Withdraw specified amount and collect rewards
     function unstake(uint256 amount) external {
-        withdraw(amount);
+        _withdraw(amount);
         getReward();
     }
 
@@ -127,7 +127,7 @@ contract RewardPool is IRewardSupplier, ReentrancyGuard {
     }
 
     /// @notice Withdraw specified amount
-    function withdraw(uint256 amount) internal virtual nonReentrant updateReward(msg.sender) {
+    function _withdraw(uint256 amount) internal virtual nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
         uint256 amount_send = amount;
         totalStaked = totalStaked.sub(amount);
