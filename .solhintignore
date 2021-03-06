@@ -1,0 +1,4 @@
+node_modules/
+contracts/interfaces/
+contracts/libraries/
+contracts/test/
