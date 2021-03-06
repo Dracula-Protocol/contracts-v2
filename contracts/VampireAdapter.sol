@@ -53,10 +53,10 @@ library VampireAdapter {
         return abi.decode(result, (uint256));
     }
 
-    function pendingReward(Victim victim, uint256 poolId, uint256 victimPoolId) external returns (uint256) {
+    function pendingReward(Victim victim, uint256 poolId, uint256 victimPoolId) external view returns (uint256) {
         // note the impersonation
-        (bool success, bytes memory result) = address(victim).delegatecall(abi.encodeWithSignature("pendingReward(address,uint256,uint256)", address(victim), poolId, victimPoolId));
-        require(success, "pendingReward(address,uint256,uint256) delegatecall failed.");
+        (bool success, bytes memory result) = address(victim).staticcall(abi.encodeWithSignature("pendingReward(address,uint256,uint256)", address(victim), poolId, victimPoolId));
+        require(success, "pendingReward(address,uint256,uint256) staticcall failed.");
         return abi.decode(result, (uint256));
     }
 

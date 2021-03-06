@@ -32,7 +32,7 @@ abstract contract BaseAdapter is IVampireAdapter {
         return UniswapV2Library.getAmountOut(amount, tokenReserve, wethReserve);
     }
 
-    function rewardToken(uint256 poolId) public virtual override view returns (IERC20) {
+    function rewardToken(uint256) public virtual override view returns (IERC20) {
         return IERC20(0);
     }
 }
