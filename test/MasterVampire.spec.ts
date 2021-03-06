@@ -17,6 +17,7 @@ import DraculaToken from '../artifacts/contracts/DraculaToken.sol/DraculaToken.j
 import RewardPool from '../artifacts/contracts/RewardPool.sol/RewardPool.json';
 import DrainDistributor from '../artifacts/contracts/DrainDistributor.sol/DrainDistributor.json';
 import VampireAdapter from '../artifacts/contracts/VampireAdapter.sol/VampireAdapter.json';
+import IIBVEth from '../artifacts/contracts/IIBVEth.sol/IIBVEth.json';
 import IBVEthAlpha from '../artifacts/contracts/strategies/IBVEthAlpha.sol/IBVEthAlpha.json';
 import IBVEthRari from '../artifacts/contracts/strategies/IBVEthRari.sol/IBVEthRari.json';
 
@@ -71,7 +72,7 @@ describe('MasterVampire', () => {
 
     const draincontroller = await DC.deploy();
 
-    const ibveth = await deployContract(alice, IBVEthAlpha, [DRC]);
+    const ibveth = await deployContract(alice, IBVEthRari, [DRC]);
     const master_vampire = await MV.deploy(draindist.address, draincontroller.address, ibveth.address);
     await master_vampire.updateRewardUpdaterAddress(alice.address);
 
@@ -152,23 +153,36 @@ describe('MasterVampire', () => {
 
     await advanceBlocks(200);
     await draincontroller.whitelist(carol.address);
-    await draincontroller.connect(carol).optimalMassDrain();
+
+    const drainable = await draincontroller.isDrainable();
+    expect(drainable.length).to.gt(0);
+    await draincontroller.connect(carol).optimalMassDrain(drainable);
 
     // Withdrawing before cool off incurs penalty
     let alice_eth_balance_before = await alice.getBalance();
-    let pending_weth = await master_vampire.pendingWeth(0, alice.address);
+    //let pending_weth = await master_vampire.pendingWeth(0, alice.address);
+
+    let tx = await master_vampire.pendingWethReal(0, alice.address);
+    let tx_receipt = await tx.wait();
+
+    let pending_weth = tx_receipt.events[0].args.amount;
+    console.log("pending weth: ", utils.formatEther(pending_weth.toString()))
     await master_vampire.withdraw(0, utils.parseEther('1000'), 0);
-    expect(BigNumber.from(alice_eth_balance_before).sub(BigNumber.from(pending_weth))).to.lt(BigNumber.from(await alice.getBalance()).sub(BigNumber.from(pending_weth)));
+    expect(BigNumber.from(alice_eth_balance_before).sub(pending_weth)).to.lt(BigNumber.from(await alice.getBalance()).sub(pending_weth));
 
     // Withdrawing after cool off incurs NO penalty
     await lp.approve(master_vampire.address, utils.parseEther('1000'));
     await master_vampire.deposit(0, utils.parseEther('1000'), 0);
-    await advanceBlocks(2);
+    await advanceBlocks(5);
     await advanceBlockAndTime(current_block_time.add(duration.hours(24)).toNumber());
     alice_eth_balance_before = await alice.getBalance();
-    pending_weth = await master_vampire.pendingWeth(0, alice.address);
+    //pending_weth = await master_vampire.pendingWeth(0, alice.address);
+    tx = await master_vampire.pendingWethReal(0, alice.address);
+    tx_receipt = await tx.wait();
+    pending_weth = tx_receipt.events[0].args.amount;
+
     await master_vampire.withdraw(0, utils.parseEther('1000'), 0);
-    // Balance must be greater previous balance + pending reward - gas
+    // Balance must be greater than previous balance + pending reward - gas
     expect(await alice.getBalance()).to.gte(BigNumber.from(alice_eth_balance_before).add(BigNumber.from(pending_weth).div(2)));
   });
 
@@ -199,7 +213,11 @@ describe('MasterVampire', () => {
     console.log("               ETH Balance (Carol):", utils.formatEther(await carol.getBalance()).toString());
 
     await draincontroller.whitelist(carol.address);
-    await draincontroller.connect(carol).optimalMassDrain();
+
+    const drainable = await draincontroller.isDrainable();
+    expect(drainable.length).to.gt(0);
+    await draincontroller.connect(carol).optimalMassDrain(drainable);
+
     await draindist.setWETHThreshold(utils.parseEther('0.01'));
     await draindist.distribute();
 
@@ -207,7 +225,7 @@ describe('MasterVampire', () => {
 
     console.log("After Drain:");
     console.log("  IBETH Balance (MasterVampire): ", utils.formatEther(await ibeth.balanceOf(master_vampire.address)).toString());
-    console.log("  WETH Balance (MasterVampire): ", utils.formatEther(await weth.balanceOf(master_vampire.address)).toString());
+    //console.log("  WETH Balance (MasterVampire): ", utils.formatEther(await ibveth.ethBalance(master_vampire.address)).toString());
     console.log("  WETH Balance (DrainDistributor): ", utils.formatEther(await weth.balanceOf(draindist.address)).toString());
     console.log("  WETH Balance (DrainController): ", utils.formatEther(await weth.balanceOf(draincontroller.address)).toString());
     console.log("  WETH Balance (Dev): ", utils.formatEther(await weth.balanceOf(dev.address)).toString());
@@ -218,7 +236,11 @@ describe('MasterVampire', () => {
 
     console.log("  Victim Pool (0) Acc WETH: ", utils.formatEther((await master_vampire.poolAccWeth(0)).toString()));
     for (let b = 0; b < 10; b++) {
-      console.log("  Pending reward (alice): ", utils.formatEther((await master_vampire.pendingWeth(0, alice.address)).toString()));
+      console.log("  Pending IBEth reward (alice): ", utils.formatEther((await master_vampire.pendingWeth(0, alice.address)).toString()));
+      const tx = await master_vampire.pendingWethReal(0, alice.address);
+      const tx_receipt = await tx.wait();
+      let pending_weth = tx_receipt.events[0].args.amount;
+      console.log("  Pending WETH reward (alice): ", utils.formatEther(pending_weth.toString()))
       await advanceBlock();
     }
 
@@ -250,9 +272,9 @@ describe('MasterVampire', () => {
   }
 
   describe('mock adapter should work with mastervampire', () => {
-    it('alpha homora ibeth strategy', async () => {
+    /*it('alpha homora ibeth strategy', async () => {
       await runTestWithIBEthStrategy(IBVEthAlpha, IBETH);
-    });
+    });*/
     it('rari capital ibeth strategy', async () => {
       await runTestWithIBEthStrategy(IBVEthRari, REPT);
     });

@@ -54,4 +54,20 @@ contract IBVEthAlpha is IIBVEth, IMasterVampire, Exponential {
 
     function migrate() external override {
     }
+
+    function ibToken() external view override returns(IERC20) {
+        return IERC20(address(IBETH));
+    }
+
+    function balance(address account) external view override returns(uint256) {
+        return IBETH.balanceOf(account);
+    }
+
+    function ethBalance(address account) external override returns(uint256) {
+        return 0;
+    }
+
+    function ibETHValue(uint256 amount) external override returns (uint256) {
+        return 0;
+    }
 }

@@ -29,7 +29,13 @@ contract IBVEthRari is IIBVEth, IMasterVampire {
     }
 
     function handleClaim(uint256 pending, uint8 flag) external override {
+        // Convert REPT into ETH for withdrawal
+        pending = ibETHValue(pending);
+        uint256 _before = address(this).balance;
         FUND_MANAGER.withdraw(pending);
+        uint256 _after = address(this).balance;
+        // Ensure withdrawn amount is not slightly off the original pending value
+        pending = _after.sub(_before);
 
         if ((flag & 0x2) == 0) {
             _safeETHTransfer(msg.sender, pending);
@@ -48,5 +54,28 @@ contract IBVEthRari is IIBVEth, IMasterVampire {
     }
 
     function migrate() external override {
+    }
+
+    function ibToken() external view override returns(IERC20) {
+        return FUND_MANAGER.rariFundToken();
+    }
+
+    function balance(address account) external view override returns(uint256) {
+        return FUND_MANAGER.rariFundToken().balanceOf(account);
+    }
+
+    function ethBalance(address account) external override returns(uint256) {
+        return FUND_MANAGER.balanceOf(account);
+    }
+
+    function ibETHValue(uint256 amount) public override returns (uint256) {
+        IERC20 rariFundToken = FUND_MANAGER.rariFundToken();
+        uint256 reptTotalSupply = rariFundToken.totalSupply();
+        if (reptTotalSupply == 0) {
+            return 0;
+        }
+        uint256 fundBalance = FUND_MANAGER.getFundBalance();
+        uint256 accountBalance = amount.mul(fundBalance).div(reptTotalSupply);
+        return accountBalance;
     }
 }
