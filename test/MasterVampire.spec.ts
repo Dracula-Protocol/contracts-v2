@@ -18,7 +18,6 @@ import RewardPool from '../artifacts/contracts/RewardPool.sol/RewardPool.json';
 import DrainDistributor from '../artifacts/contracts/DrainDistributor.sol/DrainDistributor.json';
 import VampireAdapter from '../artifacts/contracts/VampireAdapter.sol/VampireAdapter.json';
 import IIBVEth from '../artifacts/contracts/IIBVEth.sol/IIBVEth.json';
-import IBVEthAlpha from '../artifacts/contracts/strategies/IBVEthAlpha.sol/IBVEthAlpha.json';
 import IBVEthRari from '../artifacts/contracts/strategies/IBVEthRari.sol/IBVEthRari.json';
 
 const loadFixture = waffle.createFixtureLoader(
@@ -272,9 +271,6 @@ describe('MasterVampire', () => {
   }
 
   describe('mock adapter should work with mastervampire', () => {
-    /*it('alpha homora ibeth strategy', async () => {
-      await runTestWithIBEthStrategy(IBVEthAlpha, IBETH);
-    });*/
     it('rari capital ibeth strategy', async () => {
       await runTestWithIBEthStrategy(IBVEthRari, REPT);
     });

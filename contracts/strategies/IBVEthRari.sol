@@ -36,7 +36,7 @@ contract IBVEthRari is IIBVEth, IMasterVampire {
         uint256 _before = address(this).balance;
         FUND_MANAGER.withdraw(pending);
         uint256 _after = address(this).balance;
-        // Ensure withdrawn amount is not slightly off the original pending value
+        // Ensure withdrawn amount is not slightly off the calculated pending value
         pending = _after.sub(_before);
 
         if ((flag & 0x2) == 0) {
