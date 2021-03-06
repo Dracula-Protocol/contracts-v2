@@ -13,6 +13,7 @@ import { advanceBlockTo, latestBlockTimestamp } from './utils';
 
 import DrainController from '../artifacts/contracts/DrainController.sol/DrainController.json';
 import VampireAdapter from '../artifacts/contracts/VampireAdapter.sol/VampireAdapter.json';
+import IBVEthRari from '../artifacts/contracts/strategies/IBVEthRari.sol/IBVEthRari.json';
 
 describe('DrainController', () => {
   const wallets = provider.getWallets();
@@ -39,8 +40,9 @@ describe('DrainController', () => {
       }
     });
 
+    const ibveth = await deployContract(alice, IBVEthRari, [drc.address]);
     const drainctrl = await DC.deploy();
-    const mv = await MV.deploy(drc.address, draindist.address);
+    const mv = await MV.deploy(drc.address, draindist.address, ibveth.address);
 
     return {drainctrl, mv};
   }
@@ -67,18 +69,18 @@ describe('DrainController', () => {
     it('can whitelist node', async () => {
       await drain_controller.setMasterVampire(master_vampire.address);
       await drain_controller.whitelist(node.address);
-      await drain_controller.connect(node).optimalMassDrain();
+      await drain_controller.connect(node).optimalMassDrain([]);
     });
     it('can unwhitelist node', async () => {
       await drain_controller.unWhitelist(node.address);
       await expect(
-        drain_controller.connect(node).optimalMassDrain()
+        drain_controller.connect(node).optimalMassDrain([])
       ).to.be.reverted;
     });
     it('is drainable', async () => {
       await drain_controller.setMasterVampire(master_vampire.address);
       const drainable = await drain_controller.isDrainable();
-      expect(drainable).to.eq(false);
+      expect(drainable.length).to.eq(0);
     });
     it('node gas fee is paid', async () => {
       await drain_controller.setMasterVampire(master_vampire.address);
@@ -88,7 +90,7 @@ describe('DrainController', () => {
         value: utils.parseEther('1')
       });
       expect(await provider.getBalance(drain_controller.address)).to.eq(utils.parseEther('1'));
-      await drain_controller.connect(node).optimalMassDrain();
+      await drain_controller.connect(node).optimalMassDrain([]);
       expect(await provider.getBalance(drain_controller.address)).to.lt(utils.parseEther('1'));
       expect(await node.getBalance()).to.gte(utils.parseEther('10000'));
     });
@@ -109,7 +111,7 @@ describe('DrainController', () => {
       //console.log((await chi.balanceOf(node.address)).toString())
       expect(await provider.getBalance(drain_controller.address)).to.eq(utils.parseEther('0.00001'));
       await chi.approve(drain_controller.address, constants.MaxUint256);
-      await drain_controller.connect(node).optimalMassDrain();
+      await drain_controller.connect(node).optimalMassDrain([]);
       //console.log((await chi.balanceOf(node.address)).toString())
       expect(await provider.getBalance(drain_controller.address)).to.lt(utils.parseEther('0.00001'));
       //expect(await node.getBalance()).to.gte(utils.parseEther('10000'));

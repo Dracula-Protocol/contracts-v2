@@ -19,7 +19,7 @@ interface IMasterVampire {
                                                           uint256 basePoolShares,
                                                           uint256 baseDeposits);
     function poolLength() external view returns (uint256);
-    function pendingVictimReward(uint256 pid) external returns (uint256);
+    function pendingVictimReward(uint256 pid) external view returns (uint256);
 }
 
 /**
@@ -136,34 +136,36 @@ contract DrainController is Ownable {
     /**
      * @notice Determines if drain can be performed
      */
-    function isDrainable() public returns(bool) {
+    function isDrainable() external view returns(int32[] memory) {
         uint256 poolLength = masterVampire.poolLength();
+        int32[] memory drainablePools = new int32[](poolLength);
         for (uint pid = 0; pid < poolLength; pid++) {
+            drainablePools[pid] = -1;
             (Victim victim, uint256 victimPoolId,,,,,) = masterVampire.poolInfo(pid);
             if (address(victim) != address(0)) {
                 uint256 pendingReward = masterVampire.pendingVictimReward(pid);
                 if (pendingReward > 0) {
                     if (victim.rewardValue(victimPoolId, pendingReward) >= wethThreshold) {
-                       return true;
+                        drainablePools[pid] = int32(pid);
                     }
                 }
             }
         }
-        return false;
+        return drainablePools;
     }
 
     /**
      * @notice Determines which pools can be drained based on value of rewards available
      */
-    function optimalMassDrain() external onlyWhitelister refundGasCost returns(uint32) {
-        uint256 poolLength = masterVampire.poolLength();
+    function optimalMassDrain(uint256[] memory pids) external onlyWhitelister refundGasCost returns(uint32) {
+        uint256 poolLength = pids.length;
         uint32 numDrained;
-        for (uint pid = 0; pid < poolLength; ++pid) {
+        for (uint i = 0; i < poolLength; ++i) {
+            uint pid = pids[i];
             (Victim victim, uint256 victimPoolId,,,,,) = masterVampire.poolInfo(pid);
             if (address(victim) != address(0)) {
                 uint256 pendingReward = victim.pendingReward(pid, victimPoolId);
                 if (pendingReward > 0) {
-                    //IERC20 rewardToken = victim.rewardToken(victimPoolId);
                     uint256 rewardValue_ = victim.rewardValue(victimPoolId, pendingReward);
                     if (rewardValue_ >= wethThreshold) {
                         try masterVampire.drain(pid) {
