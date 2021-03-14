@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./ERC20Mock.sol";
+import "./MockERC20.sol";
 
 // MockMasterChef is the master of mocks.
 contract MockMasterChef is Ownable, ReentrancyGuard {
@@ -29,7 +29,7 @@ contract MockMasterChef is Ownable, ReentrancyGuard {
     }
 
     // The TOKEN
-    ERC20Mock public token;
+    MockERC20 public token;
     // Reward updater
     address public rewardUpdater;
     // Block number when bonus Mock period ends.
@@ -59,7 +59,7 @@ contract MockMasterChef is Ownable, ReentrancyGuard {
     }
 
     constructor(
-        ERC20Mock token_,
+        MockERC20 token_,
         uint256 tokenPerBlock_,
         uint256 startBlock_,
         uint256 bonusEndBlock_
@@ -156,8 +156,7 @@ contract MockMasterChef is Ownable, ReentrancyGuard {
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
         uint256 tokenReward = multiplier.mul(tokenPerBlock).mul(pool.allocPoint).div(totalAllocPoint);
-        // Since we cannot mint existing tokens on forked mainnet, this contract gets funded by the reward token first
-        //token.mint(address(this), tokenReward);
+        token.mint(address(this), tokenReward);
         pool.accMockPerShare = pool.accMockPerShare.add(tokenReward.mul(1e12).div(lpSupply));
         pool.lastRewardBlock = block.number;
     }

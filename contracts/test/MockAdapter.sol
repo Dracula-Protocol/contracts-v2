@@ -6,32 +6,40 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "../interfaces/IUniswapV2Pair.sol";
-import "../interfaces/IUniswapV2Factory.sol";
 import "../libraries/UniswapV2Library.sol";
 import "../BaseAdapter.sol";
-import "./ERC20Mock.sol";
+import "./MockERC20.sol";
 import "./IMockMasterChef.sol";
-
-import "hardhat/console.sol";
+import "./MockUniswapRouter.sol";
 
 contract MockAdapter is BaseAdapter {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
-    IUniswapV2Pair constant tusdWethPair = IUniswapV2Pair(0xb4d0d9df2738abE81b87b66c80851292492D1404);
-    IERC20 constant tusd = IERC20(0x0000000000085d4780B73119b644AE5ecd22b376);
+    IUniswapV2Pair immutable rewardWethPair;
+    IERC20 immutable reward;
+    IUniswapRouter immutable router;
+    address immutable weth;
 
     IMockMasterChef immutable mockChef;
     address immutable masterVampire;
 
-    constructor(address _masterVampire, address _mockChef) {
+    constructor(address _masterVampire, address _mockChef, address _rewardToken, address _weth, address _router) {
         masterVampire = _masterVampire;
         mockChef = IMockMasterChef(_mockChef);
+        reward = IERC20(_rewardToken);
+        weth = _weth;
+        rewardWethPair = IUniswapV2Pair(address(0));
+        router = IUniswapRouter(_router);
+    }
+
+    function rewardValue(uint256 poolId, uint256 amount) external virtual override pure returns(uint256) {
+        return 1 ether;
     }
 
     // Victim info
-    function rewardToken(uint256) public pure override returns (IERC20) {
-        return tusd;
+    function rewardToken(uint256) public view override returns (IERC20) {
+        return reward;
     }
 
     function poolCount() external view override returns (uint256) {
@@ -44,11 +52,12 @@ contract MockAdapter is BaseAdapter {
 
     // Victim actions, requires impersonation via delegatecall
     function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
-        tusd.safeTransfer(address(tusdWethPair), rewardAmount);
-        (uint tusdReserve, uint wethReserve,) = tusdWethPair.getReserves();
-        uint amountOutput = UniswapV2Library.getAmountOut(rewardAmount, tusdReserve, wethReserve);
-        tusdWethPair.swap(uint(0), amountOutput, to, new bytes(0));
-        return amountOutput;
+        address[] memory path = new address[](2);
+        path[0] = address(reward);
+        path[1] = address(weth);
+        reward.approve(address(router), uint256(-1));
+        uint[] memory amounts = router.swapExactTokensForTokens(rewardAmount, 1, path, to, block.timestamp);
+        return amounts[amounts.length - 1];
     }
 
     // Pool info
@@ -92,8 +101,8 @@ contract MockAdapter is BaseAdapter {
         return address(this);
     }
 
-    function rewardToWethPool() external pure override returns (address) {
-        return address(tusdWethPair);
+    function rewardToWethPool() external view override returns (address) {
+        return address(rewardWethPair);
     }
 
     function lockedValue(address, uint256) external override pure returns (uint256) {

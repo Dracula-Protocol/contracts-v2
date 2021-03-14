@@ -15,26 +15,33 @@ import "../IIBVEth.sol";
 contract IBVEthRari is IIBVEth, IMasterVampire {
     using SafeMath for uint256;
 
-    IRariFundManager private constant FUND_MANAGER = IRariFundManager(0xD6e194aF3d9674b62D1b30Ec676030C23961275e);
+    IRariFundManager private immutable fundManager;
     IUniswapV2Pair private immutable drcWethPair;
     IERC20 private immutable dracula;
 
-    constructor(address _dracula) {
+    constructor(
+        address _dracula,
+        address _weth,
+        address _swapFactory,
+        address _fundManager)
+        IIBVEth(_weth)
+    {
         dracula = IERC20(_dracula);
-        IUniswapV2Factory uniswapFactory = IUniswapV2Factory(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f);
-        drcWethPair = IUniswapV2Pair(uniswapFactory.getPair(address(WETH), _dracula));
+        IUniswapV2Factory uniswapFactory = IUniswapV2Factory(_swapFactory);
+        drcWethPair = IUniswapV2Pair(uniswapFactory.getPair(_weth, _dracula));
+        fundManager = IRariFundManager(_fundManager);
     }
 
     function handleDrainedWETH(uint256 amount) external override {
         WETH.withdraw(amount);
-        FUND_MANAGER.deposit{value: amount}();
+        fundManager.deposit{value: amount}();
     }
 
     function handleClaim(uint256 pending, uint8 flag) external override {
         // Convert REPT into ETH for withdrawal
         pending = ibETHValue(pending);
         uint256 _before = address(this).balance;
-        FUND_MANAGER.withdraw(pending);
+        fundManager.withdraw(pending);
         uint256 _after = address(this).balance;
         // Ensure withdrawn amount is not slightly off the calculated pending value
         pending = _after.sub(_before);
@@ -60,24 +67,24 @@ contract IBVEthRari is IIBVEth, IMasterVampire {
     }
 
     function ibToken() external view override returns(IERC20) {
-        return FUND_MANAGER.rariFundToken();
+        return fundManager.rariFundToken();
     }
 
     function balance(address account) external view override returns(uint256) {
-        return FUND_MANAGER.rariFundToken().balanceOf(account);
+        return fundManager.rariFundToken().balanceOf(account);
     }
 
     function ethBalance(address account) external override returns(uint256) {
-        return FUND_MANAGER.balanceOf(account);
+        return fundManager.balanceOf(account);
     }
 
     function ibETHValue(uint256 amount) public override returns (uint256) {
-        IERC20 rariFundToken = FUND_MANAGER.rariFundToken();
+        IERC20 rariFundToken = fundManager.rariFundToken();
         uint256 reptTotalSupply = rariFundToken.totalSupply();
         if (reptTotalSupply == 0) {
             return 0;
         }
-        uint256 fundBalance = FUND_MANAGER.getFundBalance();
+        uint256 fundBalance = fundManager.getFundBalance();
         uint256 accountBalance = amount.mul(fundBalance).div(reptTotalSupply);
         return accountBalance;
     }
