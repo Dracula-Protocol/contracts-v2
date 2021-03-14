@@ -47,8 +47,11 @@ contract DrainController is Ownable {
 
     mapping(address => bool) internal whitelistedNode;
 
-    constructor() {
+    IChiToken public immutable chi;
+
+    constructor(address _chi) {
         whitelistedNode[msg.sender] = true;
+        chi = IChiToken(_chi);
     }
 
     /**
@@ -79,8 +82,9 @@ contract DrainController is Ownable {
 
         // Otherwise send what we can and try use chi to save some gas
         msg.sender.transfer(ethBalance);
+        usedGas = 85000 + gasStart - gasleft();
+        gasCost = usedGas * weiGasPrice;
         uint256 remainingGasSpent = (gasCost - ethBalance) / weiGasPrice;
-        IChiToken chi = IChiToken(0x0000000000004946c0e9F43F4Dee607b0eF1fA1c);
         chi.freeFromUpTo(msg.sender, (remainingGasSpent + 14154) / 41947);
     }
 

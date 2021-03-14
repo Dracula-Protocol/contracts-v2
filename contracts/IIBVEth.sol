@@ -9,7 +9,11 @@ import "./interfaces/IWETH.sol";
 */
 abstract contract IIBVEth  {
 
-    IWETH constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH immutable WETH;
+
+    constructor(address weth) {
+        WETH = IWETH(weth);
+    }
 
     function handleDrainedWETH(uint256 amount) external virtual;
     function handleClaim(uint256 pending, uint8 flag) external virtual;

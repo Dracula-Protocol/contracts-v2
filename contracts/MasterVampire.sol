@@ -21,7 +21,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
 
-    IWETH constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH immutable weth;
 
     modifier onlyDev() {
         require(devAddress == msg.sender, "not dev");
@@ -36,13 +36,15 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     constructor(
         address _drainAddress,
         address _drainController,
-        address _IBVETH
+        address _IBVETH,
+        address _weth
     ) {
         drainAddress = _drainAddress;
         drainController = _drainController;
         devAddress = msg.sender;
         poolRewardUpdater = msg.sender;
         IBVETH = _IBVETH;
+        weth = IWETH(_weth);
     }
 
     /**
@@ -54,7 +56,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         return poolInfo.length;
     }
 
-    function add(Victim _victim, uint256 _victimPoolId, uint8 flag) external onlyOwner saveGas(flag) {
+    function add(Victim _victim, uint256 _victimPoolId) external onlyOwner {
         poolInfo.push(PoolInfo({
             victim: _victim,
             victimPoolId: _victimPoolId,
@@ -247,7 +249,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         // Take a % of the drained reward to be redistributed to other contracts
         uint256 wethDrainAmount = wethReward.mul(wethDrainModifier).div(1000);
         if (wethDrainAmount > 0) {
-            WETH.transfer(drainAddress, wethDrainAmount);
+            weth.transfer(drainAddress, wethDrainAmount);
             wethReward = wethReward.sub(wethDrainAmount);
         }
 
@@ -292,11 +294,11 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     }
 
     function _safeWethTransfer(address to, uint256 amount) internal {
-        uint256 balance = WETH.balanceOf(address(this));
+        uint256 balance = weth.balanceOf(address(this));
         if (amount > balance) {
-            WETH.transfer(to, balance);
+            weth.transfer(to, balance);
         } else {
-            WETH.transfer(to, amount);
+            weth.transfer(to, amount);
         }
     }
 }

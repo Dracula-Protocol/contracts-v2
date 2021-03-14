@@ -4,8 +4,13 @@ pragma solidity ^0.7.6;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "../interfaces/IUniswapV2Pair.sol";
+import "../libraries/UniswapV2Library.sol";
+import "./MockUniswapFactory.sol";
 
 interface IUniswapRouter {
+    function factory() external view returns (address);
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -38,10 +43,10 @@ contract MockUniswapRouter is IUniswapRouter {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
-    IERC20 univ2LpToken;
+    address public immutable override factory;
 
-    constructor(IERC20 _univ2LpToken) {
-        univ2LpToken = _univ2LpToken;
+    constructor(address _factory) {
+        factory = _factory;
     }
 
     function swapExactTokensForTokens(
@@ -91,11 +96,16 @@ contract MockUniswapRouter is IUniswapRouter {
         address to,
         uint
     ) external override returns (uint amountA, uint amountB, uint liquidity) {
+        address pair = IUniswapV2Factory(factory).getPair(tokenA, tokenB);
+        if (pair == address(0)) {
+            pair = IUniswapV2Factory(factory).createPair(tokenA, tokenB);
+        }
         amountA = (amountADesired < amountBDesired) ? amountADesired : amountBDesired;
         amountB = amountA;
-        liquidity = amountA;
-        IERC20(tokenA).safeTransferFrom(msg.sender, address(this), amountA);
-        IERC20(tokenB).safeTransferFrom(msg.sender, address(this), amountB);
-        univ2LpToken.safeTransfer(to, liquidity); // 1A + 1B -> 1LP
+        require(pair != address(0), "pair doesn't exist");
+        IERC20(tokenA).safeTransferFrom(msg.sender, pair, amountA);
+        IERC20(tokenB).safeTransferFrom(msg.sender, pair, amountB);
+        liquidity = IUniswapV2Pair(pair).mint(to);
+
     }
 }

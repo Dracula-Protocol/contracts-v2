@@ -20,7 +20,7 @@ interface IDrainController {
 */
 contract DrainDistributor is Ownable {
     using SafeMath for uint256;
-    IWETH constant WETH = IWETH(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2);
+    IWETH immutable WETH;
 
     // Distribution
     // Percentages are using decimal base of 1000 ie: 10% = 100
@@ -31,7 +31,7 @@ contract DrainDistributor is Ownable {
     uint256 public drcRewardPoolShare = 300;
     uint256 public wethThreshold = 200000000000000000 wei;
 
-    address public devFund = 0xa896e4bd97a733F049b23d2AcEB091BcE01f298d;
+    address public devFund;
     address public uniRewardPool;
     address public yflRewardPool;
     address public drcRewardPool;
@@ -43,14 +43,16 @@ contract DrainDistributor is Ownable {
      * @param yflRewardPool_ address of the linkswap LP reward pool
      * @param drcRewardPool_ address of the DRC->ETH reward pool
      */
-    constructor(address uniRewardPool_, address yflRewardPool_, address drcRewardPool_) {
+    constructor(address weth_, address _devFund, address uniRewardPool_, address yflRewardPool_, address drcRewardPool_) {
         require((gasShare + devShare + uniRewardPoolShare + yflRewardPoolShare + drcRewardPoolShare) == 1000, "invalid distribution");
         uniRewardPool = uniRewardPool_;
         yflRewardPool = yflRewardPool_;
         drcRewardPool = drcRewardPool_;
-        WETH.approve(uniRewardPool, uint256(-1));
-        WETH.approve(yflRewardPool, uint256(-1));
-        WETH.approve(drcRewardPool, uint256(-1));
+        WETH = IWETH(weth_);
+        devFund = _devFund;
+        IWETH(weth_).approve(uniRewardPool, uint256(-1));
+        IWETH(weth_).approve(yflRewardPool, uint256(-1));
+        IWETH(weth_).approve(drcRewardPool, uint256(-1));
     }
 
     /**
@@ -62,6 +64,7 @@ contract DrainDistributor is Ownable {
      * @notice Distributes drained rewards
      */
     function distribute() external {
+        require(drainController != address(0), "drainctrl not set");
         require(WETH.balanceOf(address(this)) >= wethThreshold);
         uint256 drainWethBalance = WETH.balanceOf(address(this));
         uint256 gasAmt = drainWethBalance.mul(gasShare).div(1000);
