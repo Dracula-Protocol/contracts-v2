@@ -156,6 +156,13 @@ async function deployAdapters() {
   console.log(' TruFi deployed to: ', truefi.address);
   console.log(' TruFi deploy hash: ', truefi.deployTransaction.hash);
 
+  const Mirror = await ethers.getContractFactory("MirrorAdapter");
+  const mirror = await Mirror.deploy();
+  await mirror.deployed();
+
+  console.log(' Mirror deployed to: ', mirror.address);
+  console.log(' Mirror deploy hash: ', mirror.deployTransaction.hash);
+
   const YAX = await ethers.getContractFactory("YAxisAdapter");
   const yax = await YAX.deploy();
   await yax.deployed();
@@ -206,7 +213,7 @@ async function main() {
     stabilizePIDs,
     yaxisPIDs } = require('./pools');
 
-  const {dodo, pickle, stabilize, sushi, truefi, yax} = await deployAdapters();
+  const {dodo, pickle, stabilize, sushi, truefi, mirror, yax} = await deployAdapters();
   await initVictimPools(master_vampire, dodoPIDs, dodo.address, 'DODO');
   await initVictimPools(master_vampire, picklePIDs, pickle.address, 'Pickle');
   await initVictimPools(master_vampire, sushiPIDs, sushi.address, 'Sushi');
