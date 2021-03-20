@@ -25,10 +25,10 @@ contract DrainDistributor is Ownable {
     // Distribution
     // Percentages are using decimal base of 1000 ie: 10% = 100
     uint256 public gasShare = 100;
-    uint256 public devShare = 200;
+    uint256 public devShare = 250;
     uint256 public uniRewardPoolShare = 200;
     uint256 public yflRewardPoolShare = 200;
-    uint256 public drcRewardPoolShare = 300;
+    uint256 public drcRewardPoolShare = 250;
     uint256 public wethThreshold = 200000000000000000 wei;
 
     address public devFund;
