@@ -10,6 +10,7 @@ import 'hardhat-deploy-ethers';
 import "hardhat-typechain";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
+import "hardhat-abi-exporter";
 
 
 const INFURA_API_KEY = `${process.env.INFURA_API_KEY}`;
@@ -40,6 +41,9 @@ const config: HardhatUserConfig = {
     currency: 'USD',
     gasPrice: 60,
     coinmarketcap: `${CMC_API_KEY}`
+  },
+  abiExporter: {
+    clear: true,
   },
   networks: {
     hardhat: {
