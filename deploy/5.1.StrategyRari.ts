@@ -6,7 +6,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const chainId = await getChainId();
 
-  let { deployer, alice, DRC, WETH, uniFactory, rariFundManager } = await getNamedAccounts();
+  let { deployer, DRC, WETH, uniFactory, rariFundManager } = await getNamedAccounts();
 
   if (chainId != '1') {
     const drc = await deployments.get('DRC');
