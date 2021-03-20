@@ -11,6 +11,7 @@ import "../BaseAdapter.sol";
 import "./MockERC20.sol";
 import "./IMockMasterChef.sol";
 import "./MockUniswapRouter.sol";
+import "./MockUniswapFactory.sol";
 
 contract MockAdapter is BaseAdapter {
     using SafeMath for uint256;
@@ -19,22 +20,18 @@ contract MockAdapter is BaseAdapter {
     IUniswapV2Pair immutable rewardWethPair;
     IERC20 immutable reward;
     IUniswapRouter immutable router;
-    address immutable weth;
 
     IMockMasterChef immutable mockChef;
     address immutable masterVampire;
 
-    constructor(address _masterVampire, address _mockChef, address _rewardToken, address _weth, address _router) {
+    constructor(address _masterVampire, address _mockChef, address _rewardToken, address _weth, address _router, address _factory)
+        BaseAdapter(_weth, _factory)
+    {
         masterVampire = _masterVampire;
         mockChef = IMockMasterChef(_mockChef);
         reward = IERC20(_rewardToken);
-        weth = _weth;
-        rewardWethPair = IUniswapV2Pair(address(0));
+        rewardWethPair = IUniswapV2Pair(MockUniswapFactory(_factory).getPair(address(_rewardToken), address(_weth)));
         router = IUniswapRouter(_router);
-    }
-
-    function rewardValue(uint256 poolId, uint256 amount) external virtual override pure returns(uint256) {
-        return 1 ether;
     }
 
     // Victim info
