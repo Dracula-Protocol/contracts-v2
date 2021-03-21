@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig, task } from "hardhat/config";
 dotenv.config({ path: __dirname + '/.env' });
 
 import "@nomiclabs/hardhat-ethers";
@@ -11,6 +11,15 @@ import "hardhat-typechain";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-abi-exporter";
+
+task('contracts', 'Prints the contract addresses for a network', async (args, hre) => {
+  const {deployments} = hre;
+  // eslint-disable-next-line no-undef
+  const contracts = await deployments.all();
+  for (const contract in contracts) {
+      console.log(contract, contracts[contract].address);
+  }
+});
 
 
 const INFURA_API_KEY = `${process.env.INFURA_API_KEY}`;
@@ -48,12 +57,10 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       loggingEnabled: false,
-      /*forking: {
-        url: `https://mainnet.infura.io/v3/${INFURA_API_KEY}`
-      }*/
-    },
-    localhost: {
-      url: "http://127.0.0.1:8546"
+      forking: {
+        url: `https://mainnet.infura.io/v3/${INFURA_API_KEY}`,
+        enabled: false
+      }
     },
     kovan: {
       url: `https://kovan.infura.io/v3/${INFURA_API_KEY}`,
@@ -108,11 +115,11 @@ const config: HardhatUserConfig = {
     rariFundManager: {
       1: '0xD6e194aF3d9674b62D1b30Ec676030C23961275e'
     },
-    sushirouter: {
+    sushiRouter: {
       1: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
       42: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
     },
-    unirouter: {
+    uniRouter: {
       1: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
       42: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
     },
