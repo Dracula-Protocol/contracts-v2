@@ -67,7 +67,7 @@ contract MirrorAdapter is BaseAdapter {
     // Pool actions, requires impersonation via delegatecall
     function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
-        adapter.lockableToken.approve(address(pools[poolId]), uint256(-1));
+        adapter.lockableToken(poolId).approve(address(pools[poolId]), uint256(-1));
         ILPPool(adapter.poolAddress(poolId)).stake(amount);
         return 0;
     }
@@ -83,13 +83,13 @@ contract MirrorAdapter is BaseAdapter {
         ILPPool(adapter.poolAddress(victimPoolId)).getReward();
     }
 
-    function emergencyWithdraw(address, uint256 poolId) external override {
+    function emergencyWithdraw(address, uint256) external pure override {
         require(false, "not implemented");
-        return 0;
+        return;
         }
 
     // Service methods
-    function poolAddress(uint256 poolId) external pure override returns (address) {
+    function poolAddress(uint256 poolId) external view override returns (address) {
         return address(pools[poolId]);
     }
 
