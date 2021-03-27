@@ -173,7 +173,7 @@ async function deployAdapters() {
   // TODO
   // Update MV address in all adapters
 
-  return {dodo, pickle, stabilize, sushi, truefi, yax};
+  return {dodo, pickle, stabilize, sushi, truefi, mirror, yax};
 }
 
 async function initVictimPools(master_vampire, pools, victim_address, victim_name) {
@@ -211,6 +211,7 @@ async function main() {
     sushiPIDs,
     luaPIDs,
     stabilizePIDs,
+    mirror,
     yaxisPIDs } = require('./pools');
 
   const {dodo, pickle, stabilize, sushi, truefi, mirror, yax} = await deployAdapters();
@@ -218,6 +219,7 @@ async function main() {
   await initVictimPools(master_vampire, picklePIDs, pickle.address, 'Pickle');
   await initVictimPools(master_vampire, sushiPIDs, sushi.address, 'Sushi');
   await initVictimPools(master_vampire, stabilizePIDs, sushi.address, 'Stabilize');
+  await initVictimPools(master_vampire, mirrorPIDs, mirror.address, 'mirror');
   await initVictimPools(master_vampire, yaxisPIDs, sushi.address, 'yAxis');
 }
 
