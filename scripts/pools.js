@@ -416,6 +416,58 @@ const stabilizePIDs = [
   },
 ]
 
+const mirrorPIDs = [
+  {
+    token: 'MIR-UST',
+    pid: 0,
+    lp: '0x87dA823B6fC8EB8575a235A824690fda94674c88'
+  },
+    token: 'UST-mAAPL',
+    pid: 1,
+    lp: '0xB022e08aDc8bA2dE6bA4fECb59C6D502f66e953B'
+  },
+    token: 'mGOOGL-UST',
+    pid: 2,
+    lp: '0x4b70ccD1Cf9905BE1FaEd025EADbD3Ab124efe9a'
+  },
+    token: 'mTSLA-UST',
+    pid: 3,
+    lp: '0x5233349957586A8207c52693A959483F9aeAA50C'
+  },
+    token: 'UST-mNFLX',
+    pid: 4,
+    lp: '0xC99A74145682C4b4A6e9fa55d559eb49A6884F75'
+  },
+    token: 'UST-mTWTR',
+    pid: 5,
+    lp: '0x34856be886A2dBa5F7c38c4df7FD86869aB08040'
+  },
+    token: 'mAMZN-UST',
+    pid: 6,
+    lp: '0x0Ae8cB1f57e3b1b7f4f5048743710084AA69E796'
+  },
+    token: 'mBABA-UST',
+    pid: 7,
+    lp: '0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363'
+  },
+    token: 'mIAU-UST',
+    pid: 8,
+    lp: '0xd7f97aa0317C08A1F5C2732e7894933f11724868'
+  },
+    token: 'mSLV-UST',
+    pid: 9,
+    lp: '0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe'
+  },
+    token: 'mUSO-UST',
+    pid: 10,
+    lp: '0x6Bd8Ca9D141aa95842b41e1431A244C309c9008C'
+  },
+    token: 'mVIXY-UST',
+    pid: 11,
+    lp: '0x6094367ea57ff4f545e2672e024393d82a1d3F28'
+  },
+]
+
 const yaxisPIDs = [
   {
     token: 'YAX-ETH',
@@ -431,5 +483,6 @@ module.exports = {
   sushiPIDs,
   luaPIDs,
   stabilizePIDs,
+  mirrorPIDs,
   yaxisPIDs
 }
