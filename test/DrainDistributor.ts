@@ -65,10 +65,10 @@ describe('DrainDistributor', () => {
     });
     it('can set distribution', async () => {
       expect(await drain_distributor.gasShare()).to.eq(100);
-      expect(await drain_distributor.devShare()).to.eq(200);
+      expect(await drain_distributor.devShare()).to.eq(250);
       expect(await drain_distributor.uniRewardPoolShare()).to.eq(200);
       expect(await drain_distributor.yflRewardPoolShare()).to.eq(200);
-      expect(await drain_distributor.drcRewardPoolShare()).to.eq(300);
+      expect(await drain_distributor.drcRewardPoolShare()).to.eq(250);
       await drain_distributor.changeDistribution(200, 200, 200, 200, 200);
       expect(await drain_distributor.gasShare()).to.eq(200);
       expect(await drain_distributor.devShare()).to.eq(200);
@@ -92,18 +92,18 @@ describe('DrainDistributor', () => {
       expect(await weth.balanceOf(drain_distributor.address)).to.eq(utils.parseEther('1'));
       await drain_distributor.distribute();
       expect(await carol.getBalance()).to.eq(utils.parseEther('10000.1'));
-      expect(await weth.balanceOf(bob.address)).to.eq(utils.parseEther('0.2'));
+      expect(await weth.balanceOf(bob.address)).to.eq(utils.parseEther('0.25'));
       expect(await weth.balanceOf(uniRewardPool.address)).to.eq(utils.parseEther('0.2'));
       expect(await weth.balanceOf(yflRewardPool.address)).to.eq(utils.parseEther('0.2'));
-      expect(await weth.balanceOf(drcRewardPool.address)).to.eq(utils.parseEther('0.3'));
+      expect(await weth.balanceOf(drcRewardPool.address)).to.eq(utils.parseEther('0.25'));
 
       await weth.transfer(drain_distributor.address, utils.parseEther('1'));
       await drain_distributor.distribute();
       expect(await carol.getBalance()).to.eq(utils.parseEther('10000.2'));
-      expect(await weth.balanceOf(bob.address)).to.eq(utils.parseEther('0.4'));
+      expect(await weth.balanceOf(bob.address)).to.eq(utils.parseEther('0.5'));
       expect(await weth.balanceOf(uniRewardPool.address)).to.eq(utils.parseEther('0.4'));
       expect(await weth.balanceOf(yflRewardPool.address)).to.eq(utils.parseEther('0.4'));
-      expect(await weth.balanceOf(drcRewardPool.address)).to.eq(utils.parseEther('0.6'));
+      expect(await weth.balanceOf(drcRewardPool.address)).to.eq(utils.parseEther('0.5'));
     });
   });
 });

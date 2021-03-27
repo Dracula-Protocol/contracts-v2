@@ -7,17 +7,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const chainId = await getChainId();
 
-  let { deployer, alice, DRC, WETH, DRCETHUNI, DRCETHYFL, treasury } = await getNamedAccounts();
+  let { deployer, WETH, treasury } = await getNamedAccounts();
 
   if (chainId != '1') {
-    const drc = await deployments.get('DRC');
-    DRC = drc.address;
     const weth = await deployments.get('WETH');
     WETH = weth.address;
-    const drcethuni = await deployments.get('DRCETHUNI');
-    DRCETHUNI = drcethuni.address;
-    const drcethyfl = await deployments.get('DRCETHYFL');
-    DRCETHYFL = drcethyfl.address;
   }
 
   const DrainController = await deployments.get('DrainController');

@@ -20,6 +20,11 @@ contract DODOAdapter is BaseAdapter {
     IERC20 constant DODO = IERC20(0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd);
     IERC20 constant USDT = IERC20(0xdAC17F958D2ee523a2206206994597C13D831ec7);
 
+    constructor(address _weth, address _factory)
+        BaseAdapter(_weth, _factory)
+    {
+    }
+
     // Victim info
     function rewardToken(uint256) public pure override returns (IERC20) {
         return DODO;

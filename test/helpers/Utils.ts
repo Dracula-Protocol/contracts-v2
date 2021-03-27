@@ -1,5 +1,5 @@
 import { providers, BigNumber } from 'ethers';
-import { network, ethers } from 'hardhat';
+import { network, ethers  } from 'hardhat';
 
 export async function evmSnapshot(): Promise<string> {
   const data = await network.provider.request({
@@ -23,12 +23,11 @@ export async function latestBlock() {
 
 // Returns the time of the last mined block in seconds
 export async function latestBlockTimestamp() {
-  const block_number = await ethers.provider.getBlockNumber();
-  const block = await ethers.provider.getBlock(block_number);
+  const block = await ethers.provider.getBlock('latest');
   if (block) {
     return BigNumber.from(block.timestamp);
   }
-  console.log('WARN: latestBlockTimestamp: failed to get block #', block_number.toString());
+  console.log('WARN: failed to get block');
   return BigNumber.from(0);
 };
 
