@@ -15,7 +15,9 @@ contract TruefiAdapter is BaseAdapter, IMasterVampire {
     IUniswapV2Pair constant TRU_WETH_PAIR = IUniswapV2Pair(0xfCEAAf9792139BF714a694f868A215493461446D);
     ITrueFarm[] farms;
 
-    constructor() {
+    constructor(address _weth, address _factory)
+        BaseAdapter(_weth, _factory)
+    {
         farms.push(ITrueFarm(0x8FD832757F58F71BAC53196270A4a55c8E1a29D9)); // TFI-LP farm
         farms.push(ITrueFarm(0xED45Cf4895C110f464cE857eBE5f270949eC2ff4)); // ETH/TRU farm
         farms.push(ITrueFarm(0xf8F14Fbb93fa0cEFe35Acf7e004fD4Ef92d8315a)); // TUSD/TFI-LP farm

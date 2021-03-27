@@ -16,6 +16,11 @@ contract YAxisAdapter is BaseAdapter {
     // token 0 - YAX
     // token 1 - WETH
 
+    constructor(address _weth, address _factory)
+        BaseAdapter(_weth, _factory)
+    {
+    }
+
     // Victim info
     function rewardToken(uint256) public pure override returns (IERC20) {
         return YAX;

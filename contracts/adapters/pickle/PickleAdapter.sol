@@ -16,6 +16,11 @@ contract PickleAdapter is BaseAdapter {
     // token 0 - PICKLE
     // token 1 - weth
 
+    constructor(address _weth, address _factory)
+        BaseAdapter(_weth, _factory)
+    {
+    }
+
     // Victim info
     function rewardToken(uint256) public pure override returns (IERC20) {
         return PICKLE;

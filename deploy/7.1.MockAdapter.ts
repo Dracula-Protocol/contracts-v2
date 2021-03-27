@@ -17,6 +17,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     WETH = weth.address;
     const Router = await deployments.get('MockUniswapRouter');
     unirouter = Router.address;
+    const MockUniswapFactory = await deployments.get('MockUniswapFactory');
 
     const MockChefLP = await deploy('MockChefLP', {
       from: deployer,
@@ -29,7 +30,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       from: deployer,
       log: true,
       contract: 'MockAdapter',
-      args: [MasterVampire.address, MockMasterChef.address, MockMasterChefToken.address, WETH, unirouter]
+      args: [MasterVampire.address, MockMasterChef.address, MockMasterChefToken.address, WETH, unirouter, MockUniswapFactory.address]
     });
 
     const mockMasterChef = await ethers.getContractAt('MockMasterChef', MockMasterChef.address, ethers.provider.getSigner(deployer));

@@ -85,13 +85,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       args: [MockUniswapFactory.address]
     });
 
-    /*await execute(
-      'MockUniswapFactory',
-      { from: deployer },
-      'createPair',
-      WETH.address, DRC.address
-    );*/
-
     await execute(
       'MockMasterChefToken',
       { from: deployer },
@@ -100,15 +93,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       utils.parseEther('5000')
     );
 
-
-    await execute(
-      'DRC',
-      { from: deployer },
-      'mint',
-      deployer,
-      utils.parseEther('5000')
-    );
-
+    // Get some WETH from ETH
     await execute(
       'WETH',
       { from: deployer, value: utils.parseEther('5000') },
@@ -121,6 +106,54 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       'transfer',
       UniRouter.address,
       utils.parseEther('2000')
+    );
+
+    // Add ChefToken liquidity
+    await execute(
+      'MockMasterChefToken',
+      { from: deployer },
+      'mint',
+      deployer,
+      utils.parseEther('1000')
+    );
+
+    await execute(
+      'MockMasterChefToken',
+      { from: deployer },
+      'approve',
+      UniRouter.address,
+      utils.parseEther('1000')
+    );
+    await execute(
+      'WETH',
+      { from: deployer },
+      'approve',
+      UniRouter.address,
+      utils.parseEther('1000')
+    );
+
+    await execute(
+      'MockUniswapRouter',
+      { from: deployer },
+      'addLiquidity',
+      WETH.address,
+      MockMasterChefToken.address,
+      utils.parseEther('1000'),
+      utils.parseEther('1000'),
+      0,
+      0,
+      deployer,
+      0
+    );
+
+
+    // Add DRC/WETH liquidity
+    await execute(
+      'DRC',
+      { from: deployer },
+      'mint',
+      deployer,
+      utils.parseEther('5000')
     );
 
     await execute(

@@ -1,3 +1,6 @@
+abi
+coverage
+coverage.json
 .env
 artifacts
 .vscode
