@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const chainId = await getChainId();
 
-  let { deployer, WETH, unirouter } = await getNamedAccounts();
+  let { deployer, WETH, uniRouter } = await getNamedAccounts();
 
   if (chainId != '1') {
     const MasterVampire = await deployments.get('MasterVampire');
@@ -16,7 +16,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const weth = await deployments.get('WETH');
     WETH = weth.address;
     const Router = await deployments.get('MockUniswapRouter');
-    unirouter = Router.address;
+    uniRouter = Router.address;
     const MockUniswapFactory = await deployments.get('MockUniswapFactory');
 
     const MockChefLP = await deploy('MockChefLP', {
@@ -30,7 +30,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       from: deployer,
       log: true,
       contract: 'MockAdapter',
-      args: [MasterVampire.address, MockMasterChef.address, MockMasterChefToken.address, WETH, unirouter, MockUniswapFactory.address]
+      args: [MasterVampire.address, MockMasterChef.address, MockMasterChefToken.address, WETH, uniRouter, MockUniswapFactory.address]
     });
 
     const mockMasterChef = await ethers.getContractAt('MockMasterChef', MockMasterChef.address, ethers.provider.getSigner(deployer));
