@@ -82,7 +82,10 @@ describe('DrainController', () => {
 
       expect(await provider.getBalance(drainController.address)).to.eq(utils.parseEther('0.00001'));
       await chi.connect(bob).approve(drainController.address, constants.MaxUint256);
-      await drainController.connect(bob).optimalMassDrain([]);
+      const drainable = await drainController.isDrainable();
+      // Filter pools that haven't hit drain threshold
+      const filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
+      await drainController.connect(bob).optimalMassDrain(filtered_drain);
       expect(await chi.balanceOf(bob.address)).to.lt(50);
       expect(await provider.getBalance(drainController.address)).to.lt(utils.parseEther('0.00001'));
       expect(await bob.getBalance()).to.gte(utils.parseEther('9999.1'));

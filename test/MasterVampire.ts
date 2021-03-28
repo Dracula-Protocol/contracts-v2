@@ -59,6 +59,8 @@ describe('MasterVampire', () => {
     mockChefAdapter = await ethers.getContractAt('MockAdapter', MockChefAdapter.address, deployer);
 
     await drainController.setMasterVampire(masterVampire.address);
+    await drainController.setWETHThreshold(utils.parseEther('0.01'));
+    await drainDistributor.setWETHThreshold(utils.parseEther('0.01'));
   });
 
   describe('setters & getters', () => {
@@ -105,12 +107,14 @@ describe('MasterVampire', () => {
     expect(user_info.coolOffTime).to.gte(current_block_time);
     expect(user_info.coolOffTime).to.gte(current_block_time.add(duration.hours(23)));
 
-    await advanceBlocks(200);
+    await advanceBlocks(50);
     await drainController.whitelist(carol.address);
 
     const drainable = await drainController.isDrainable();
-    expect(drainable.length).to.gt(0);
-    await drainController.connect(carol).optimalMassDrain(drainable);
+    // Filter pools that haven't hit drain threshold
+    const filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
+    expect(filtered_drain.length).to.be.gt(0);
+    await drainController.connect(carol).optimalMassDrain(filtered_drain);
 
     // Withdrawing before cool off incurs penalty
     let alice_eth_balance_before = await alice.getBalance();
@@ -118,6 +122,7 @@ describe('MasterVampire', () => {
     let tx_receipt = await tx.wait();
 
     let pending_weth = tx_receipt.events[0].args.amount;
+    //console.log("pending_weth: ", pending_weth);
     await masterVampire.connect(alice).withdraw(0, utils.parseEther('1000'), 0);
     expect(BigNumber.from(alice_eth_balance_before).sub(pending_weth)).to.lt(BigNumber.from(await alice.getBalance()).sub(pending_weth));
 
@@ -132,9 +137,11 @@ describe('MasterVampire', () => {
     tx_receipt = await tx.wait();
     pending_weth = tx_receipt.events[0].args.amount;
 
-    await masterVampire.connect(alice).withdraw(0, utils.parseEther('1000'), 0);
+    tx = await masterVampire.connect(alice).withdraw(0, utils.parseEther('1000'), 0);
+    tx_receipt = await tx.wait();
+    const gas = tx_receipt.gasUsed.mul(tx.gasPrice);
     // Balance must be greater than previous balance + pending reward - gas
-    expect(await alice.getBalance()).to.gte(BigNumber.from(alice_eth_balance_before).add(BigNumber.from(pending_weth).div(2)));
+    expect(await alice.getBalance()).to.be.gte(BigNumber.from(alice_eth_balance_before).add(BigNumber.from(pending_weth).sub(gas)));
   });
 
 
@@ -148,8 +155,8 @@ describe('MasterVampire', () => {
       // Advanced blocks
       await advanceBlocks(10);
 
-      // Expect to have 10 MOCK (10 blocks/1 per block)
-      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('10'));
+      // Expect to have 0.1 MOCK (0.01 per block)
+      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.1'));
       /*console.log("Pending reward (alice): ", utils.formatEther((await mockMasterChef.pendingMock(0, masterVampire.address)).toString()));
 
       console.log("Before Drain:");
@@ -160,10 +167,11 @@ describe('MasterVampire', () => {
       await drainController.whitelist(carol.address);
 
       const drainable = await drainController.isDrainable();
-      expect(drainable.length).to.gt(0);
-      await drainController.connect(carol).optimalMassDrain(drainable);
+      // Filter pools that haven't hit drain threshold
+      const filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
+      expect(filtered_drain.length).to.gt(0);
+      await drainController.connect(carol).optimalMassDrain(filtered_drain);
 
-      await drainDistributor.setWETHThreshold(utils.parseEther('0.01'));
       await drainDistributor.distribute();
 
       const StrategyRari = await deployments.get('StrategyRari');

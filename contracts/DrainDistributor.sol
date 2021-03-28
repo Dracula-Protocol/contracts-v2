@@ -65,7 +65,7 @@ contract DrainDistributor is Ownable {
      */
     function distribute() external {
         require(drainController != address(0), "drainctrl not set");
-        require(WETH.balanceOf(address(this)) >= wethThreshold);
+        require(WETH.balanceOf(address(this)) >= wethThreshold, "weth balance too low");
         uint256 drainWethBalance = WETH.balanceOf(address(this));
         uint256 gasAmt = drainWethBalance.mul(gasShare).div(1000);
         uint256 devAmt = drainWethBalance.mul(devShare).div(1000);
