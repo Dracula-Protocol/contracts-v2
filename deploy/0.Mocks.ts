@@ -68,7 +68,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       from: deployer,
       log: true,
       contract: 'MockMasterChef',
-      args: [MockMasterChefToken.address, utils.parseEther('1'), 0, 0]
+      args: [MockMasterChefToken.address, utils.parseEther('0.01'), 0, 0]
     });
 
     const mockMasterChef = await deployments.get('MockMasterChef');
@@ -96,7 +96,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     // Get some WETH from ETH
     await execute(
       'WETH',
-      { from: deployer, value: utils.parseEther('5000') },
+      { from: deployer, value: utils.parseEther('3') },
       'deposit'
     );
 
@@ -105,7 +105,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       { from: deployer },
       'transfer',
       UniRouter.address,
-      utils.parseEther('2000')
+      utils.parseEther('1')
     );
 
     // Add ChefToken liquidity
@@ -129,7 +129,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       { from: deployer },
       'approve',
       UniRouter.address,
-      utils.parseEther('1000')
+      utils.parseEther('1')
     );
 
     await execute(
@@ -138,8 +138,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       'addLiquidity',
       WETH.address,
       MockMasterChefToken.address,
-      utils.parseEther('1000'),
-      utils.parseEther('1000'),
+      utils.parseEther('1'),
+      utils.parseEther('1'),
       0,
       0,
       deployer,
@@ -168,7 +168,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       { from: deployer },
       'approve',
       UniRouter.address,
-      utils.parseEther('1000')
+      utils.parseEther('1')
     );
 
     await execute(
@@ -177,8 +177,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       'addLiquidity',
       WETH.address,
       DRC.address,
-      utils.parseEther('1000'),
-      utils.parseEther('1000'),
+      utils.parseEther('1'),
+      utils.parseEther('1'),
       0,
       0,
       deployer,

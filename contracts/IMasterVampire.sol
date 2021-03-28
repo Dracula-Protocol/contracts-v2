@@ -44,7 +44,7 @@ abstract contract IMasterVampire is Ownable, ReentrancyGuard {
     address public drainAddress;
     address public poolRewardUpdater;
     address public devAddress;
-    uint256 public distributionPeriod = 6519; // Block in 24 hour period
+    uint256 public distributionPeriod = 6519; // Blocks in 24 hour period
     uint256 public withdrawalPenalty = 10;
     uint256 public wethDrainModifier = 150;
 
