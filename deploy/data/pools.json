@@ -74,31 +74,63 @@
         "victimPools": [
             {
                 "victimPID": 0,
-                "token": "TOMOE-ETH"
+                "token": "TOMOE-ETH",
+                "lp": "0x7885e359a085372EbCF1ed6829402f149D02c600"
             },
             {
                 "victimPID": 1,
-                "token": "TOMOE-USDT"
+                "token": "TOMOE-USDT",
+                "lp": "0xbFFD9FF55685A3B6940C59DCDCc69b1737363BE0"
             },
             {
                 "victimPID": 2,
-                "token": "TOMOE-USDC"
+                "token": "TOMOE-USDC",
+                "lp": "0xB10C1840f562f0ac914DA2bad3290833C75fdddF"
             },
             {
                 "victimPID": 3,
-                "token": "LUA-USDC"
+                "token": "LUA-USDC",
+                "lp": "0x96258BB42779Bf300cf69c9B5bD2Ba5245CB4bc4"
             },
             {
-                "token": "TOMOE-LUA",
-                "victimPID": 4
+                "victimPID": 4,
+                "token": "LUA-TOMOE",
+                "lp": "0xE2f4cC0198150a7beA98E0a2A66fecafC30a5cD0"
             },
             {
-                "token": "LUA-FRONT",
-                "victimPID": 5
+                "victimPID": 6,
+                "token": "LUA-SUSHI",
+                "lp": "0xc9a72CC23f900b381FC6355afD8ee674B1F12DF6"
             },
             {
-                "token": "SUSHI-LUA",
-                "victimPID": 6
+                "victimPID": 8,
+                "token": "LUA-FTT",
+                "lp": "0x38F9307839A8E82b071EA6Fcbef029814Ed88fcb"
+            },
+            {
+                "victimPID": 9,
+                "token": "LUA-ETH",
+                "lp": "0x65FaBAF7e6c5380243E063D8559d84e589Db6438"
+            },
+            {
+                "victimPID": 12,
+                "token": "USDC-USDT",
+                "lp": "0xB3558F47Fa914F7ec1dA1a6F52aB41eE63E81301"
+            },
+            {
+                "victimPID": 14,
+                "token": "UNI-LUA",
+                "lp": "0xb195325642431b6aA6CD3C646591e7825BB3F90c"
+            },
+            {
+                "victimPID": 15,
+                "token": "ETH-USDT",
+                "lp": "0xd6bE3b9780572f0215aFB3e4d15751955503CeBE"
+            },
+            {
+                "victimPID": 16,
+                "token": "RAMP-USDT",
+                "lp": "0x627846F6131A4631ddF6BB53bd682cCF51f623b3"
             }
         ]
     },
