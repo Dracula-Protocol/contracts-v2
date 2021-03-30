@@ -5,67 +5,87 @@
             {
                 "token": "ETH-USDC dodo LP (ETH)",
                 "victimPID": 0,
-                "lp": ""
+                "lp": "0xc11eCCDee225d644f873776A68A02eCD8c015697"
             },
             {
                 "token": "ETH-USDC dodo LP (USDC)",
                 "victimPID": 1,
-                "lp": "0x6B2e59b8EbE61B5ee0EF30021b7740C63F597654"
+                "lp": "0x6a5Eb3555cBbD29016Ba6F6fFbCcEE28D57b2932"
             },
             {
                 "token": "LINK-USDC dodo LP (LINK) LP",
                 "victimPID": 2,
-                "lp": ""
+                "lp": "0xF03F3d2FbeE37F92eC91aE927a8019CACef4b738"
             },
             {
                 "token": "LINK-USDC dodo LP (USDC) LP",
                 "victimPID": 3,
-                "lp": ""
+                "lp": "0x0F769BC3EcbdA8e0d78280c88e31609E899A1F78"
             },
             {
                 "token": "SNX-USDC dodo LP (SNX) LP",
                 "victimPID": 6,
-                "lp": ""
+                "lp": "0x5bd1b7d3930d7a5e8fd5aeec6b931C822C8Be14E"
             },
             {
                 "token": "SNX-USDC dodo LP (USDC) LP",
                 "victimPID": 7,
-                "lp": ""
+                "lp": "0x1b06A22b20362b4115388Ab8ca3ED0972230d78A"
             },
             {
                 "token": "COMP-USDC dodo LP (COMP) LP",
                 "victimPID": 8,
-                "lp": ""
+                "lp": "0x53Cf4694B427FcEf9BB1F4438B68dF51A10228D0"
             },
             {
                 "token": "COMP-USDC dodo LP (USDC) LP",
                 "victimPID": 9,
-                "lp": ""
+                "lp": "0x51baf2656778ad6D67b19A419F91D38C3d0b87B6"
             },
             {
                 "token": "WBTC-USDC dodo LP (WBTC) LP",
                 "victimPID": 10,
-                "lp": ""
+                "lp": "0x2eC2A42901c761b295a9e6b95200cd0BdAa474Eb"
             },
             {
                 "token": "WBTC-USDC dodo LP (USDC) LP",
                 "victimPID": 11,
-                "lp": ""
+                "lp": "0x0cDb21e20597d753C90458f5eF2083f6695eb794"
             },
             {
                 "token": "YFI-USDC dodo LP (YFI) LP",
                 "victimPID": 12,
-                "lp": ""
+                "lp": "0xE2852C572FC42C9e2ec03197deFa42c647e89291"
             },
             {
                 "token": "YFI-USDC dodo LP (USDC) LP",
                 "victimPID": 13,
-                "lp": ""
+                "lp": "0xD9D0bd18DDfA753d0c88a060fFb60657bB0D7A07"
             },
             {
-                "token": "DODO",
+                "token": "DODO-USDT dodo LP (DODO) LP",
                 "victimPID": 14,
-                "lp": ""
+                "lp": "0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd"
+            },
+            {
+                "token": "USDT-USDC dodo LP (USDC) LP",
+                "victimPID": 15,
+                "lp": "0x05a54b466F01510E92c02d3a180BaE83A64BAab8"
+            },
+            {
+                "token": "USDT-USDC dodo LP (USDT) LP",
+                "victimPID": 16,
+                "lp": "0x50b11247bF14eE5116C855CDe9963fa376FceC86"
+            },
+            {
+                "token": "AAVE-USDC dodo LP (USDC) LP",
+                "victimPID": 17,
+                "lp": "0x5840A9E733960f591856A5D13F6366658535bBE5"
+            },
+            {
+                "token": "AAVE-USDC dodo LP (AAVE) LP",
+                "victimPID": 18,
+                "lp": "0x30aD5B6D4e531591591113B49eae2FafbC2236D5"
             }
         ]
     },
