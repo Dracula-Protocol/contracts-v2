@@ -87,8 +87,7 @@ contract MirrorAdapter is BaseAdapter {
 
     function emergencyWithdraw(address, uint256) external pure override {
         require(false, "not implemented");
-        return;
-        }
+    }
 
     // Service methods
     function poolAddress(uint256 poolId) external view override returns (address) {
