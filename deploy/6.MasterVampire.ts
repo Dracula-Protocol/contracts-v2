@@ -3,16 +3,21 @@ import { DeployFunction } from 'hardhat-deploy/types';
 import { ethers } from 'hardhat';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const { deployments, getNamedAccounts } = hre;
+  const { deployments, getNamedAccounts, getChainId } = hre;
   const { deploy } = deployments;
+  const chainId = await getChainId();
 
-  let { deployer } = await getNamedAccounts();
+  let { deployer, WETH } = await getNamedAccounts();
+
+  if (chainId != '1') {
+    const weth = await deployments.get('WETH');
+    WETH = weth.address;
+  }
 
   const VampireAdapter = await deployments.get('VampireAdapter');
   const DrainController = await deployments.get('DrainController');
   const DrainDistributor = await deployments.get('DrainDistributor');
   const StrategyRari = await deployments.get('StrategyRari');
-  const WETH = await deployments.get('WETH');
 
   const MasterVampire = await deploy('MasterVampire', {
     from: deployer,
@@ -21,7 +26,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     libraries: {
       VampireAdapter: VampireAdapter.address
     },
-    args: [DrainDistributor.address, DrainController.address, StrategyRari.address, WETH.address]
+    args: [DrainDistributor.address, DrainController.address, StrategyRari.address, WETH]
   });
 };
 
