@@ -368,17 +368,12 @@
         "deployedAdapter": "",
         "victimPools": [
             {
-                "token": "TFI-LP",
+                "token": "tfTUSD",
                 "victimPID": 0,
                 "lp": "0x8FD832757F58F71BAC53196270A4a55c8E1a29D9"
             },
             {
-                "token": "ETH/TRU",
-                "victimPID": 1,
-                "lp": "0xED45Cf4895C110f464cE857eBE5f270949eC2ff4"
-            },
-            {
-                "token": "TUSD/TFI-LP",
+                "token": "UNI TUSD/TFI",
                 "victimPID": 2,
                 "lp": "0xf8F14Fbb93fa0cEFe35Acf7e004fD4Ef92d8315a"
             }
