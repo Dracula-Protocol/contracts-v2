@@ -1,392 +1,398 @@
 {
-    "dodo": {
-        "deployedAdapter": "",
-        "victimPools": [
-            {
-                "token": "ETH-USDC dodo LP (ETH)",
-                "victimPID": 0,
-                "lp": "0xc11eCCDee225d644f873776A68A02eCD8c015697"
-            },
-            {
-                "token": "ETH-USDC dodo LP (USDC)",
-                "victimPID": 1,
-                "lp": "0x6a5Eb3555cBbD29016Ba6F6fFbCcEE28D57b2932"
-            },
-            {
-                "token": "WBTC-USDC dodo LP (WBTC) LP",
-                "victimPID": 10,
-                "lp": "0x2eC2A42901c761b295a9e6b95200cd0BdAa474Eb"
-            },
-            {
-                "token": "WBTC-USDC dodo LP (USDC) LP",
-                "victimPID": 11,
-                "lp": "0x0cDb21e20597d753C90458f5eF2083f6695eb794"
-            },
-            {
-                "token": "USDT-USDC dodo LP (USDC) LP",
-                "victimPID": 15,
-                "lp": "0x05a54b466F01510E92c02d3a180BaE83A64BAab8"
-            },
-            {
-                "token": "USDT-USDC dodo LP (USDT) LP",
-                "victimPID": 16,
-                "lp": "0x50b11247bF14eE5116C855CDe9963fa376FceC86"
-            }
-        ]
-    },
-    "lua": {
-        "deployedAdapter": "",
-        "victimPools": [
-            {
-                "victimPID": 0,
-                "token": "TOMOE-ETH",
-                "lp": "0x7885e359a085372EbCF1ed6829402f149D02c600"
-            },
-            {
-                "victimPID": 1,
-                "token": "TOMOE-USDT",
-                "lp": "0xbFFD9FF55685A3B6940C59DCDCc69b1737363BE0"
-            },
-            {
-                "victimPID": 2,
-                "token": "TOMOE-USDC",
-                "lp": "0xB10C1840f562f0ac914DA2bad3290833C75fdddF"
-            },
-            {
-                "victimPID": 3,
-                "token": "LUA-USDC",
-                "lp": "0x96258BB42779Bf300cf69c9B5bD2Ba5245CB4bc4"
-            },
-            {
-                "victimPID": 4,
-                "token": "LUA-TOMOE",
-                "lp": "0xE2f4cC0198150a7beA98E0a2A66fecafC30a5cD0"
-            },
-            {
-                "victimPID": 6,
-                "token": "LUA-SUSHI",
-                "lp": "0xc9a72CC23f900b381FC6355afD8ee674B1F12DF6"
-            },
-            {
-                "victimPID": 8,
-                "token": "LUA-FTT",
-                "lp": "0x38F9307839A8E82b071EA6Fcbef029814Ed88fcb"
-            },
-            {
-                "victimPID": 9,
-                "token": "LUA-ETH",
-                "lp": "0x65FaBAF7e6c5380243E063D8559d84e589Db6438"
-            },
-            {
-                "victimPID": 12,
-                "token": "USDC-USDT",
-                "lp": "0xB3558F47Fa914F7ec1dA1a6F52aB41eE63E81301"
-            },
-            {
-                "victimPID": 14,
-                "token": "UNI-LUA",
-                "lp": "0xb195325642431b6aA6CD3C646591e7825BB3F90c"
-            },
-            {
-                "victimPID": 16,
-                "token": "RAMP-USDT",
-                "lp": "0x627846F6131A4631ddF6BB53bd682cCF51f623b3"
-            }
-        ]
-    },
-    "mirror": {
-        "deployedAdapter": "",
-        "victimPools": [
-            {
-                "token": "MIR-UST",
-                "victimPID": 0,
-                "lp": "0x87dA823B6fC8EB8575a235A824690fda94674c88"
-            },
-            {
-                "token": "UST-mAAPL",
-                "victimPID": 1,
-                "lp": "0xB022e08aDc8bA2dE6bA4fECb59C6D502f66e953B"
-            },
-            {
-                "token": "mGOOGL-UST",
-                "victimPID": 2,
-                "lp": "0x4b70ccD1Cf9905BE1FaEd025EADbD3Ab124efe9a"
-            },
-            {
-                "token": "mTSLA-UST",
-                "victimPID": 3,
-                "lp": "0x5233349957586A8207c52693A959483F9aeAA50C"
-            },
-            {
-                "token": "UST-mNFLX",
-                "victimPID": 4,
-                "lp": "0xC99A74145682C4b4A6e9fa55d559eb49A6884F75"
-            },
-            {
-                "token": "UST-mTWTR",
-                "victimPID": 5,
-                "lp": "0x34856be886A2dBa5F7c38c4df7FD86869aB08040"
-            },
-            {
-                "token": "mAMZN-UST",
-                "victimPID": 6,
-                "lp": "0x0Ae8cB1f57e3b1b7f4f5048743710084AA69E796"
-            },
-            {
-                "token": "mBABA-UST",
-                "victimPID": 7,
-                "lp": "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363"
-            },
-            {
-                "token": "mIAU-UST",
-                "victimPID": 8,
-                "lp": "0xd7f97aa0317C08A1F5C2732e7894933f11724868"
-            },
-            {
-                "token": "mSLV-UST",
-                "victimPID": 9,
-                "lp": "0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe"
-            },
-            {
-                "token": "mUSO-UST",
-                "victimPID": 10,
-                "lp": "0x6Bd8Ca9D141aa95842b41e1431A244C309c9008C"
-            },
-            {
-                "token": "mVIXY-UST",
-                "victimPID": 11,
-                "lp": "0x6094367ea57ff4f545e2672e024393d82a1d3F28"
-            }
-        ]
-    },
-    "pickle": {
-        "deployedAdapter": "",
-        "victimPools": [
-            {
-                "token": "PICKLE-ETH",
-                "victimPID": 0,
-                "lp": "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819"
-            },
-            {
-                "token": "p3CRV",
-                "victimPID": 14,
-                "lp": "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33"
-            },
-            {
-                "token": "pSLP-DAI",
-                "victimPID": 17,
-                "lp": "0x55282dA27a3a02ffe599f6D11314D239dAC89135"
-            },
-            {
-                "token": "pSLP-USDC",
-                "victimPID": 18,
-                "lp": "0x8c2D16B7F6D3F989eb4878EcF13D695A7d504E43"
-            },
-            {
-                "token": "pSLP-USDT",
-                "victimPID": 19,
-                "lp": "0xa7a37aE5Cb163a3147DE83F15e15D8E5f94D6bCE"
-            },
-            {
-                "token": "pSLP-WBTC",
-                "victimPID": 20,
-                "lp": "0xde74b6c547bd574c3527316a2eE30cd8F6041525"
-            },
-            {
-                "token": "pSLP-YFI",
-                "victimPID": 21,
-                "lp": "0x3261D9408604CC8607b687980D40135aFA26FfED"
-            },
-            {
-                "token": "pUNI BAC-DAI",
-                "victimPID": 22,
-                "lp": "0x2350fc7268F3f5a6cC31f26c38f706E41547505d"
-            },
-            {
-                "token": "stETH-ETH",
-                "victimPID": 24,
-                "lp": "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD"
-            },
-            {
-                "token": "pSLP yveCRV",
-                "victimPID": 26,
-                "lp": "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48"
-            },
-            {
-                "token": "pUNI BASv2-DAI",
-                "victimPID": 27,
-                "lp": "0x748712686a78737DA0b7643DF78Fdf2778dC5944"
-            }
-        ]
-    },
-    "stabilize": {
-        "deployedAdapter": "",
-        "victimPools": [
-            {
-                "token": "STBZ-ETH",
-                "victimPID": 0,
-                "lp": "0xDB28312a8d26D59978D9B86cA185707B1A26725b"
-            },
-            {
-                "token": "zs-USD",
-                "victimPID": 14,
-                "lp": "0x8e769EAA31375D13a1247dE1e64987c28Bed987E"
-            },
-            {
-                "token": "zs-BTC",
-                "victimPID": 15,
-                "lp": "0x739D93f2b116E6aD754e173655c635Bd5D8d664c"
-            },
-            {
-                "token": "zs-FRAX",
-                "victimPID": 18,
-                "lp": "0xD469BB16116443F389EfEF407D73EF7Ab0Ad96Ce"
-            },
-            {
-                "token": "zs-UST",
-                "victimPID": 19,
-                "lp": "0x27E8d93D27f55130B1870d8EF2BCE847C08A8191"
-            },
-            {
-                "token": "zs-ETH",
-                "victimPID": 20,
-                "lp": "0x93B97BBb3F65EC39ea6041bF92FA998e5434E858"
-            },
-            {
-                "token": "zs-XUSD2",
-                "victimPID": 22,
-                "lp": "0xB5eB7528aCB55480b4221E498834FBc8cCBCd834"
-            }
-        ]
-    },
-    "sushi": {
-        "deployedAdapter": "",
-        "victimPools": [
-            {
-                "lp": "0x06da0fd433c1a5d7a4faa01111c044910a184553",
-                "token": "WETH-USDT",
-                "victimPID": 0
-            },
-            {
-                "lp": "0x397ff1542f962076d0bfe58ea045ffa2d347aca0",
-                "token": "USDC-WETH",
-                "victimPID": 1
-            },
-            {
-                "lp": "0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f",
-                "token": "DAI-WETH",
-                "victimPID": 2
-            },
-            {
-                "lp": "0xf1f85b2c54a2bd284b1cf4141d64fd171bd85539",
-                "token": "sUSD-WETH",
-                "victimPID": 3
-            },
-            {
-                "lp": "0x31503dcb60119a812fee820bb7042752019f2355",
-                "token": "COMP-WETH",
-                "victimPID": 4
-            },
-            {
-                "lp": "0xa1d7b2d891e3a1f9ef4bbc5be20630c2feb1c470",
-                "token": "SNX-WETH",
-                "victimPID": 6
-            },
-            {
-                "lp": "0x001b6450083e531a5a7bf310bd2c1af4247e23d4",
-                "token": "UMA-WETH",
-                "victimPID": 7
-            },
-            {
-                "lp": "0xc40d16476380e4037e6b1a2594caf6a6cc8da967",
-                "token": "LINK-WETH",
-                "victimPID": 8
-            },
-            {
-                "lp": "0xa75f7c2f025f470355515482bde9efa8153536a8",
-                "token": "BAND-WETH",
-                "victimPID": 9
-            },
-            {
-                "lp": "0x088ee5007c98a9677165d78dd2109ae4a3d04d0c",
-                "token": "YFI-WETH",
-                "victimPID": 11
-            },
-            {
-                "lp": "0x795065dcc9f64b5614c407a6efdc400da6221fb0",
-                "token": "SUSHI-WETH",
-                "victimPID": 12
-            },
-            {
-                "lp": "0x611cde65dea90918c0078ac0400a72b0d25b9bb1",
-                "token": "REN-WETH",
-                "victimPID": 13
-            },
-            {
-                "lp": "0x58dc5a51fe44589beb22e8ce67720b5bc5378009",
-                "token": "WETH-CRV",
-                "victimPID": 17
-            },
-            {
-                "lp": "0xdafd66636e2561b0284edde37e42d192f2844d40",
-                "token": "UNI-WETH",
-                "victimPID": 18
-            },
-            {
-                "lp": "0xceff51756c56ceffca006cd410b03ffc46dd3a58",
-                "token": "WBTC-WETH",
-                "victimPID": 21
-            },
-            {
-                "lp": "0x382c4a5147fd4090f7be3a9ff398f95638f5d39e",
-                "token": "yyDAI+yUSDC+yUSDT+yTUSD-WETH",
-                "victimPID": 25
-            },
-            {
-                "lp": "0xd75ea151a61d06868e31f8988d28dfe5e9df57b4",
-                "token": "AAVE-WETH",
-                "victimPID": 37
-            },
-            {
-                "lp": "0x0f82e57804d0b1f6fab2370a43dcfad3c7cb239c",
-                "token": "YAM-WETH",
-                "victimPID": 44
-            },
-            {
-                "lp": "0xaf988aff99d3d0cb870812c325c588d8d8cb7de8",
-                "token": "KP3R-WETH",
-                "victimPID": 58
-            },
-            {
-                "lp": "0x66ae32178640813f3c32a9929520bfe4fef5d167",
-                "token": "COVER-WETH",
-                "victimPID": 101
-            }
-        ]
-    },
-    "truefi": {
-        "deployedAdapter": "",
-        "victimPools": [
-            {
-                "token": "tfTUSD",
-                "victimPID": 0,
-                "lp": "0x8FD832757F58F71BAC53196270A4a55c8E1a29D9"
-            },
-            {
-                "token": "UNI TUSD/TFI",
-                "victimPID": 2,
-                "lp": "0xf8F14Fbb93fa0cEFe35Acf7e004fD4Ef92d8315a"
-            }
-        ]
-    },
-    "yaxis": {
-        "deployedAdapter": "",
-        "victimPools": [
-            {
-                "token": "YAX-ETH",
-                "victimPID": 6,
-                "lp": "0x1107B6081231d7F256269aD014bF92E041cb08df"
-            }
-        ]
-    }
+  "dodo": {
+    "deployedAdapter": "0xD5a3f5019FACa7EABAF0AD53f1eb9b533f0a92F6",
+    "victimPools": [
+      {
+        "token": "ETH-USDC dodo LP (ETH)",
+        "victimPID": 0,
+        "lp": "0xc11eCCDee225d644f873776A68A02eCD8c015697",
+        "pid": 0
+      },
+      {
+        "token": "ETH-USDC dodo LP (USDC)",
+        "victimPID": 1,
+        "lp": "0x6a5Eb3555cBbD29016Ba6F6fFbCcEE28D57b2932",
+        "pid": 1
+      },
+      {
+        "token": "WBTC-USDC dodo LP (WBTC) LP",
+        "victimPID": 10,
+        "lp": "0x2eC2A42901c761b295a9e6b95200cd0BdAa474Eb",
+        "pid": 2
+      },
+      {
+        "token": "WBTC-USDC dodo LP (USDC) LP",
+        "victimPID": 11,
+        "lp": "0x0cDb21e20597d753C90458f5eF2083f6695eb794",
+        "pid": 3
+      },
+      {
+        "token": "USDT-USDC dodo LP (USDC) LP",
+        "victimPID": 15,
+        "lp": "0x05a54b466F01510E92c02d3a180BaE83A64BAab8",
+        "pid": 4
+      },
+      {
+        "token": "USDT-USDC dodo LP (USDT) LP",
+        "victimPID": 16,
+        "lp": "0x50b11247bF14eE5116C855CDe9963fa376FceC86",
+        "pid": 5
+      }
+    ]
+  },
+  "lua": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "victimPID": 0,
+        "token": "TOMOE-ETH",
+        "lp": "0x7885e359a085372EbCF1ed6829402f149D02c600"
+      },
+      {
+        "victimPID": 1,
+        "token": "TOMOE-USDT",
+        "lp": "0xbFFD9FF55685A3B6940C59DCDCc69b1737363BE0"
+      },
+      {
+        "victimPID": 2,
+        "token": "TOMOE-USDC",
+        "lp": "0xB10C1840f562f0ac914DA2bad3290833C75fdddF"
+      },
+      {
+        "victimPID": 3,
+        "token": "LUA-USDC",
+        "lp": "0x96258BB42779Bf300cf69c9B5bD2Ba5245CB4bc4"
+      },
+      {
+        "victimPID": 4,
+        "token": "LUA-TOMOE",
+        "lp": "0xE2f4cC0198150a7beA98E0a2A66fecafC30a5cD0"
+      },
+      {
+        "victimPID": 6,
+        "token": "LUA-SUSHI",
+        "lp": "0xc9a72CC23f900b381FC6355afD8ee674B1F12DF6"
+      },
+      {
+        "victimPID": 8,
+        "token": "LUA-FTT",
+        "lp": "0x38F9307839A8E82b071EA6Fcbef029814Ed88fcb"
+      },
+      {
+        "victimPID": 9,
+        "token": "LUA-ETH",
+        "lp": "0x65FaBAF7e6c5380243E063D8559d84e589Db6438"
+      },
+      {
+        "victimPID": 12,
+        "token": "USDC-USDT",
+        "lp": "0xB3558F47Fa914F7ec1dA1a6F52aB41eE63E81301"
+      },
+      {
+        "victimPID": 14,
+        "token": "UNI-LUA",
+        "lp": "0xb195325642431b6aA6CD3C646591e7825BB3F90c"
+      },
+      {
+        "victimPID": 16,
+        "token": "RAMP-USDT",
+        "lp": "0x627846F6131A4631ddF6BB53bd682cCF51f623b3"
+      }
+    ]
+  },
+  "mirror": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "token": "MIR-UST",
+        "victimPID": 0,
+        "lp": "0x87dA823B6fC8EB8575a235A824690fda94674c88"
+      },
+      {
+        "token": "UST-mAAPL",
+        "victimPID": 1,
+        "lp": "0xB022e08aDc8bA2dE6bA4fECb59C6D502f66e953B"
+      },
+      {
+        "token": "mGOOGL-UST",
+        "victimPID": 2,
+        "lp": "0x4b70ccD1Cf9905BE1FaEd025EADbD3Ab124efe9a"
+      },
+      {
+        "token": "mTSLA-UST",
+        "victimPID": 3,
+        "lp": "0x5233349957586A8207c52693A959483F9aeAA50C"
+      },
+      {
+        "token": "UST-mNFLX",
+        "victimPID": 4,
+        "lp": "0xC99A74145682C4b4A6e9fa55d559eb49A6884F75"
+      },
+      {
+        "token": "UST-mTWTR",
+        "victimPID": 5,
+        "lp": "0x34856be886A2dBa5F7c38c4df7FD86869aB08040"
+      },
+      {
+        "token": "mAMZN-UST",
+        "victimPID": 6,
+        "lp": "0x0Ae8cB1f57e3b1b7f4f5048743710084AA69E796"
+      },
+      {
+        "token": "mBABA-UST",
+        "victimPID": 7,
+        "lp": "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363"
+      },
+      {
+        "token": "mIAU-UST",
+        "victimPID": 8,
+        "lp": "0xd7f97aa0317C08A1F5C2732e7894933f11724868"
+      },
+      {
+        "token": "mSLV-UST",
+        "victimPID": 9,
+        "lp": "0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe"
+      },
+      {
+        "token": "mUSO-UST",
+        "victimPID": 10,
+        "lp": "0x6Bd8Ca9D141aa95842b41e1431A244C309c9008C"
+      },
+      {
+        "token": "mVIXY-UST",
+        "victimPID": 11,
+        "lp": "0x6094367ea57ff4f545e2672e024393d82a1d3F28"
+      }
+    ]
+  },
+  "pickle": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "token": "PICKLE-ETH",
+        "victimPID": 0,
+        "lp": "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819"
+      },
+      {
+        "token": "p3CRV",
+        "victimPID": 14,
+        "lp": "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33"
+      },
+      {
+        "token": "pSLP-DAI",
+        "victimPID": 17,
+        "lp": "0x55282dA27a3a02ffe599f6D11314D239dAC89135"
+      },
+      {
+        "token": "pSLP-USDC",
+        "victimPID": 18,
+        "lp": "0x8c2D16B7F6D3F989eb4878EcF13D695A7d504E43"
+      },
+      {
+        "token": "pSLP-USDT",
+        "victimPID": 19,
+        "lp": "0xa7a37aE5Cb163a3147DE83F15e15D8E5f94D6bCE"
+      },
+      {
+        "token": "pSLP-WBTC",
+        "victimPID": 20,
+        "lp": "0xde74b6c547bd574c3527316a2eE30cd8F6041525"
+      },
+      {
+        "token": "pSLP-YFI",
+        "victimPID": 21,
+        "lp": "0x3261D9408604CC8607b687980D40135aFA26FfED"
+      },
+      {
+        "token": "pUNI BAC-DAI",
+        "victimPID": 22,
+        "lp": "0x2350fc7268F3f5a6cC31f26c38f706E41547505d"
+      },
+      {
+        "token": "stETH-ETH",
+        "victimPID": 24,
+        "lp": "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD"
+      },
+      {
+        "token": "pSLP yveCRV",
+        "victimPID": 26,
+        "lp": "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48"
+      },
+      {
+        "token": "pUNI BASv2-DAI",
+        "victimPID": 27,
+        "lp": "0x748712686a78737DA0b7643DF78Fdf2778dC5944"
+      }
+    ]
+  },
+  "stabilize": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "token": "STBZ-ETH",
+        "victimPID": 0,
+        "lp": "0xDB28312a8d26D59978D9B86cA185707B1A26725b"
+      },
+      {
+        "token": "zs-USD",
+        "victimPID": 14,
+        "lp": "0x8e769EAA31375D13a1247dE1e64987c28Bed987E"
+      },
+      {
+        "token": "zs-BTC",
+        "victimPID": 15,
+        "lp": "0x739D93f2b116E6aD754e173655c635Bd5D8d664c"
+      },
+      {
+        "token": "zs-FRAX",
+        "victimPID": 18,
+        "lp": "0xD469BB16116443F389EfEF407D73EF7Ab0Ad96Ce"
+      },
+      {
+        "token": "zs-UST",
+        "victimPID": 19,
+        "lp": "0x27E8d93D27f55130B1870d8EF2BCE847C08A8191"
+      },
+      {
+        "token": "zs-ETH",
+        "victimPID": 20,
+        "lp": "0x93B97BBb3F65EC39ea6041bF92FA998e5434E858"
+      },
+      {
+        "token": "zs-XUSD2",
+        "victimPID": 22,
+        "lp": "0xB5eB7528aCB55480b4221E498834FBc8cCBCd834"
+      }
+    ]
+  },
+  "sushi": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "lp": "0x06da0fd433c1a5d7a4faa01111c044910a184553",
+        "token": "WETH-USDT",
+        "victimPID": 0
+      },
+      {
+        "lp": "0x397ff1542f962076d0bfe58ea045ffa2d347aca0",
+        "token": "USDC-WETH",
+        "victimPID": 1
+      },
+      {
+        "lp": "0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f",
+        "token": "DAI-WETH",
+        "victimPID": 2
+      },
+      {
+        "lp": "0xf1f85b2c54a2bd284b1cf4141d64fd171bd85539",
+        "token": "sUSD-WETH",
+        "victimPID": 3
+      },
+      {
+        "lp": "0x31503dcb60119a812fee820bb7042752019f2355",
+        "token": "COMP-WETH",
+        "victimPID": 4
+      },
+      {
+        "lp": "0xa1d7b2d891e3a1f9ef4bbc5be20630c2feb1c470",
+        "token": "SNX-WETH",
+        "victimPID": 6
+      },
+      {
+        "lp": "0x001b6450083e531a5a7bf310bd2c1af4247e23d4",
+        "token": "UMA-WETH",
+        "victimPID": 7
+      },
+      {
+        "lp": "0xc40d16476380e4037e6b1a2594caf6a6cc8da967",
+        "token": "LINK-WETH",
+        "victimPID": 8
+      },
+      {
+        "lp": "0xa75f7c2f025f470355515482bde9efa8153536a8",
+        "token": "BAND-WETH",
+        "victimPID": 9
+      },
+      {
+        "lp": "0x088ee5007c98a9677165d78dd2109ae4a3d04d0c",
+        "token": "YFI-WETH",
+        "victimPID": 11
+      },
+      {
+        "lp": "0x795065dcc9f64b5614c407a6efdc400da6221fb0",
+        "token": "SUSHI-WETH",
+        "victimPID": 12
+      },
+      {
+        "lp": "0x611cde65dea90918c0078ac0400a72b0d25b9bb1",
+        "token": "REN-WETH",
+        "victimPID": 13
+      },
+      {
+        "lp": "0x58dc5a51fe44589beb22e8ce67720b5bc5378009",
+        "token": "WETH-CRV",
+        "victimPID": 17
+      },
+      {
+        "lp": "0xdafd66636e2561b0284edde37e42d192f2844d40",
+        "token": "UNI-WETH",
+        "victimPID": 18
+      },
+      {
+        "lp": "0xceff51756c56ceffca006cd410b03ffc46dd3a58",
+        "token": "WBTC-WETH",
+        "victimPID": 21
+      },
+      {
+        "lp": "0x382c4a5147fd4090f7be3a9ff398f95638f5d39e",
+        "token": "yyDAI+yUSDC+yUSDT+yTUSD-WETH",
+        "victimPID": 25
+      },
+      {
+        "lp": "0xd75ea151a61d06868e31f8988d28dfe5e9df57b4",
+        "token": "AAVE-WETH",
+        "victimPID": 37
+      },
+      {
+        "lp": "0x0f82e57804d0b1f6fab2370a43dcfad3c7cb239c",
+        "token": "YAM-WETH",
+        "victimPID": 44
+      },
+      {
+        "lp": "0xaf988aff99d3d0cb870812c325c588d8d8cb7de8",
+        "token": "KP3R-WETH",
+        "victimPID": 58
+      },
+      {
+        "lp": "0x66ae32178640813f3c32a9929520bfe4fef5d167",
+        "token": "COVER-WETH",
+        "victimPID": 101
+      }
+    ]
+  },
+  "truefi": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "token": "tfTUSD",
+        "victimPID": 0,
+        "lp": "0x8FD832757F58F71BAC53196270A4a55c8E1a29D9"
+      },
+      {
+        "token": "UNI TUSD/TFI",
+        "victimPID": 2,
+        "lp": "0xf8F14Fbb93fa0cEFe35Acf7e004fD4Ef92d8315a"
+      }
+    ]
+  },
+  "yaxis": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "token": "YAX-ETH",
+        "victimPID": 6,
+        "lp": "0x1107B6081231d7F256269aD014bF92E041cb08df"
+      }
+    ]
+  }
 }
