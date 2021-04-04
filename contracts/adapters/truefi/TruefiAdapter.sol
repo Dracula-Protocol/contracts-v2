@@ -10,7 +10,7 @@ import "../../IMasterVampire.sol";
 import "./ITrueFarm.sol";
 
 contract TruefiAdapter is BaseAdapter, IMasterVampire {
-    address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
+    address constant MASTER_VAMPIRE = 0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
     IERC20 constant TRU = IERC20(0x4C19596f5aAfF459fA38B0f7eD92F11AE6543784);
     IUniswapV2Pair constant TRU_WETH_PAIR = IUniswapV2Pair(0xfCEAAf9792139BF714a694f868A215493461446D);
     ITrueFarm[] farms;

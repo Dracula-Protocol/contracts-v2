@@ -12,7 +12,7 @@ import "./IOperator.sol";
 contract StabilizeAdapter is BaseAdapter {
     using SafeMath for uint256;
     IOperator constant OPERATOR = IOperator(0xEe9156C93ebB836513968F92B4A67721f3cEa08a);
-    address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
+    address constant MASTER_VAMPIRE = 0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
     IERC20 constant STBZ = IERC20(0xB987D48Ed8f2C468D52D6405624EADBa5e76d723);
     IUniswapV2Pair constant STBZ_WETH_PAIR = IUniswapV2Pair(0xDB28312a8d26D59978D9B86cA185707B1A26725b);
     uint256 constant BLOCKS_PER_YEAR = 2336000;
