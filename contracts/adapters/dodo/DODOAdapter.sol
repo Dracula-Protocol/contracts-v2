@@ -13,7 +13,7 @@ import "./IDODOMine.sol";
 contract DODOAdapter is BaseAdapter {
     using SafeERC20 for IERC20;
 
-    address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
+    address constant MASTER_VAMPIRE = 0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
     IUniswapV2Pair constant WETH_USDT_PAIR = IUniswapV2Pair(0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852);
     IDODOMine constant DODO_MINE = IDODOMine(0xaeD7384F03844Af886b830862FF0a7AFce0a632C);
     IDODO constant DODO_USDT = IDODO(0x8876819535b48b551C9e97EBc07332C7482b4b2d);

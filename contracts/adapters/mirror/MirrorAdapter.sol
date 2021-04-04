@@ -10,7 +10,7 @@ import "./ILPPool.sol";
 
 contract MirrorAdapter is BaseAdapter {
     ILPPool[] pools;
-    address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
+    address constant MASTER_VAMPIRE = 0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
     IERC20 constant MIR = IERC20(0x09a3EcAFa817268f77BE1283176B946C4ff2E608);
     IUniswapV2Pair constant MIR_WETH_PAIR = IUniswapV2Pair(0x57aB5AEB8baC2586A0d437163C3eb844246336CE);
 

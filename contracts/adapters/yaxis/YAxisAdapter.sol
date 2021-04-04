@@ -9,7 +9,7 @@ import "../../BaseAdapter.sol";
 import "./IYAxisMaster.sol";
 
 contract YAxisAdapter is BaseAdapter {
-    address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
+    address constant MASTER_VAMPIRE = 0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
     IYAxisMaster constant YAXIS_MASTER = IYAxisMaster(0xC330E7e73717cd13fb6bA068Ee871584Cf8A194F);
     IERC20 constant YAX = IERC20(0xb1dC9124c395c1e97773ab855d66E879f053A289);
     IUniswapV2Pair constant YAX_WETH_PAIR = IUniswapV2Pair(0x1107B6081231d7F256269aD014bF92E041cb08df);
