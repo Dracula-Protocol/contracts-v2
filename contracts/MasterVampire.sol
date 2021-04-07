@@ -2,6 +2,7 @@
 
 pragma solidity ^0.7.6;
 
+import "@openzeppelin/contracts/math/Math.sol";
 import "./IMasterVampire.sol";
 import "./IIBVEth.sol";
 
@@ -20,6 +21,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
+    event ETHValue(uint256 amount);
 
     IWETH immutable weth;
 
@@ -76,6 +78,10 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         withdrawalPenalty = _withdrawalPenalty;
     }
 
+    function updateVictimAddress(uint256 _pid, address _victim) external onlyOwner {
+        poolInfo[_pid].victim = Victim(_victim);
+    }
+
     function updateVictimInfo(uint256 _pid, address _victim, uint256 _victimPoolId) external onlyOwner {
         poolInfo[_pid].victim = Victim(_victim);
         poolInfo[_pid].victimPoolId = _victimPoolId;
@@ -121,8 +127,6 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         return user.amount.mul(accWethPerShare).div(1e12).sub(user.rewardDebt);
     }
 
-    event ETHValue(uint256 amount);
-
     function pendingWethReal(uint256 _pid, address _user) external returns (uint256) {
         uint256 ibETH = pendingWeth(_pid, _user);
         uint256 ethVal = IIBVEth(IBVETH).ibETHValue(ibETH);
@@ -159,7 +163,8 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         }
 
         uint256 blocksToReward = block.number.sub(pool.lastRewardBlock);
-        uint256 wethReward = blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod);
+        uint256 wethReward = Math.min(blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod), pool.wethAccumulator);
+        //uint256 wethReward = blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod);
         pool.accWethPerShare = pool.accWethPerShare.add(wethReward.mul(1e12).div(lpSupply));
         pool.lastRewardBlock = block.number;
         pool.wethAccumulator = pool.wethAccumulator.sub(wethReward);
