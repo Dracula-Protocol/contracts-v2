@@ -46,12 +46,12 @@ describe('DrainController', () => {
   describe('drain', () => {
     it('can whitelist node', async () => {
       await drainController.whitelist(bob.address);
-      await drainController.connect(bob).optimalMassDrain([]);
+      await drainController.connect(bob).drainPools([]);
     });
     it('can unwhitelist node', async () => {
       await drainController.unWhitelist(bob.address);
       await expect(
-        drainController.connect(bob).optimalMassDrain([])
+        drainController.connect(bob).drainPools([])
       ).to.be.reverted;
     });
     it('is drainable', async () => {
@@ -65,7 +65,7 @@ describe('DrainController', () => {
         value: utils.parseEther('1')
       });
       expect(await provider.getBalance(drainController.address)).to.eq(utils.parseEther('1'));
-      await drainController.connect(bob).optimalMassDrain([]);
+      await drainController.connect(bob).drainPools([]);
       expect(await provider.getBalance(drainController.address)).to.lt(utils.parseEther('1'));
       expect(await bob.getBalance()).to.gte(utils.parseEther('10000'));
     });
@@ -85,7 +85,7 @@ describe('DrainController', () => {
       const drainable = await drainController.isDrainable();
       // Filter pools that haven't hit drain threshold
       const filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
-      await drainController.connect(bob).optimalMassDrain(filtered_drain);
+      await drainController.connect(bob).drainPools(filtered_drain);
       expect(await chi.balanceOf(bob.address)).to.lt(50);
       expect(await provider.getBalance(drainController.address)).to.lt(utils.parseEther('0.00001'));
       expect(await bob.getBalance()).to.gte(utils.parseEther('9999.1'));
