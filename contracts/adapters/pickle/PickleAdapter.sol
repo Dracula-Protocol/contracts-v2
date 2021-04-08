@@ -10,15 +10,16 @@ import "./IMasterChef.sol";
 
 contract PickleAdapter is BaseAdapter {
     IMasterChef constant PICKLE_MASTER_CHEF = IMasterChef(0xbD17B1ce622d73bD438b9E658acA5996dc394b0d);
-    address constant MASTER_VAMPIRE = 0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
+    address immutable MASTER_VAMPIRE;
     IERC20 constant PICKLE = IERC20(0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5);
     IUniswapV2Pair constant PICKLE_WETH_PAIR = IUniswapV2Pair(0x269Db91Fc3c7fCC275C2E6f22e5552504512811c);
     // token 0 - PICKLE
     // token 1 - weth
 
-    constructor(address _weth, address _factory)
+    constructor(address _weth, address _factory, address _masterVampire)
         BaseAdapter(_weth, _factory)
     {
+        MASTER_VAMPIRE = _masterVampire;
     }
 
     // Victim info

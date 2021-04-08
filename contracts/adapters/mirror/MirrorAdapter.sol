@@ -10,13 +10,14 @@ import "./ILPPool.sol";
 
 contract MirrorAdapter is BaseAdapter {
     ILPPool[] pools;
-    address constant MASTER_VAMPIRE = 0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
+    address immutable MASTER_VAMPIRE;
     IERC20 constant MIR = IERC20(0x09a3EcAFa817268f77BE1283176B946C4ff2E608);
     IUniswapV2Pair constant MIR_WETH_PAIR = IUniswapV2Pair(0x57aB5AEB8baC2586A0d437163C3eb844246336CE);
 
-    constructor(address _weth, address _factory)
+    constructor(address _weth, address _factory, address _masterVampire)
         BaseAdapter(_weth, _factory)
     {
+        MASTER_VAMPIRE = _masterVampire;
         pools.push(ILPPool(0x87dA823B6fC8EB8575a235A824690fda94674c88)); // MIR-UST
         pools.push(ILPPool(0xB022e08aDc8bA2dE6bA4fECb59C6D502f66e953B)); // UST-mAAPL
         pools.push(ILPPool(0x4b70ccD1Cf9905BE1FaEd025EADbD3Ab124efe9a)); // mGOOGL-UST
