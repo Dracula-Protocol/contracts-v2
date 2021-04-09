@@ -9,7 +9,7 @@ import "../../libraries/UniswapV2Library.sol";
 import "../../BaseAdapter.sol";
 import "./IStakingPools.sol";
 
-contract LuaAdapter is BaseAdapter {
+contract AlchemixAdapter is BaseAdapter {
     address constant MASTER_VAMPIRE =
         0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
     IStakingPools constant ALCX_STAKINGPOOLS =
