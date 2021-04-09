@@ -10,14 +10,15 @@ import "../../BaseAdapter.sol";
 import "./IStakingPools.sol";
 
 contract AlchemixAdapter is BaseAdapter {
-    address constant MASTER_VAMPIRE = 0x12B7b9e21Ad9D7E8992e0c129ED0bccEaC185c3E;
+    address immutable MASTER_VAMPIRE;
     IERC20 constant ALCX = IERC20(0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF);
     IStakingPools constant ALCX_STAKINGPOOLS = IStakingPools(0xAB8e74017a8Cc7c15FFcCd726603790d26d7DeCa);
     IUniswapV2Pair constant ALCX_WETH_PAIR = IUniswapV2Pair(0x352E5EeE2D9C957710be656534D51Fbb3Ce074d6);
 
-    constructor(address _weth, address _factory)
+    constructor(address _weth, address _factory, address _masterVampire)
         BaseAdapter(_weth, _factory)
     {
+        MASTER_VAMPIRE = _masterVampire;
     }
 
     // Victim info
