@@ -528,5 +528,30 @@
         "lp": "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c"
       }
     ]
+  },
+  "oneinch": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "token": "1INCH-ETH",
+        "victimPID": 0,
+        "lp": "0xE65184b402376703Adc27A7d7e0e8D35A264A240"
+      },
+      {
+        "token": "1INCH-USDC",
+        "victimPID": 1,
+        "lp": "0x1055f60Bbf27D233C4E34D2E03e35567427415Fa"
+      },
+      {
+        "token": "1INCH-WBTC",
+        "victimPID": 2,
+        "lp": "0x73f5E5260423A2742d9F8Ac49DeA6CB5eaec465e"
+      },
+      {
+        "token": "1INCH-VSP",
+        "victimPID": 4,
+        "lp": "0x8b1aF1298f5c0CA8a6B4E66626a4bDaE0f7521e5"
+      }
+    ]
   }
 }
