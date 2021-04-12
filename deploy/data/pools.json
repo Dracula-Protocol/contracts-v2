@@ -1128,5 +1128,25 @@
                 "lp": "0x1107B6081231d7F256269aD014bF92E041cb08df"
             }
         ]
+    },
+    "vesper": {
+        "deployedAdapter": "",
+        "victimPools": [
+            {
+                "token": "VETH",
+                "victimPID": 0,
+                "lp": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+            },
+                        {
+                "token": "VWBTC",
+                "victimPID": 1,
+                "lp": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+            },
+                        {
+                "token": "VUSDC",
+                "victimPID": 2,
+                "lp": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+            }
+        ]
     }
 }
