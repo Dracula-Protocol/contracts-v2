@@ -120,7 +120,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         uint256 lpSupply = pool.victim.lockedAmount(pool.victimPoolId);
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
             uint256 blocksToReward = block.number.sub(pool.lastRewardBlock);
-            uint256 wethReward = blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod);
+            uint256 wethReward = Math.min(blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod), pool.wethAccumulator);
             accWethPerShare = accWethPerShare.add(wethReward.mul(1e12).div(lpSupply));
         }
 
