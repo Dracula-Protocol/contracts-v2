@@ -15,7 +15,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (chainId == '1') {
     const MasterVampire = await deployments.get('MasterVampire');
 
-    const MirrorAdapter = await deploy('VesperAdapter', {
+    const VesperAdapter = await deploy('VesperAdapter', {
       from: deployer,
       log: true,
       contract: 'VesperAdapter',

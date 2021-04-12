@@ -12,9 +12,8 @@ import "./IVesperPool.sol";
 import "./IPoolRewards.sol";
 
 contract VesperAdapter is BaseAdapter {
-    IVesperController constant VESPER_CONTROLLER = IVesperController(0xa4f1671d3aee73c05b552d57f2d16d3cfcbd0217);
     address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
-    IUniswapV2Router02 constant VSP_WETH_PAIR = IUniswapV2Router02(0x6d7b6dad6abed1dfa5eba37a6667ba9dcfd49077);
+    IUniswapV2Pair constant VSP_WETH_PAIR = IUniswapV2Pair(0x6D7B6DaD6abeD1DFA5eBa37a6667bA9DCFD49077);
     IERC20 constant VSP = IERC20(0x1b40183EFB4Dd766f11bDa7A7c3AD8982e998421);
     IVesperPool[] pools;
 
@@ -31,7 +30,7 @@ contract VesperAdapter is BaseAdapter {
         return VSP;
     }
 
-    function poolCount() external view override returns (uint256) {
+    function poolCount() external pure override returns (uint256) {
         return uint256(3);
     }
 
@@ -49,20 +48,12 @@ contract VesperAdapter is BaseAdapter {
     }
 
     // Pool info
-    function lockableToken(uint256 poolId) external view override returns (IERC20) {
-        return pools[poolId]->token();
-    }
-
-    function lockedAmount(address user, uint256 poolId) external view override returns (uint256) {
-        return pools[poolId].staked(user); //TODO
-    }
-
     function pendingReward(address _adapter, uint256, uint256 victimPoolId) external view override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
-        IVesperPool pool = IVesperPool(adapter.poolAddress(victimPoolId))
-        IVesperController controller = pool.controller()
-        IPoolRewards poolRewards = controller->poolRewards(adapter.poolAddress(victimPoolId))
-        return poolRewards->claimable(MASTER_VAMPIRE);
+        IVesperPool pool = IVesperPool(adapter.poolAddress(victimPoolId));
+        IVesperController controller = IVesperController(pool.controller());
+        IPoolRewards poolRewards = IPoolRewards(controller.poolRewards(adapter.poolAddress(victimPoolId)));
+        return poolRewards.claimable(MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
@@ -81,10 +72,10 @@ contract VesperAdapter is BaseAdapter {
 
     function claimReward(address _adapter, uint256, uint256 victimPoolId) external override {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
-        IVesperPool pool = IVesperPool(adapter.poolAddress(victimPoolId))
-        IVesperController controller = pool.controller()
-        IPoolRewards poolRewards = controller->poolRewards(adapter.poolAddress(victimPoolId))
-        return poolRewards->claimReward(MASTER_VAMPIRE);
+        IVesperPool pool = IVesperPool(adapter.poolAddress(victimPoolId));
+        IVesperController controller = IVesperController(pool.controller());
+        IPoolRewards poolRewards = IPoolRewards(controller.poolRewards(adapter.poolAddress(victimPoolId)));
+        return poolRewards.claimReward(MASTER_VAMPIRE);
     }
 
     function emergencyWithdraw(address, uint256) external pure override {
@@ -96,17 +87,26 @@ contract VesperAdapter is BaseAdapter {
         return address(pools[poolId]);
     }
 
+    function lockedAmount(address user, uint256 poolId) external view override returns (uint256) {
+        return pools[poolId].balanceOf(user);
+    }
+
+    function lockableToken(uint256 poolId) external view override returns (IERC20) {
+        return pools[poolId].token();
+    }
+
     function rewardToWethPool() external pure override returns (address) {
         return address(VSP_WETH_PAIR);
     }
 
-    function lockedValue(address user, uint256 poolId) external override pure returns (uint256) {
+    function lockedValue(address, uint256) external override pure returns (uint256) {
         require(false, "not implemented");
         return 0;
     }
 
     function totalLockedValue(uint256) external override pure returns (uint256) {
-        return IVesperPool(adapter.poolAddress(poolId))->tokenLocked();
+        require(false, "not implemented");
+        return 0;
     }
 
     function normalizedAPY(uint256) external override pure returns (uint256) {
