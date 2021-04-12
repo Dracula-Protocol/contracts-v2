@@ -12,20 +12,21 @@ import "./IVesperPool.sol";
 import "./IPoolRewards.sol";
 
 contract VesperAdapter is BaseAdapter {
-    address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
+    address immutable MASTER_VAMPIRE;
     IUniswapV2Pair constant VSP_WETH_PAIR = IUniswapV2Pair(0x6D7B6DaD6abeD1DFA5eBa37a6667bA9DCFD49077);
     IERC20 constant VSP = IERC20(0x1b40183EFB4Dd766f11bDa7A7c3AD8982e998421);
     IVesperPool[] pools;
 
-    constructor(address _weth, address _factory)
+    constructor(address _weth, address _factory, address _masterVampire)
         BaseAdapter(_weth, _factory)
     {
+        MASTER_VAMPIRE = _masterVampire;
         pools.push(IVesperPool(0x103cc17C2B1586e5Cd9BaD308690bCd0BBe54D5e)); // VETH pool
         pools.push(IVesperPool(0x4B2e76EbBc9f2923d83F5FBDe695D8733db1a17B)); // VWBTC pool
         pools.push(IVesperPool(0x0C49066C0808Ee8c673553B7cbd99BCC9ABf113d)); // VUSDC pool
     }
 
-    // Victim info
+    // Pool info
     function rewardToken(uint256) public pure override returns (IERC20) {
         return VSP;
     }
@@ -38,7 +39,7 @@ contract VesperAdapter is BaseAdapter {
         return uint256(-1);
     }
 
-    // Victim actions, requires impersonation via delegatecall
+    // Pool actions, requires impersonation via delegatecall
     function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
         VSP.transfer(address(VSP_WETH_PAIR), rewardAmount);
         (uint vspReserve, uint wethReserve,) = VSP_WETH_PAIR.getReserves();
@@ -48,11 +49,11 @@ contract VesperAdapter is BaseAdapter {
     }
 
     // Pool info
-    function pendingReward(address _adapter, uint256, uint256 victimPoolId) external view override returns (uint256) {
+    function pendingReward(address _adapter, uint256, uint256 poolId) external view override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
-        IVesperPool pool = IVesperPool(adapter.poolAddress(victimPoolId));
+        IVesperPool pool = IVesperPool(adapter.poolAddress(poolId));
         IVesperController controller = IVesperController(pool.controller());
-        IPoolRewards poolRewards = IPoolRewards(controller.poolRewards(adapter.poolAddress(victimPoolId)));
+        IPoolRewards poolRewards = IPoolRewards(controller.poolRewards(adapter.poolAddress(poolId)));
         return poolRewards.claimable(MASTER_VAMPIRE);
     }
 
@@ -70,11 +71,11 @@ contract VesperAdapter is BaseAdapter {
         return 0;
     }
 
-    function claimReward(address _adapter, uint256, uint256 victimPoolId) external override {
+    function claimReward(address _adapter, uint256, uint256 poolId) external override {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
-        IVesperPool pool = IVesperPool(adapter.poolAddress(victimPoolId));
+        IVesperPool pool = IVesperPool(adapter.poolAddress(poolId));
         IVesperController controller = IVesperController(pool.controller());
-        IPoolRewards poolRewards = IPoolRewards(controller.poolRewards(adapter.poolAddress(victimPoolId)));
+        IPoolRewards poolRewards = IPoolRewards(controller.poolRewards(adapter.poolAddress(poolId)));
         return poolRewards.claimReward(MASTER_VAMPIRE);
     }
 
