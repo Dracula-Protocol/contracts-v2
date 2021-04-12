@@ -30,7 +30,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     for (let pool of pools[POOL_ID].victimPools) {
       await masterVampire.add(DODOAdapter.address, pool.victimPID);
       if (pool.pid == undefined) {
-        const pid = await masterVampire.poolLength() - 1;
+        const pid = (await masterVampire.poolLength()) - 1;
         pool.pid = pid;
       }
     }
