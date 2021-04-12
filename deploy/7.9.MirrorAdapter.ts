@@ -19,7 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       from: deployer,
       log: true,
       contract: 'MirrorAdapter',
-      args: [WETH, uniFactory, uniFactory]
+      args: [WETH, uniFactory, MasterVampire]
     });
 
     const masterVampire = await ethers.getContractAt('MasterVampire', MasterVampire.address, ethers.provider.getSigner(deployer));
