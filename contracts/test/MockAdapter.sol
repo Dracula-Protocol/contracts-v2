@@ -49,12 +49,11 @@ contract MockAdapter is BaseAdapter {
 
     // Victim actions, requires impersonation via delegatecall
     function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
-        address[] memory path = new address[](2);
-        path[0] = address(reward);
-        path[1] = address(weth);
-        reward.approve(address(router), uint256(-1));
-        uint[] memory amounts = router.swapExactTokensForTokens(rewardAmount, 1, path, to, block.timestamp);
-        return amounts[amounts.length - 1];
+        reward.transfer(address(rewardWethPair), rewardAmount);
+        (uint mirReserve, uint wethReserve,) = rewardWethPair.getReserves();
+        uint amountOutput = UniswapV2Library.getAmountOut(rewardAmount, mirReserve, wethReserve);
+        rewardWethPair.swap(uint(0), amountOutput, to, new bytes(0));
+        return amountOutput;
     }
 
     // Pool info

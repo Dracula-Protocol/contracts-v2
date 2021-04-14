@@ -119,7 +119,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         uint256 accWethPerShare = pool.accWethPerShare;
         uint256 lpSupply = pool.victim.lockedAmount(pool.victimPoolId);
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
-            uint256 blocksToReward = block.number.sub(pool.lastRewardBlock);
+            uint256 blocksToReward = Math.min(block.number.sub(pool.lastRewardBlock), distributionPeriod);
             uint256 wethReward = Math.min(blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod), pool.wethAccumulator);
             accWethPerShare = accWethPerShare.add(wethReward.mul(1e12).div(lpSupply));
         }
@@ -162,7 +162,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
             return;
         }
 
-        uint256 blocksToReward = block.number.sub(pool.lastRewardBlock);
+        uint256 blocksToReward = Math.min(block.number.sub(pool.lastRewardBlock), distributionPeriod);
         uint256 wethReward = Math.min(blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod), pool.wethAccumulator);
         pool.accWethPerShare = pool.accWethPerShare.add(wethReward.mul(1e12).div(lpSupply));
         pool.lastRewardBlock = block.number;
@@ -250,6 +250,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         }
 
         uint256 wethReward = victim.sellRewardForWeth(pid, claimedReward, address(this));
+
         // Take a % of the drained reward to be redistributed to other contracts
         uint256 wethDrainAmount = wethReward.mul(wethDrainModifier).div(1000);
         if (wethDrainAmount > 0) {
@@ -263,7 +264,11 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         require(success, "handleDrainedWETH(uint256 amount) delegatecall failed.");
         uint256 ibethAfter = IIBVEth(IBVETH).balance(address(this));
 
-        pool.wethAccumulator = pool.wethAccumulator.add(ibethAfter.sub(ibethBefore));
+        if (pool.wethAccumulator == 0) {
+            pool.wethAccumulator = ibethAfter;
+        } else {
+            pool.wethAccumulator = pool.wethAccumulator.add(ibethAfter.sub(ibethBefore));
+        }
     }
 
     /// This function allows owner to take unsupported tokens out of the contract.

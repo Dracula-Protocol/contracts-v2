@@ -161,20 +161,12 @@ contract DrainController is Ownable {
     /**
      * @notice Drains the specified pools
      */
-    function drainPools(uint256[] memory pids) external onlyWhitelister refundGasCost returns(uint32) {
+    function drainPools(uint256[] memory pids) external onlyWhitelister refundGasCost {
         uint256 poolLength = pids.length;
-        uint32 numDrained;
         for (uint i = 0; i < poolLength; ++i) {
             uint pid = pids[i];
-            try masterVampire.drain(pid) {
-                // success
-                ++numDrained;
-            } catch {
-                // ignore failed drain
-            }
+            masterVampire.drain(pid);
         }
-
-        return numDrained;
     }
 
     /**
