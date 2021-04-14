@@ -405,5 +405,30 @@
         "lp": "0x1107B6081231d7F256269aD014bF92E041cb08df"
       }
     ]
+  },
+  "alchemix": {
+    "deployedAdapter": "",
+    "victimPools": [
+      {
+        "token": "alUSD",
+        "victimPID": 0,
+        "lp": "0xBC6DA0FE9aD5f3b0d58160288917AA56653660E9"
+      },
+      {
+        "token": "ALCX",
+        "victimPID": 1,
+        "lp": "0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF"
+      },
+      {
+        "token": "ALCX-ETH SLP (SushiSwap LP Token)",
+        "victimPID": 2,
+        "lp": "0xC3f279090a47e80990Fe3a9c30d24Cb117EF91a8"
+      },
+      {
+        "token": "alUSD3CRV Curve.fi Factory USD Metapool",
+        "victimPID": 4,
+        "lp": "0x43b4FdFD4Ff969587185cDB6f0BD875c5Fc83f8c"
+      }
+    ]
   }
 }
