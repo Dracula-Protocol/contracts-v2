@@ -19,6 +19,10 @@ contract MockRariFundManager is IRariFundManager {
         reptToken = new MockERC20("RARI ETH", "REPT", 18);
     }
 
+    receive() external payable {
+        _deposit(msg.value);
+    }
+
     function rariFundToken() external view override returns (IERC20) {
         return IERC20(address(reptToken));
     }

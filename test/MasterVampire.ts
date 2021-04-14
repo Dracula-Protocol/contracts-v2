@@ -142,6 +142,16 @@ describe('MasterVampire', () => {
 
   describe('mock adapter should work with mastervampire', () => {
     it('rari capital ibeth strategy', async () => {
+
+      async function drain(drainController:Contract, drainDistributor:Contract) {
+        let drainable = await drainController.isDrainable();
+        // Filter pools that haven't hit drain threshold
+        let filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
+        expect(filtered_drain.length).to.gt(0);
+        await drainController.connect(carol).drainPools(filtered_drain);
+        await drainDistributor.distribute();
+      }
+
       // Deposit the Mock LP into the Mock Adapter pool
       await mockLP.mint(alice.address, utils.parseEther('1000'));
       await mockLP.connect(alice).approve(masterVampire.address, utils.parseEther('1000'));
@@ -161,13 +171,8 @@ describe('MasterVampire', () => {
 
       await drainController.whitelist(carol.address);
 
-      let drainable = await drainController.isDrainable();
-      // Filter pools that haven't hit drain threshold
-      let filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
-      expect(filtered_drain.length).to.gt(0);
-      await drainController.connect(carol).drainPools(filtered_drain);
-
-      await drainDistributor.distribute();
+      await drain(drainController, drainDistributor);
+      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.01'));
 
       const StrategyRari = await deployments.get('StrategyRari');
       const strategyRari = await ethers.getContractAt('IBVEthRari', StrategyRari.address, deployer);
@@ -186,14 +191,16 @@ describe('MasterVampire', () => {
       console.log("  Victim Pool (0) Acc WETH: ", utils.formatEther((await masterVampire.poolAccWeth(0)).toString()));*/
       let last_pending_weth = BigNumber.from(0);
       for (let b = 0; b < 10; b++) {
-        //console.log("  Pending IBEth reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
+        console.log("  Pending IBEth reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
         const pending_weth = await masterVampire.callStatic.pendingWethReal(0, alice.address);
         expect(pending_weth).to.gt(last_pending_weth);
-        //console.log("  Pending WETH reward (alice): ", utils.formatEther(pending_weth.toString()))
+        console.log("  Pending WETH reward (alice): ", utils.formatEther(pending_weth.toString()))
         await advanceBlock();
       }
 
-      await advanceBlocks(200);
+      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.11'));
+
+      await advanceBlocks(8000);
 
       const ethBeforeClaim = await alice.getBalance();
       //console.log("Before Claim:");
@@ -205,12 +212,32 @@ describe('MasterVampire', () => {
       //console.log("  ETH Balance (Alice):", utils.formatEther(await alice.getBalance()).toString());
       expect(await alice.getBalance()).to.gt(ethBeforeClaim);
 
+      await advanceBlocks(100);
+      //expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('80.22'));
+
+      await drain(drainController, drainDistributor);
+      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.01'));
+
+      await advanceBlocks(50);
+
+      // FAILING HERE: pending rewards is zero???
+      last_pending_weth = BigNumber.from(0);
+      for (let b = 0; b < 10; b++) {
+        console.log("  Pending IBEth reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
+        const pending_weth = await masterVampire.callStatic.pendingWethReal(0, alice.address);
+        expect(pending_weth).to.gt(last_pending_weth);
+        console.log("  Pending WETH reward (alice): ", utils.formatEther(pending_weth.toString()))
+        await advanceBlock();
+      }
+
       await advanceBlocks(200);
 
+
+
       expect(await drc.balanceOf(alice.address)).to.eq(0);
-      //console.log("Before Claim (DRC):");
-      //console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
-      //console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
+      console.log("Before Claim (DRC):");
+      console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
+      console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
       await masterVampire.connect(alice).claim(0, parseInt("0x2"));
       //console.log("After Claim (DRC):");
       //console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
