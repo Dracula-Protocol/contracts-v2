@@ -19,7 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       from: deployer,
       log: true,
       contract: 'VesperAdapter',
-      args: [WETH, uniFactory, MasterVampire]
+      args: [WETH, uniFactory, MasterVampire.address]
     });
 
     const masterVampire = await ethers.getContractAt('MasterVampire', MasterVampire.address, ethers.provider.getSigner(deployer));
