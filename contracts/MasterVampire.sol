@@ -289,6 +289,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     function _claim(uint256 pid, bool withdrawing, uint8 flag) internal {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
+
         uint256 pending = user.amount.mul(pool.accWethPerShare).div(1e12).sub(user.rewardDebt);
         if (pending > 0) {
             if (withdrawing && withdrawalPenalty > 0 && block.timestamp < user.coolOffTime) {
