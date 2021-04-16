@@ -168,7 +168,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       { from: deployer },
       'approve',
       UniRouter.address,
-      utils.parseEther('1')
+      utils.parseEther('50')
     );
 
     await execute(
@@ -177,8 +177,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       'addLiquidity',
       WETH.address,
       DRC.address,
-      utils.parseEther('1'),
-      utils.parseEther('1'),
+      utils.parseEther('50'),
+      utils.parseEther('500'),
       0,
       0,
       deployer,
