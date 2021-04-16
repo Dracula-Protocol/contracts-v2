@@ -1,6 +1,6 @@
 {
   "dodo": {
-    "deployedAdapter": "0x4e4a9001b2C54C1679d7BFCE6d6B3e09714cB2F8",
+    "deployedAdapter": "0x680276CF3Ea6C52F0fCa4BA216C3353fe387EBdE",
     "victimPools": [
       {
         "token": "ETH-USDC dodo LP (ETH)",
@@ -41,73 +41,62 @@
     ]
   },
   "lua": {
-    "deployedAdapter": "0x2A8021f801dF026968d5334fAa585596d52D4C38",
+    "deployedAdapter": "",
     "victimPools": [
       {
         "victimPID": 0,
         "token": "TOMOE-ETH",
-        "lp": "0x7885e359a085372EbCF1ed6829402f149D02c600",
-        "pid": 6
+        "lp": "0x7885e359a085372EbCF1ed6829402f149D02c600"
       },
       {
         "victimPID": 1,
         "token": "TOMOE-USDT",
-        "lp": "0xbFFD9FF55685A3B6940C59DCDCc69b1737363BE0",
-        "pid": 7
+        "lp": "0xbFFD9FF55685A3B6940C59DCDCc69b1737363BE0"
       },
       {
         "victimPID": 2,
         "token": "TOMOE-USDC",
-        "lp": "0xB10C1840f562f0ac914DA2bad3290833C75fdddF",
-        "pid": 8
+        "lp": "0xB10C1840f562f0ac914DA2bad3290833C75fdddF"
       },
       {
         "victimPID": 3,
         "token": "LUA-USDC",
-        "lp": "0x96258BB42779Bf300cf69c9B5bD2Ba5245CB4bc4",
-        "pid": 9
+        "lp": "0x96258BB42779Bf300cf69c9B5bD2Ba5245CB4bc4"
       },
       {
         "victimPID": 4,
         "token": "LUA-TOMOE",
-        "lp": "0xE2f4cC0198150a7beA98E0a2A66fecafC30a5cD0",
-        "pid": 10
+        "lp": "0xE2f4cC0198150a7beA98E0a2A66fecafC30a5cD0"
       },
       {
         "victimPID": 6,
         "token": "LUA-SUSHI",
-        "lp": "0xc9a72CC23f900b381FC6355afD8ee674B1F12DF6",
-        "pid": 11
+        "lp": "0xc9a72CC23f900b381FC6355afD8ee674B1F12DF6"
       },
       {
         "victimPID": 8,
         "token": "LUA-FTT",
-        "lp": "0x38F9307839A8E82b071EA6Fcbef029814Ed88fcb",
-        "pid": 12
+        "lp": "0x38F9307839A8E82b071EA6Fcbef029814Ed88fcb"
       },
       {
         "victimPID": 9,
         "token": "LUA-ETH",
-        "lp": "0x65FaBAF7e6c5380243E063D8559d84e589Db6438",
-        "pid": 13
+        "lp": "0x65FaBAF7e6c5380243E063D8559d84e589Db6438"
       },
       {
         "victimPID": 12,
         "token": "USDC-USDT",
-        "lp": "0xB3558F47Fa914F7ec1dA1a6F52aB41eE63E81301",
-        "pid": 14
+        "lp": "0xB3558F47Fa914F7ec1dA1a6F52aB41eE63E81301"
       },
       {
         "victimPID": 14,
         "token": "UNI-LUA",
-        "lp": "0xb195325642431b6aA6CD3C646591e7825BB3F90c",
-        "pid": 15
+        "lp": "0xb195325642431b6aA6CD3C646591e7825BB3F90c"
       },
       {
         "victimPID": 16,
         "token": "RAMP-USDT",
-        "lp": "0x627846F6131A4631ddF6BB53bd682cCF51f623b3",
-        "pid": 16
+        "lp": "0x627846F6131A4631ddF6BB53bd682cCF51f623b3"
       }
     ]
   },

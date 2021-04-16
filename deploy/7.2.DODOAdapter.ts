@@ -27,7 +27,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       const data = fs.readFileSync(POOL_JSON);
       const pools = JSON.parse(data);
 
-      let nextPID = await masterVampire.poolLength();
+      let nextPID = (await masterVampire.poolLength()).toNumber();
       for (let pool of pools[POOL_ID].victimPools) {
         await masterVampire.add(DODOAdapter.address, pool.victimPID);
         if (pool.pid == undefined) {
