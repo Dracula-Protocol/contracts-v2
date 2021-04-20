@@ -15,7 +15,6 @@ contract OneInchAdapter is BaseAdapter {
 
     address immutable MASTER_VAMPIRE;
     IERC20 constant ONEINCH = IERC20(0x111111111117dC0aa78b770fA6A738034120C302);
-    IFarmRewards constant ONEINCH_MASTER_POOL = IFarmRewards(0x0EF1B8a0E726Fc3948E15b23993015eB1627f210);
     IUniswapV2Pair constant ONEINCH_WETH_PAIR = IUniswapV2Pair(0x26aAd2da94C59524ac0D93F6D6Cbf9071d7086f2);
     IFarmRewards[] pools;
 
