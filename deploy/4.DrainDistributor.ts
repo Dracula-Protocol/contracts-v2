@@ -31,13 +31,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [WETH, treasury, uniRewardPool.address, yflRewardPool.address, drcRewardPool.address]
   });
 
-  const drainDistributor = await ethers.getContractAt('DrainDistributor', DrainDistributor.address, ethers.provider.getSigner(deployer));
+  if (DrainDistributor.newlyDeployed) {
+    const drainDistributor = await ethers.getContractAt('DrainDistributor', DrainDistributor.address, ethers.provider.getSigner(deployer));
 
-  await drainDistributor.changeDrainController(drainController.address);
+    await drainDistributor.changeDrainController(drainController.address);
 
-  await uniRewardPool.addRewardSupplier(drainDistributor.address);
-  await yflRewardPool.addRewardSupplier(drainDistributor.address);
-  await drcRewardPool.addRewardSupplier(drainDistributor.address);
+    await uniRewardPool.addRewardSupplier(drainDistributor.address);
+    await yflRewardPool.addRewardSupplier(drainDistributor.address);
+    await drcRewardPool.addRewardSupplier(drainDistributor.address);
+  }
 };
 
 export default func;
