@@ -29,8 +29,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [DrainDistributor.address, DrainController.address, StrategyRari.address, WETH]
   });
 
-  const drainController = await ethers.getContractAt('DrainController', DrainController.address, ethers.provider.getSigner(deployer));
-  await drainController.setMasterVampire(MasterVampire.address);
+  if (MasterVampire.newlyDeployed) {
+    const drainController = await ethers.getContractAt('DrainController', DrainController.address, ethers.provider.getSigner(deployer));
+    await drainController.setMasterVampire(MasterVampire.address);
+  }
 };
 
 export default func;
