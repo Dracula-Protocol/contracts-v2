@@ -173,6 +173,16 @@
         "token": "mVIXY-UST",
         "victimPID": 11,
         "lp": "0x6094367ea57ff4f545e2672e024393d82a1d3F28"
+      },
+      {
+        "token": "mQQQ-UST",
+        "victimPID": 12,
+        "lp": "0x9E3B47B861B451879d43BBA404c35bdFb99F0a6c"
+      },
+      {
+        "token": "mMSFT-UST",
+        "victimPID": 13,
+        "lp": "0xeAfAD3065de347b910bb88f09A5abE580a09D655"
       }
     ]
   },
@@ -215,11 +225,6 @@
         "lp": "0x3261D9408604CC8607b687980D40135aFA26FfED"
       },
       {
-        "token": "pUNI BAC-DAI",
-        "victimPID": 22,
-        "lp": "0x2350fc7268F3f5a6cC31f26c38f706E41547505d"
-      },
-      {
         "token": "stETH-ETH",
         "victimPID": 24,
         "lp": "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD"
@@ -230,10 +235,56 @@
         "lp": "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48"
       },
       {
-        "token": "pUNI BASv2-DAI",
+        "token": "pUNIBASV2DAI",
         "victimPID": 27,
         "lp": "0x748712686a78737DA0b7643DF78Fdf2778dC5944"
+      },
+      {
+        "token": "pUNIMIRUST",
+        "victimPID": 28,
+        "lp": "0x3bcd97dca7b1ced292687c97702725f37af01cac"
+      },
+      {
+        "token": "pUNImTSLAUST",
+        "victimPID": 30,
+        "lp": "0xaFB2FE266c215B5aAe9c4a9DaDC325cC7a497230"
+      },     
+      {
+        "token": "pUNImAAPLUST",
+        "victimPID": 31,
+        "lp": "0xF303B35D5bCb4d9ED20fB122F5E268211dEc0EBd"
+      },
+      {
+        "token": "pUNImQQQUST",
+        "victimPID": 32,
+        "lp": "0x7C8de3eE2244207A54b57f45286c9eE1465fee9f"
+      },
+      {
+        "token": "pUNImSLVUST",
+        "victimPID": 33,
+        "lp": "0x1ed1fD33b62bEa268e527A622108fe0eE0104C07"
+      },
+      {
+        "token": "pUNImBABAUST",
+        "victimPID": 34,
+        "lp": "0x1CF137F651D8f0A4009deD168B442ea2E870323A"
+      },
+      {
+        "token": "pSUSHIETH",
+        "victimPID": 35,
+        "lp": "0xECb520217DccC712448338B0BB9b08Ce75AD61AE"
+      },
+      {
+        "token": "pUNIFEITRIBE",
+        "victimPID": 36,
+        "lp": "0xC1513C1b0B359Bc5aCF7b772100061217838768B"
+      },
+      {
+        "token": "mDILLv2",
+        "victimPID": 37,
+        "lp": "0x45F7fa97BD0e0C212A844BAea35876C7560F465B"
       }
+ 
     ]
   },
   "stabilize": {
@@ -255,11 +306,6 @@
         "lp": "0x739D93f2b116E6aD754e173655c635Bd5D8d664c"
       },
       {
-        "token": "zs-FRAX",
-        "victimPID": 18,
-        "lp": "0xD469BB16116443F389EfEF407D73EF7Ab0Ad96Ce"
-      },
-      {
         "token": "zs-UST",
         "victimPID": 19,
         "lp": "0x27E8d93D27f55130B1870d8EF2BCE847C08A8191"
@@ -273,6 +319,11 @@
         "token": "zs-XUSD2",
         "victimPID": 22,
         "lp": "0xB5eB7528aCB55480b4221E498834FBc8cCBCd834"
+      },
+      {
+        "token": "zs-tsBTC",
+        "victimPID": 23,
+        "lp": "0x06C3467b2FcFc7431E92ecCE9dcb14D18bd518a2"
       }
     ]
   },
