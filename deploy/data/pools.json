@@ -306,42 +306,49 @@
     ]
   },
   "stabilize": {
-    "deployedAdapter": "",
+    "deployedAdapter": "0x707eB2A42bd3788DAF749849a26351548f0dab0c",
     "victimPools": [
       {
         "token": "STBZ-ETH",
         "victimPID": 0,
-        "lp": "0xDB28312a8d26D59978D9B86cA185707B1A26725b"
+        "lp": "0xDB28312a8d26D59978D9B86cA185707B1A26725b",
+        "pid": 36
       },
       {
         "token": "zs-USD",
         "victimPID": 14,
-        "lp": "0x8e769EAA31375D13a1247dE1e64987c28Bed987E"
+        "lp": "0x8e769EAA31375D13a1247dE1e64987c28Bed987E",
+        "pid": 37
       },
       {
         "token": "zs-BTC",
         "victimPID": 15,
-        "lp": "0x739D93f2b116E6aD754e173655c635Bd5D8d664c"
+        "lp": "0x739D93f2b116E6aD754e173655c635Bd5D8d664c",
+        "pid": 38
       },
       {
         "token": "zs-UST",
         "victimPID": 19,
-        "lp": "0x27E8d93D27f55130B1870d8EF2BCE847C08A8191"
+        "lp": "0x27E8d93D27f55130B1870d8EF2BCE847C08A8191",
+        "pid": 39
       },
       {
         "token": "zs-ETH",
         "victimPID": 20,
-        "lp": "0x93B97BBb3F65EC39ea6041bF92FA998e5434E858"
+        "lp": "0x93B97BBb3F65EC39ea6041bF92FA998e5434E858",
+        "pid": 40
       },
       {
         "token": "zs-XUSD2",
         "victimPID": 22,
-        "lp": "0xB5eB7528aCB55480b4221E498834FBc8cCBCd834"
+        "lp": "0xB5eB7528aCB55480b4221E498834FBc8cCBCd834",
+        "pid": 41
       },
       {
         "token": "zs-tsBTC",
         "victimPID": 23,
-        "lp": "0x06C3467b2FcFc7431E92ecCE9dcb14D18bd518a2"
+        "lp": "0x06C3467b2FcFc7431E92ecCE9dcb14D18bd518a2",
+        "pid": 42
       }
     ]
   },
