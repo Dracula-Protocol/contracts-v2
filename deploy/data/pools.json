@@ -187,104 +187,122 @@
     ]
   },
   "pickle": {
-    "deployedAdapter": "",
+    "deployedAdapter": "0x8432BF53c68aed9E703ABCd78Be3810478F1eE36",
     "victimPools": [
       {
         "token": "PICKLE-ETH",
         "victimPID": 0,
-        "lp": "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819"
+        "lp": "0xdc98556Ce24f007A5eF6dC1CE96322d65832A819",
+        "pid": 17
       },
       {
         "token": "p3CRV",
         "victimPID": 14,
-        "lp": "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33"
+        "lp": "0x1BB74b5DdC1f4fC91D6f9E7906cf68bc93538e33",
+        "pid": 18
       },
       {
         "token": "pSLP-DAI",
         "victimPID": 17,
-        "lp": "0x55282dA27a3a02ffe599f6D11314D239dAC89135"
+        "lp": "0x55282dA27a3a02ffe599f6D11314D239dAC89135",
+        "pid": 19
       },
       {
         "token": "pSLP-USDC",
         "victimPID": 18,
-        "lp": "0x8c2D16B7F6D3F989eb4878EcF13D695A7d504E43"
+        "lp": "0x8c2D16B7F6D3F989eb4878EcF13D695A7d504E43",
+        "pid": 20
       },
       {
         "token": "pSLP-USDT",
         "victimPID": 19,
-        "lp": "0xa7a37aE5Cb163a3147DE83F15e15D8E5f94D6bCE"
+        "lp": "0xa7a37aE5Cb163a3147DE83F15e15D8E5f94D6bCE",
+        "pid": 21
       },
       {
         "token": "pSLP-WBTC",
         "victimPID": 20,
-        "lp": "0xde74b6c547bd574c3527316a2eE30cd8F6041525"
+        "lp": "0xde74b6c547bd574c3527316a2eE30cd8F6041525",
+        "pid": 22
       },
       {
         "token": "pSLP-YFI",
         "victimPID": 21,
-        "lp": "0x3261D9408604CC8607b687980D40135aFA26FfED"
+        "lp": "0x3261D9408604CC8607b687980D40135aFA26FfED",
+        "pid": 23
       },
       {
         "token": "stETH-ETH",
         "victimPID": 24,
-        "lp": "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD"
+        "lp": "0x77C8A58D940a322Aea02dBc8EE4A30350D4239AD",
+        "pid": 24
       },
       {
         "token": "pSLP yveCRV",
         "victimPID": 26,
-        "lp": "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48"
+        "lp": "0x5Eff6d166D66BacBC1BF52E2C54dD391AE6b1f48",
+        "pid": 25
       },
       {
         "token": "pUNIBASV2DAI",
         "victimPID": 27,
-        "lp": "0x748712686a78737DA0b7643DF78Fdf2778dC5944"
+        "lp": "0x748712686a78737DA0b7643DF78Fdf2778dC5944",
+        "pid": 26
       },
       {
         "token": "pUNIMIRUST",
         "victimPID": 28,
-        "lp": "0x3bcd97dca7b1ced292687c97702725f37af01cac"
+        "lp": "0x3bcd97dca7b1ced292687c97702725f37af01cac",
+        "pid": 27
       },
       {
         "token": "pUNImTSLAUST",
         "victimPID": 30,
-        "lp": "0xaFB2FE266c215B5aAe9c4a9DaDC325cC7a497230"
-      },     
+        "lp": "0xaFB2FE266c215B5aAe9c4a9DaDC325cC7a497230",
+        "pid": 28
+      },
       {
         "token": "pUNImAAPLUST",
         "victimPID": 31,
-        "lp": "0xF303B35D5bCb4d9ED20fB122F5E268211dEc0EBd"
+        "lp": "0xF303B35D5bCb4d9ED20fB122F5E268211dEc0EBd",
+        "pid": 29
       },
       {
         "token": "pUNImQQQUST",
         "victimPID": 32,
-        "lp": "0x7C8de3eE2244207A54b57f45286c9eE1465fee9f"
+        "lp": "0x7C8de3eE2244207A54b57f45286c9eE1465fee9f",
+        "pid": 30
       },
       {
         "token": "pUNImSLVUST",
         "victimPID": 33,
-        "lp": "0x1ed1fD33b62bEa268e527A622108fe0eE0104C07"
+        "lp": "0x1ed1fD33b62bEa268e527A622108fe0eE0104C07",
+        "pid": 31
       },
       {
         "token": "pUNImBABAUST",
         "victimPID": 34,
-        "lp": "0x1CF137F651D8f0A4009deD168B442ea2E870323A"
+        "lp": "0x1CF137F651D8f0A4009deD168B442ea2E870323A",
+        "pid": 32
       },
       {
         "token": "pSUSHIETH",
         "victimPID": 35,
-        "lp": "0xECb520217DccC712448338B0BB9b08Ce75AD61AE"
+        "lp": "0xECb520217DccC712448338B0BB9b08Ce75AD61AE",
+        "pid": 33
       },
       {
         "token": "pUNIFEITRIBE",
         "victimPID": 36,
-        "lp": "0xC1513C1b0B359Bc5aCF7b772100061217838768B"
+        "lp": "0xC1513C1b0B359Bc5aCF7b772100061217838768B",
+        "pid": 34
       },
       {
         "token": "mDILLv2",
         "victimPID": 37,
-        "lp": "0x45F7fa97BD0e0C212A844BAea35876C7560F465B"
+        "lp": "0x45F7fa97BD0e0C212A844BAea35876C7560F465B",
+        "pid": 35
       }
- 
     ]
   },
   "stabilize": {
