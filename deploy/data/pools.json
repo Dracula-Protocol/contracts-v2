@@ -353,122 +353,144 @@
     ]
   },
   "sushi": {
-    "deployedAdapter": "",
+    "deployedAdapter": "0x750bA66B58708C7C1F396844F41dc84b0092F427",
     "victimPools": [
       {
         "lp": "0x06da0fd433c1a5d7a4faa01111c044910a184553",
         "token": "WETH-USDT",
-        "victimPID": 0
+        "victimPID": 0,
+        "pid": 43
       },
       {
         "lp": "0x397ff1542f962076d0bfe58ea045ffa2d347aca0",
         "token": "USDC-WETH",
-        "victimPID": 1
+        "victimPID": 1,
+        "pid": 44
       },
       {
         "lp": "0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f",
         "token": "DAI-WETH",
-        "victimPID": 2
+        "victimPID": 2,
+        "pid": 45
       },
       {
         "lp": "0xf1f85b2c54a2bd284b1cf4141d64fd171bd85539",
         "token": "sUSD-WETH",
-        "victimPID": 3
+        "victimPID": 3,
+        "pid": 46
       },
       {
         "lp": "0x31503dcb60119a812fee820bb7042752019f2355",
         "token": "COMP-WETH",
-        "victimPID": 4
+        "victimPID": 4,
+        "pid": 47
       },
       {
         "lp": "0xa1d7b2d891e3a1f9ef4bbc5be20630c2feb1c470",
         "token": "SNX-WETH",
-        "victimPID": 6
+        "victimPID": 6,
+        "pid": 48
       },
       {
         "lp": "0x001b6450083e531a5a7bf310bd2c1af4247e23d4",
         "token": "UMA-WETH",
-        "victimPID": 7
+        "victimPID": 7,
+        "pid": 49
       },
       {
         "lp": "0xc40d16476380e4037e6b1a2594caf6a6cc8da967",
         "token": "LINK-WETH",
-        "victimPID": 8
+        "victimPID": 8,
+        "pid": 50
       },
       {
         "lp": "0xa75f7c2f025f470355515482bde9efa8153536a8",
         "token": "BAND-WETH",
-        "victimPID": 9
+        "victimPID": 9,
+        "pid": 51
       },
       {
         "lp": "0x088ee5007c98a9677165d78dd2109ae4a3d04d0c",
         "token": "YFI-WETH",
-        "victimPID": 11
+        "victimPID": 11,
+        "pid": 52
       },
       {
         "lp": "0x795065dcc9f64b5614c407a6efdc400da6221fb0",
         "token": "SUSHI-WETH",
-        "victimPID": 12
+        "victimPID": 12,
+        "pid": 53
       },
       {
         "lp": "0x611cde65dea90918c0078ac0400a72b0d25b9bb1",
         "token": "REN-WETH",
-        "victimPID": 13
+        "victimPID": 13,
+        "pid": 54
       },
       {
         "lp": "0x58dc5a51fe44589beb22e8ce67720b5bc5378009",
         "token": "WETH-CRV",
-        "victimPID": 17
+        "victimPID": 17,
+        "pid": 55
       },
       {
         "lp": "0xdafd66636e2561b0284edde37e42d192f2844d40",
         "token": "UNI-WETH",
-        "victimPID": 18
+        "victimPID": 18,
+        "pid": 56
       },
       {
         "lp": "0xceff51756c56ceffca006cd410b03ffc46dd3a58",
         "token": "WBTC-WETH",
-        "victimPID": 21
+        "victimPID": 21,
+        "pid": 57
       },
       {
         "lp": "0x382c4a5147fd4090f7be3a9ff398f95638f5d39e",
         "token": "yyDAI+yUSDC+yUSDT+yTUSD-WETH",
-        "victimPID": 25
+        "victimPID": 25,
+        "pid": 58
       },
       {
         "lp": "0xd75ea151a61d06868e31f8988d28dfe5e9df57b4",
         "token": "AAVE-WETH",
-        "victimPID": 37
+        "victimPID": 37,
+        "pid": 59
       },
       {
         "lp": "0x0f82e57804d0b1f6fab2370a43dcfad3c7cb239c",
         "token": "YAM-WETH",
-        "victimPID": 44
+        "victimPID": 44,
+        "pid": 60
       },
       {
         "lp": "0xaf988aff99d3d0cb870812c325c588d8d8cb7de8",
         "token": "KP3R-WETH",
-        "victimPID": 58
+        "victimPID": 58,
+        "pid": 61
       },
       {
         "lp": "0x66ae32178640813f3c32a9929520bfe4fef5d167",
         "token": "COVER-WETH",
-        "victimPID": 101
+        "victimPID": 101,
+        "pid": 62
       }
     ]
   },
   "truefi": {
-    "deployedAdapter": "",
+    "deployedAdapter": "0xe26Ab391A2bA6D9A5399aE412727Dd197414cFA1",
     "victimPools": [
       {
         "token": "tfTUSD",
         "victimPID": 0,
-        "lp": "0x8FD832757F58F71BAC53196270A4a55c8E1a29D9"
+        "lp": "0x8FD832757F58F71BAC53196270A4a55c8E1a29D9",
+        "pid": 63
       },
       {
         "token": "UNI TUSD/TFI",
         "victimPID": 2,
-        "lp": "0xf8F14Fbb93fa0cEFe35Acf7e004fD4Ef92d8315a"
+        "lp": "0xf8F14Fbb93fa0cEFe35Acf7e004fD4Ef92d8315a",
+        "pid": 64
       }
     ]
   },
