@@ -26,12 +26,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [chi]
   });
 
-  const DrainDistributor = await deployments.get('DrainDistributor');
-  if (DrainController.newlyDeployed && DrainDistributor) {
-    const drainDistributor = await ethers.getContractAt('DrainDistributor', DrainDistributor.address, ethers.provider.getSigner(deployer));
-    await drainDistributor.changeDrainController(DrainController.address);
+  try {
+    const DrainDistributor = await deployments.get('DrainDistributor');
+    if (DrainController.newlyDeployed && DrainDistributor) {
+      const drainDistributor = await ethers.getContractAt('DrainDistributor', DrainDistributor.address, ethers.provider.getSigner(deployer));
+      await drainDistributor.changeDrainController(DrainController.address);
+    }
+  } catch (err) {
+    // do nothing
   }
 };
 
 export default func;
-func.tags = ['dracula', 'live'];
+func.tags = ['disabled'];

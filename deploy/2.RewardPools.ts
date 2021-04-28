@@ -6,7 +6,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const chainId = await getChainId();
 
-  let { deployer, alice, DRC, WETH, DRCETHUNI, DRCETHYFL } = await getNamedAccounts();
+  let { deployer, DRC, WETH, DRCETHUNI, DRCETHYFL } = await getNamedAccounts();
 
   if (chainId != '1') {
     const drc = await deployments.get('DRC');
@@ -43,4 +43,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 export default func;
-func.tags = ['dracula', 'live'];
+func.tags = ['disabled'];

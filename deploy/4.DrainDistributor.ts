@@ -19,8 +19,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const UniRewardPool = await deployments.get('UniRewardPool');
   const uniRewardPool = await ethers.getContractAt('RewardPool', UniRewardPool.address, ethers.provider.getSigner(deployer));
-  const YFLRewardPool = await deployments.get('YFLRewardPool');
-  const yflRewardPool = await ethers.getContractAt('RewardPool', YFLRewardPool.address, ethers.provider.getSigner(deployer));
   const DRCRewardPool = await deployments.get('DRCRewardPool');
   const drcRewardPool = await ethers.getContractAt('DRCRewardPool', DRCRewardPool.address, ethers.provider.getSigner(deployer));
 
@@ -28,7 +26,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     log: true,
     contract: 'DrainDistributor',
-    args: [WETH, treasury, uniRewardPool.address, yflRewardPool.address, drcRewardPool.address]
+    args: [WETH, treasury, uniRewardPool.address, drcRewardPool.address]
   });
 
   if (DrainDistributor.newlyDeployed) {
@@ -37,10 +35,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     await drainDistributor.changeDrainController(drainController.address);
 
     await uniRewardPool.addRewardSupplier(drainDistributor.address);
-    await yflRewardPool.addRewardSupplier(drainDistributor.address);
     await drcRewardPool.addRewardSupplier(drainDistributor.address);
   }
 };
 
 export default func;
-func.tags = ['dracula', 'live'];
+func.tags = ['disabled'];
