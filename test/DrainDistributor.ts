@@ -16,7 +16,6 @@ describe('DrainDistributor', () => {
       weth:Contract,
       drain_distributor:Contract,
       uniRewardPool:Contract,
-      yflRewardPool:Contract,
       drcRewardPool:Contract;
 
   beforeEach(async () => {
@@ -37,8 +36,6 @@ describe('DrainDistributor', () => {
 
     const UniRewardPool = await deployments.get('UniRewardPool');
     uniRewardPool = await ethers.getContractAt('RewardPool', UniRewardPool.address, deployer);
-    const YFLRewardPool = await deployments.get('YFLRewardPool');
-    yflRewardPool = await ethers.getContractAt('RewardPool', YFLRewardPool.address, deployer);
     const DRCRewardPool = await deployments.get('DRCRewardPool');
     drcRewardPool = await ethers.getContractAt('DRCRewardPool', DRCRewardPool.address, deployer);
   });
@@ -52,9 +49,6 @@ describe('DrainDistributor', () => {
       expect(await drain_distributor.uniRewardPool()).to.not.eq(bob.address);
       await drain_distributor.changeUniRewardPool(bob.address);
       expect(await drain_distributor.uniRewardPool()).to.eq(bob.address);
-      expect(await drain_distributor.yflRewardPool()).to.not.eq(carol.address);
-      await drain_distributor.changeYFLRewardPool(carol.address);
-      expect(await drain_distributor.yflRewardPool()).to.eq(carol.address);
       expect(await drain_distributor.drcRewardPool()).to.not.eq(alice.address);
       await drain_distributor.changeDRCRewardPool(alice.address);
       expect(await drain_distributor.drcRewardPool()).to.eq(alice.address);
@@ -66,17 +60,15 @@ describe('DrainDistributor', () => {
     it('can set distribution', async () => {
       expect(await drain_distributor.gasShare()).to.eq(100);
       expect(await drain_distributor.devShare()).to.eq(250);
-      expect(await drain_distributor.uniRewardPoolShare()).to.eq(200);
-      expect(await drain_distributor.yflRewardPoolShare()).to.eq(200);
+      expect(await drain_distributor.uniRewardPoolShare()).to.eq(400);
       expect(await drain_distributor.drcRewardPoolShare()).to.eq(250);
-      await drain_distributor.changeDistribution(200, 200, 200, 200, 200);
+      await drain_distributor.changeDistribution(200, 200, 300, 300);
       expect(await drain_distributor.gasShare()).to.eq(200);
       expect(await drain_distributor.devShare()).to.eq(200);
-      expect(await drain_distributor.uniRewardPoolShare()).to.eq(200);
-      expect(await drain_distributor.yflRewardPoolShare()).to.eq(200);
-      expect(await drain_distributor.drcRewardPoolShare()).to.eq(200);
+      expect(await drain_distributor.uniRewardPoolShare()).to.eq(300);
+      expect(await drain_distributor.drcRewardPoolShare()).to.eq(300);
       await expect(
-        drain_distributor.changeDistribution(200, 100, 300, 300, 200)
+        drain_distributor.changeDistribution(200, 100, 300, 200)
       ).to.be.reverted;
     });
   });
@@ -93,16 +85,14 @@ describe('DrainDistributor', () => {
       await drain_distributor.distribute();
       expect(await carol.getBalance()).to.eq(utils.parseEther('10000.1'));
       expect(await weth.balanceOf(bob.address)).to.eq(utils.parseEther('0.25'));
-      expect(await weth.balanceOf(uniRewardPool.address)).to.eq(utils.parseEther('0.2'));
-      expect(await weth.balanceOf(yflRewardPool.address)).to.eq(utils.parseEther('0.2'));
+      expect(await weth.balanceOf(uniRewardPool.address)).to.eq(utils.parseEther('0.4'));
       expect(await weth.balanceOf(drcRewardPool.address)).to.eq(utils.parseEther('0.25'));
 
       await weth.transfer(drain_distributor.address, utils.parseEther('1'));
       await drain_distributor.distribute();
       expect(await carol.getBalance()).to.eq(utils.parseEther('10000.2'));
       expect(await weth.balanceOf(bob.address)).to.eq(utils.parseEther('0.5'));
-      expect(await weth.balanceOf(uniRewardPool.address)).to.eq(utils.parseEther('0.4'));
-      expect(await weth.balanceOf(yflRewardPool.address)).to.eq(utils.parseEther('0.4'));
+      expect(await weth.balanceOf(uniRewardPool.address)).to.eq(utils.parseEther('0.8'));
       expect(await weth.balanceOf(drcRewardPool.address)).to.eq(utils.parseEther('0.5'));
     });
   });
