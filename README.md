@@ -16,7 +16,7 @@ __DraculaToken__ [0xb78B3320493a4EFaa1028130C5Ba26f0B6085Ef8](https://etherscan.
 
 __DrainController__ [0xEB0E5D49C5504DFd850E9d28Eb69bA8d8cc02736](https://etherscan.io/address/0xEB0E5D49C5504DFd850E9d28Eb69bA8d8cc02736)
 
-__DrainDistributor__ [0xE4CE241D367b48c4C70719E0A634F1fD16b77b6E](https://etherscan.io/address/0xE4CE241D367b48c4C70719E0A634F1fD16b77b6E)
+__DrainDistributor__ [0x1543e3d0d71a8Ed29019F4Eb7b57d319A7051b84](https://etherscan.io/address/0x1543e3d0d71a8Ed29019F4Eb7b57d319A7051b84)
 
 __DRCRewardPool__ [0xC8DFD57E82657f1e7EdEc5A9aA4906230C29A62A](https://etherscan.io/address/0xC8DFD57E82657f1e7EdEc5A9aA4906230C29A62A) DRC staking pool.
 
