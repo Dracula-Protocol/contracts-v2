@@ -48,7 +48,7 @@ const config: HardhatUserConfig = {
   gasReporter: {
     enabled: false,
     currency: 'USD',
-    gasPrice: 60,
+    gasPrice: 120,
     coinmarketcap: `${CMC_API_KEY}`
   },
   abiExporter: {

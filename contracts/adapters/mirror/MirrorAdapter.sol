@@ -10,11 +10,11 @@ import "./ILPPool.sol";
 
 contract MirrorAdapter is BaseAdapter {
     ILPPool[] pools;
-    address constant MASTER_VAMPIRE = 0xD12d68Fd52b54908547ebC2Cd77Ec6EbbEfd3099;
+    address immutable MASTER_VAMPIRE;
     IERC20 constant MIR = IERC20(0x09a3EcAFa817268f77BE1283176B946C4ff2E608);
     IUniswapV2Pair constant MIR_WETH_PAIR = IUniswapV2Pair(0x57aB5AEB8baC2586A0d437163C3eb844246336CE);
 
-    constructor(address _weth, address _factory)
+    constructor(address _weth, address _factory, address _masterVampire)
         BaseAdapter(_weth, _factory)
     {
         pools.push(ILPPool(0x5d447Fc0F8965cED158BAB42414Af10139Edf0AF)); // MIR-UST
@@ -31,6 +31,7 @@ contract MirrorAdapter is BaseAdapter {
         pools.push(ILPPool(0xDB278fb5f7d4A7C3b83F80D18198d872Bbf7b923)); // mSLV-UST
         pools.push(ILPPool(0x2221518288AF8c5D5a87fd32717fAb154240d942)); // mUSO-UST
         pools.push(ILPPool(0xBC07342D01fF5D72021Bb4cb95F07C252e575309)); // mVIXY-UST
+
     }
 
     // Victim info
@@ -89,8 +90,7 @@ contract MirrorAdapter is BaseAdapter {
 
     function emergencyWithdraw(address, uint256) external pure override {
         require(false, "not implemented");
-        return;
-        }
+    }
 
     // Service methods
     function poolAddress(uint256 poolId) external view override returns (address) {

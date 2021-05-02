@@ -19,6 +19,10 @@ contract MockRariFundManager is IRariFundManager {
         reptToken = new MockERC20("RARI ETH", "REPT", 18);
     }
 
+    receive() external payable {
+        _deposit(msg.value);
+    }
+
     function rariFundToken() external view override returns (IERC20) {
         return IERC20(address(reptToken));
     }
@@ -44,22 +48,29 @@ contract MockRariFundManager is IRariFundManager {
         return true;
     }
 
-    function _deposit(uint256 _amount) internal {
-        uint256 _pool = balance();
+    function _deposit(uint256 _ethAmount) internal {
+        uint256 totalETH = balance();
+        uint256 totalShares = reptToken.totalSupply();
         uint256 shares = 0;
-        if (reptToken.totalSupply() == 0) {
-            shares = _amount;
+        if (totalShares == 0 || totalETH == 0) {
+            shares = _ethAmount;
         } else {
-            shares = (_amount.mul(reptToken.totalSupply())).div(_pool);
+            // Note: input amount of eth is subtracted from total ETH because by the time
+            // we hit this statement, totalETH already includes ethAmount and would skew the
+            // calculation of shares.
+            shares = _ethAmount.mul(totalShares).div(totalETH.sub(_ethAmount));
         }
-        balances[msg.sender] = balances[msg.sender].add(_amount);
+
+        balances[msg.sender] = balances[msg.sender].add(_ethAmount);
         reptToken.mint(msg.sender, shares);
     }
 
-    function _withdraw(uint256 _amount) internal {
-        uint256 r = (balance().mul(_amount)).div(reptToken.totalSupply());
-        reptToken.burnFrom(msg.sender, _amount);
-        balances[msg.sender] = balances[msg.sender].sub(_amount);
-        msg.sender.transfer(r);
+    function _withdraw(uint256 _ethAmount) internal {
+        uint256 totalETH = balance();
+        uint256 totalShares = reptToken.totalSupply();
+        uint256 reptAmount = _ethAmount.mul(totalShares).div(totalETH);
+        reptToken.burnFrom(msg.sender, reptAmount);
+        balances[msg.sender] = balances[msg.sender].sub(_ethAmount);
+        msg.sender.transfer(_ethAmount);
     }
 }
