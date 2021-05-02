@@ -1,3 +1,11 @@
+# What is Dracula Protocol?
+
+Dracula Protocol is a universal DeFi adapter that aggregates interest earning strategies, known as yield farming, into a singular protocol. Dracula Protocol aims to consolidate various aspects of DeFi into one platform and is managed through a Distributed Autonomous Organization (DAO), in which voting rights are quantified by $DRC ownership.
+
+# How does it work?
+
+Dracula Protocol allows users to deposit their assets through its interface, which are then deposited into underlying platforms to earn interest. Dracula Protocol adds a layer of security when yield farming, while also consolidating all steps necessary to earn interest into one protocol.
+
 # Dracula Protocol contracts
 
 ## Core contracts

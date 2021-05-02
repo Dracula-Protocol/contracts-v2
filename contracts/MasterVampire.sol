@@ -2,6 +2,7 @@
 
 pragma solidity ^0.7.6;
 
+import "@openzeppelin/contracts/math/Math.sol";
 import "./IMasterVampire.sol";
 import "./IIBVEth.sol";
 
@@ -20,6 +21,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
+    event ETHValue(uint256 amount);
 
     IWETH immutable weth;
 
@@ -76,6 +78,10 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         withdrawalPenalty = _withdrawalPenalty;
     }
 
+    function updateVictimAddress(uint256 _pid, address _victim) external onlyOwner {
+        poolInfo[_pid].victim = Victim(_victim);
+    }
+
     function updateVictimInfo(uint256 _pid, address _victim, uint256 _victimPoolId) external onlyOwner {
         poolInfo[_pid].victim = Victim(_victim);
         poolInfo[_pid].victimPoolId = _victimPoolId;
@@ -113,15 +119,13 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         uint256 accWethPerShare = pool.accWethPerShare;
         uint256 lpSupply = pool.victim.lockedAmount(pool.victimPoolId);
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
-            uint256 blocksToReward = block.number.sub(pool.lastRewardBlock);
-            uint256 wethReward = blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod);
+            uint256 blocksToReward = Math.min(block.number.sub(pool.lastRewardBlock), distributionPeriod);
+            uint256 wethReward = Math.min(blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod), pool.wethAccumulator);
             accWethPerShare = accWethPerShare.add(wethReward.mul(1e12).div(lpSupply));
         }
 
         return user.amount.mul(accWethPerShare).div(1e12).sub(user.rewardDebt);
     }
-
-    event ETHValue(uint256 amount);
 
     function pendingWethReal(uint256 _pid, address _user) external returns (uint256) {
         uint256 ibETH = pendingWeth(_pid, _user);
@@ -158,8 +162,8 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
             return;
         }
 
-        uint256 blocksToReward = block.number.sub(pool.lastRewardBlock);
-        uint256 wethReward = blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod);
+        uint256 blocksToReward = Math.min(block.number.sub(pool.lastRewardBlock), distributionPeriod);
+        uint256 wethReward = Math.min(blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod), pool.wethAccumulator);
         pool.accWethPerShare = pool.accWethPerShare.add(wethReward.mul(1e12).div(lpSupply));
         pool.lastRewardBlock = block.number;
         pool.wethAccumulator = pool.wethAccumulator.sub(wethReward);
@@ -246,6 +250,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         }
 
         uint256 wethReward = victim.sellRewardForWeth(pid, claimedReward, address(this));
+
         // Take a % of the drained reward to be redistributed to other contracts
         uint256 wethDrainAmount = wethReward.mul(wethDrainModifier).div(1000);
         if (wethDrainAmount > 0) {
@@ -259,7 +264,11 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         require(success, "handleDrainedWETH(uint256 amount) delegatecall failed.");
         uint256 ibethAfter = IIBVEth(IBVETH).balance(address(this));
 
-        pool.wethAccumulator = pool.wethAccumulator.add(ibethAfter.sub(ibethBefore));
+        if (pool.wethAccumulator == 0) {
+            pool.wethAccumulator = ibethAfter;
+        } else {
+            pool.wethAccumulator = pool.wethAccumulator.add(ibethAfter.sub(ibethBefore));
+        }
     }
 
     /// This function allows owner to take unsupported tokens out of the contract.
@@ -280,6 +289,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     function _claim(uint256 pid, bool withdrawing, uint8 flag) internal {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
+
         uint256 pending = user.amount.mul(pool.accWethPerShare).div(1e12).sub(user.rewardDebt);
         if (pending > 0) {
             if (withdrawing && withdrawalPenalty > 0 && block.timestamp < user.coolOffTime) {

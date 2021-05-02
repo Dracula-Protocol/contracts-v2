@@ -25,7 +25,7 @@ interface IMasterVampire {
 /**
 * @title Controls the "drain" of pool rewards
 *
-* optimalMassDrain should be called by a whitelisted node.
+* drainPools should be called by a whitelisted node.
 * This function calls drain() for each pool in MasterVampire if the reward
 * WETH value is greater then the configured threshold.
 *
@@ -159,31 +159,14 @@ contract DrainController is Ownable {
     }
 
     /**
-     * @notice Determines which pools can be drained based on value of rewards available
+     * @notice Drains the specified pools
      */
-    function optimalMassDrain(uint256[] memory pids) external onlyWhitelister refundGasCost returns(uint32) {
+    function drainPools(uint256[] memory pids) external onlyWhitelister refundGasCost {
         uint256 poolLength = pids.length;
-        uint32 numDrained;
         for (uint i = 0; i < poolLength; ++i) {
             uint pid = pids[i];
-            (Victim victim, uint256 victimPoolId,,,,,) = masterVampire.poolInfo(pid);
-            if (address(victim) != address(0)) {
-                uint256 pendingReward = victim.pendingReward(pid, victimPoolId);
-                if (pendingReward > 0) {
-                    uint256 rewardValue_ = victim.rewardValue(victimPoolId, pendingReward);
-                    if (rewardValue_ >= wethThreshold) {
-                        try masterVampire.drain(pid) {
-                            // success
-                            ++numDrained;
-                        } catch {
-                            // ignore failed drain
-                        }
-                    }
-                }
-            }
+            masterVampire.drain(pid);
         }
-
-        return numDrained;
     }
 
     /**
