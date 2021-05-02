@@ -17,18 +17,20 @@ contract MirrorAdapter is BaseAdapter {
     constructor(address _weth, address _factory)
         BaseAdapter(_weth, _factory)
     {
-        pools.push(ILPPool(0x87dA823B6fC8EB8575a235A824690fda94674c88)); // MIR-UST
-        pools.push(ILPPool(0xB022e08aDc8bA2dE6bA4fECb59C6D502f66e953B)); // UST-mAAPL
-        pools.push(ILPPool(0x4b70ccD1Cf9905BE1FaEd025EADbD3Ab124efe9a)); // mGOOGL-UST
-        pools.push(ILPPool(0x5233349957586A8207c52693A959483F9aeAA50C)); // mTSLA-UST
-        pools.push(ILPPool(0xC99A74145682C4b4A6e9fa55d559eb49A6884F75)); // UST-mNFLX
-        pools.push(ILPPool(0x34856be886A2dBa5F7c38c4df7FD86869aB08040)); // UST-mTWTR
-        pools.push(ILPPool(0x0Ae8cB1f57e3b1b7f4f5048743710084AA69E796)); // mAMZN-UST
-        pools.push(ILPPool(0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363)); // mBABA-UST
-        pools.push(ILPPool(0xd7f97aa0317C08A1F5C2732e7894933f11724868)); // mIAU-UST
-        pools.push(ILPPool(0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe)); // mSLV-UST
-        pools.push(ILPPool(0x6Bd8Ca9D141aa95842b41e1431A244C309c9008C)); // mUSO-UST
-        pools.push(ILPPool(0x6094367ea57ff4f545e2672e024393d82a1d3F28)); // mVIXY-UST
+        pools.push(ILPPool(0x5d447Fc0F8965cED158BAB42414Af10139Edf0AF)); // MIR-UST
+        pools.push(ILPPool(0x735659C8576d88A2Eb5C810415Ea51cB06931696)); // UST-mAAPL
+        pools.push(ILPPool(0x5b64BB4f69c8C03250Ac560AaC4C7401d78A1c32)); // mGOOGL-UST
+        pools.push(ILPPool(0x43DFb87a26BA812b0988eBdf44e3e341144722Ab)); // mTSLA-UST
+        pools.push(ILPPool(0x29cF719d134c1C18daB61C2F4c0529C4895eCF44)); // UST-mNFLX
+        pools.push(ILPPool(0xc1d2ca26A59E201814bF6aF633C3b3478180E91F)); // mQQQ-UST
+        pools.push(ILPPool(0x99d737ab0df10cdC99c6f64D0384ACd5C03AEF7F)); // UST-mTWTR
+        pools.push(ILPPool(0x27a14c03C364D3265e0788f536ad8d7afB0695F7)); // mMSFT-UST
+        pools.push(ILPPool(0x1fABef2C2DAB77f01053E9600F70bE1F3F657F51)); // mAMZN-UST
+        pools.push(ILPPool(0x769325E8498bF2C2c3cFd6464A60fA213f26afcc)); // mBABA-UST
+        pools.push(ILPPool(0xE214a6ca22BE90f011f34FDddC7c5A07800F8BCd)); // mIAU-UST
+        pools.push(ILPPool(0xDB278fb5f7d4A7C3b83F80D18198d872Bbf7b923)); // mSLV-UST
+        pools.push(ILPPool(0x2221518288AF8c5D5a87fd32717fAb154240d942)); // mUSO-UST
+        pools.push(ILPPool(0xBC07342D01fF5D72021Bb4cb95F07C252e575309)); // mVIXY-UST
     }
 
     // Victim info
