@@ -140,52 +140,52 @@
         "lp": "0xC99A74145682C4b4A6e9fa55d559eb49A6884F75"
       },
       {
-        "token": "UST-mTWTR",
+        "token": "mQQQ-UST",
         "victimPID": 5,
+        "lp": "0xC99A74145682C4b4A6e9fa55d559eb49A6884F75"
+      },
+      {
+        "token": "UST-mTWTR",
+        "victimPID": 6,
         "lp": "0x34856be886A2dBa5F7c38c4df7FD86869aB08040"
       },
       {
+        "token": "mMSFT-UST",
+        "victimPID": 7,
+        "lp": "0xeAfAD3065de347b910bb88f09A5abE580a09D655"
+      },
+      {
         "token": "mAMZN-UST",
-        "victimPID": 6,
+        "victimPID": 8,
         "lp": "0x0Ae8cB1f57e3b1b7f4f5048743710084AA69E796"
       },
       {
         "token": "mBABA-UST",
-        "victimPID": 7,
+        "victimPID": 9,
         "lp": "0x676Ce85f66aDB8D7b8323AeEfe17087A3b8CB363"
       },
       {
         "token": "mIAU-UST",
-        "victimPID": 8,
+        "victimPID": 10,
         "lp": "0xd7f97aa0317C08A1F5C2732e7894933f11724868"
       },
       {
         "token": "mSLV-UST",
-        "victimPID": 9,
+        "victimPID": 11,
         "lp": "0x860425bE6ad1345DC7a3e287faCBF32B18bc4fAe"
       },
       {
         "token": "mUSO-UST",
-        "victimPID": 10,
+        "victimPID": 12,
         "lp": "0x6Bd8Ca9D141aa95842b41e1431A244C309c9008C"
       },
       {
         "token": "mVIXY-UST",
-        "victimPID": 11,
-        "lp": "0x6094367ea57ff4f545e2672e024393d82a1d3F28"
-      },
-      {
-        "token": "mQQQ-UST",
-        "victimPID": 12,
-        "lp": "0x9E3B47B861B451879d43BBA404c35bdFb99F0a6c"
-      },
-      {
-        "token": "mMSFT-UST",
         "victimPID": 13,
-        "lp": "0xeAfAD3065de347b910bb88f09A5abE580a09D655"
+        "lp": "0x6094367ea57ff4f545e2672e024393d82a1d3F28"
       }
     ]
-  },
+},
   "pickle": {
     "deployedAdapter": "0x8432BF53c68aed9E703ABCd78Be3810478F1eE36",
     "victimPools": [
