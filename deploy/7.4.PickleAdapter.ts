@@ -12,6 +12,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let { deployer, WETH, uniFactory } = await getNamedAccounts();
 
+  if (chainId === '31337') {
+    return;
+  }
+
   if (chainId == '1') {
     const MasterVampire = await deployments.get('MasterVampire');
     const masterVampire = await ethers.getContractAt('MasterVampire', MasterVampire.address, ethers.provider.getSigner(deployer));
