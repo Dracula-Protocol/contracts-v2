@@ -49,6 +49,7 @@ contract SushiAdapter is BaseAdapter {
     // Victim actions, requires impersonation via delegatecall
     function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {
         uint256 devAmt = rewardAmount.mul(DEV_SHARE).div(1000);
+        SUSHI.approve(address(SUSHI_BAR), devAmt);
         SUSHI_BAR.enter(devAmt);
         SUSHI_BAR.transfer(DEV_FUND, SUSHI_BAR.balanceOf(address(this)));
         rewardAmount = rewardAmount.sub(devAmt);

@@ -9,6 +9,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let { deployer } = await getNamedAccounts();
 
+  if (chainId === '31337') {
+    return;
+  }
+
   const DELAY = 60 * 60 * 6; // initially 6 hours until deployment is all complete
 
   const Timelock = await deploy('Timelock', {

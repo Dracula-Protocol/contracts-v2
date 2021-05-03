@@ -12,34 +12,40 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let { deployer, WETH, uniFactory } = await getNamedAccounts();
 
+  if (chainId === '31337') {
+    return;
+  }
+
   if (chainId == '1') {
     const MasterVampire = await deployments.get('MasterVampire');
+    const masterVampire = await ethers.getContractAt('MasterVampire', MasterVampire.address, ethers.provider.getSigner(deployer));
 
     const MirrorAdapter = await deploy('MirrorAdapter', {
       from: deployer,
       log: true,
       contract: 'MirrorAdapter',
-      args: [WETH, uniFactory]
+      args: [WETH, uniFactory, masterVampire.address]
     });
 
-    const masterVampire = await ethers.getContractAt('MasterVampire', MasterVampire.address, ethers.provider.getSigner(deployer));
+    if (MirrorAdapter.newlyDeployed) {
+      const data = fs.readFileSync(POOL_JSON);
+      const pools = JSON.parse(data);
 
-    const data = fs.readFileSync(POOL_JSON);
-    const pools = JSON.parse(data);
-
-    for (let pool of pools[POOL_ID].victimPools) {
-      await masterVampire.add(MirrorAdapter.address, pool.victimPID);
-      if (pool.pid == undefined) {
-        const pid = await masterVampire.poolLength() - 1;
-        pool.pid = pid;
+      let nextPID = (await masterVampire.poolLength()).toNumber();
+      for (let pool of pools[POOL_ID].victimPools) {
+        await masterVampire.add(MirrorAdapter.address, pool.victimPID);
+        if (pool.pid == undefined) {
+          pool.pid = nextPID;
+          nextPID++;
+        }
       }
+
+      pools[POOL_ID].deployedAdapter = MirrorAdapter.address;
+
+      fs.writeFileSync(POOL_JSON, JSON.stringify(pools, null, 2));
     }
-
-    pools[POOL_ID].deployedAdapter = MirrorAdapter.address;
-
-    fs.writeFileSync(POOL_JSON, JSON.stringify(pools, null, 2));
   }
 };
 
 export default func;
-func.tags = ['dracula', 'live'];
+func.tags = ['disabled'];

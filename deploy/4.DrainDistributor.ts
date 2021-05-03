@@ -9,6 +9,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let { deployer, WETH, treasury } = await getNamedAccounts();
 
+  if (chainId === '31337') {
+    return;
+  }
+
   if (chainId != '1') {
     const weth = await deployments.get('WETH');
     WETH = weth.address;
