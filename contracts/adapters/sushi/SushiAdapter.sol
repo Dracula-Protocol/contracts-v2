@@ -62,39 +62,39 @@ contract SushiAdapter is BaseAdapter {
     }
 
     // Pool info
-    function lockableToken(uint256 poolId) external view override returns (IERC20) {
-        (IERC20 lpToken,,,) = SUSHI_MASTER_CHEF.poolInfo(poolId);
+    function lockableToken(uint256 victimPID) external view override returns (IERC20) {
+        (IERC20 lpToken,,,) = SUSHI_MASTER_CHEF.poolInfo(victimPID);
         return lpToken;
     }
 
-    function lockedAmount(address user, uint256 poolId) external view override returns (uint256) {
-        (uint256 amount,) = SUSHI_MASTER_CHEF.userInfo(poolId, user);
+    function lockedAmount(address user, uint256 victimPID) external view override returns (uint256) {
+        (uint256 amount,) = SUSHI_MASTER_CHEF.userInfo(victimPID, user);
         return amount;
     }
 
-    function pendingReward(address, uint256, uint256 victimPoolId) external view override returns (uint256) {
-        return SUSHI_MASTER_CHEF.pendingSushi(victimPoolId, MASTER_VAMPIRE);
+    function pendingReward(address, uint256, uint256 victimPID) external view override returns (uint256) {
+        return SUSHI_MASTER_CHEF.pendingSushi(victimPID, MASTER_VAMPIRE);
     }
 
     // Pool actions, requires impersonation via delegatecall
-    function deposit(address _adapter, uint256 poolId, uint256 amount) external override returns (uint256) {
+    function deposit(address _adapter, uint256 victimPID, uint256 amount) external override returns (uint256) {
         IVampireAdapter adapter = IVampireAdapter(_adapter);
-        adapter.lockableToken(poolId).approve(address(SUSHI_MASTER_CHEF), uint256(-1));
-        SUSHI_MASTER_CHEF.deposit(poolId, amount);
+        adapter.lockableToken(victimPID).approve(address(SUSHI_MASTER_CHEF), uint256(-1));
+        SUSHI_MASTER_CHEF.deposit(victimPID, amount);
         return 0;
     }
 
-    function withdraw(address, uint256 poolId, uint256 amount) external override returns (uint256) {
-        SUSHI_MASTER_CHEF.withdraw(poolId, amount);
+    function withdraw(address, uint256 victimPID, uint256 amount) external override returns (uint256) {
+        SUSHI_MASTER_CHEF.withdraw(victimPID, amount);
         return 0;
     }
 
-    function claimReward(address, uint256, uint256 victimPoolId) external override {
-        SUSHI_MASTER_CHEF.deposit(victimPoolId, 0);
+    function claimReward(address, uint256, uint256 victimPID) external override {
+        SUSHI_MASTER_CHEF.deposit(victimPID, 0);
     }
 
-    function emergencyWithdraw(address, uint256 poolId) external override {
-        SUSHI_MASTER_CHEF.emergencyWithdraw(poolId);
+    function emergencyWithdraw(address, uint256 victimPID) external override {
+        SUSHI_MASTER_CHEF.emergencyWithdraw(victimPID);
     }
 
     // Service methods
@@ -106,26 +106,26 @@ contract SushiAdapter is BaseAdapter {
         return address(SUSHI_WETH_PAIR);
     }
 
-    function lockedValue(address user, uint256 poolId) external override view returns (uint256) {
+    function lockedValue(address user, uint256 victimPID) external override view returns (uint256) {
         SushiAdapter adapter = SushiAdapter(this);
-        return adapter.lpTokenValue(adapter.lockedAmount(user, poolId),IUniswapV2Pair(address(adapter.lockableToken(poolId))));
+        return adapter.lpTokenValue(adapter.lockedAmount(user, victimPID),IUniswapV2Pair(address(adapter.lockableToken(victimPID))));
     }
 
-    function totalLockedValue(uint256 poolId) external override view returns (uint256) {
+    function totalLockedValue(uint256 victimPID) external override view returns (uint256) {
         SushiAdapter adapter = SushiAdapter(this);
-        IUniswapV2Pair lockedToken = IUniswapV2Pair(address(adapter.lockableToken(poolId)));
-        return adapter.lpTokenValue(lockedToken.balanceOf(adapter.poolAddress(poolId)), lockedToken);
+        IUniswapV2Pair lockedToken = IUniswapV2Pair(address(adapter.lockableToken(victimPID)));
+        return adapter.lpTokenValue(lockedToken.balanceOf(adapter.poolAddress(victimPID)), lockedToken);
     }
 
-    function normalizedAPY(uint256 poolId) external override view returns (uint256) {
+    function normalizedAPY(uint256 victimPID) external override view returns (uint256) {
         SushiAdapter adapter = SushiAdapter(this);
-        (,uint256 allocationPoints,,) = SUSHI_MASTER_CHEF.poolInfo(poolId);
+        (,uint256 allocationPoints,,) = SUSHI_MASTER_CHEF.poolInfo(victimPID);
         uint256 sushiPerBlock = SUSHI_MASTER_CHEF.sushiPerBlock();
         uint256 totalAllocPoint = SUSHI_MASTER_CHEF.totalAllocPoint();
         uint256 multiplier = SUSHI_MASTER_CHEF.getMultiplier(block.number - 1, block.number);
         uint256 rewardPerBlock = multiplier.mul(sushiPerBlock).mul(allocationPoints).div(totalAllocPoint);
         (uint256 sushiReserve, uint256 wethReserve,) = SUSHI_WETH_PAIR.getReserves();
         uint256 valuePerYear = rewardPerBlock.mul(wethReserve).mul(BLOCKS_PER_YEAR).div(sushiReserve);
-        return valuePerYear.mul(1 ether).div(adapter.totalLockedValue(poolId));
+        return valuePerYear.mul(1 ether).div(adapter.totalLockedValue(victimPID));
     }
 }

@@ -4,9 +4,9 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 const { waffle, ethers, deployments } = require("hardhat");
 const { deployContract } = waffle;
 
-import { setupTestDracula } from './helpers/TestFixture';
+import { setupTestDracula } from '../helpers/TestFixture';
 
-import SushiAdapter from '../artifacts/contracts/adapters/sushi/SushiAdapter.sol/SushiAdapter.json';
+import SushiAdapter from '../../artifacts/contracts/adapters/sushi/SushiAdapter.sol/SushiAdapter.json';
 
 describe('SushiAdapter', () => {
   let deployer:SignerWithAddress,
