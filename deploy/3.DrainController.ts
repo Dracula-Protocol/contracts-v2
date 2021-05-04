@@ -9,9 +9,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let { deployer, chi } = await getNamedAccounts();
 
-  if (chainId === '31337') {
+  /*if (chainId === '31337') {
     return;
-  }
+  }*/
 
   if (chainId != '1') {
     const CHI = await deployments.get('MockChiToken');
@@ -42,4 +42,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 export default func;
-func.tags = ['disabled'];
+func.tags = ['dracula'];

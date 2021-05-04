@@ -9,9 +9,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let { deployer, WETH, treasury } = await getNamedAccounts();
 
-  if (chainId === '31337') {
+  /*if (chainId === '31337') {
     return;
-  }
+  }*/
 
   if (chainId != '1') {
     const weth = await deployments.get('WETH');
@@ -44,4 +44,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 export default func;
-func.tags = ['disabled'];
+func.tags = ['dracula'];
