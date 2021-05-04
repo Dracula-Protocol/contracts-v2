@@ -79,6 +79,7 @@ contract OneInchAdapter is BaseAdapter {
 
     function claimReward(address, uint256, uint256 victimPoolId) external override {
         pools[victimPoolId].getReward(0);
+        pools[victimPoolId].getReward(1);
     }
 
     function emergencyWithdraw(address, uint256) external pure override {
