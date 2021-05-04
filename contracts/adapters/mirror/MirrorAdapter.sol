@@ -17,6 +17,8 @@ contract MirrorAdapter is BaseAdapter {
     constructor(address _weth, address _factory, address _masterVampire)
         BaseAdapter(_weth, _factory)
     {
+        MASTER_VAMPIRE = _masterVampire;
+
         pools.push(ILPPool(0x5d447Fc0F8965cED158BAB42414Af10139Edf0AF)); // MIR-UST
         pools.push(ILPPool(0x735659C8576d88A2Eb5C810415Ea51cB06931696)); // UST-mAAPL
         pools.push(ILPPool(0x5b64BB4f69c8C03250Ac560AaC4C7401d78A1c32)); // mGOOGL-UST
@@ -31,7 +33,6 @@ contract MirrorAdapter is BaseAdapter {
         pools.push(ILPPool(0xDB278fb5f7d4A7C3b83F80D18198d872Bbf7b923)); // mSLV-UST
         pools.push(ILPPool(0x2221518288AF8c5D5a87fd32717fAb154240d942)); // mUSO-UST
         pools.push(ILPPool(0xBC07342D01fF5D72021Bb4cb95F07C252e575309)); // mVIXY-UST
-
     }
 
     // Victim info
