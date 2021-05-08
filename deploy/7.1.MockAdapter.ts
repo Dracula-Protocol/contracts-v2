@@ -39,9 +39,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const mockMasterChef = await ethers.getContractAt('MockMasterChef', MockMasterChef.address, ethers.provider.getSigner(deployer));
     await mockMasterChef.add('100', MockChefLP.address);
+    await mockMasterChef.add('50', MockChefLP.address);
 
     const masterVampire = await ethers.getContractAt('MasterVampire', MasterVampire.address, ethers.provider.getSigner(deployer));
     await masterVampire.add(MockChefAdapter.address, 0);
+    await masterVampire.add(MockChefAdapter.address, 1);
   }
 };
 
