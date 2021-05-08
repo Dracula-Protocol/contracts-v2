@@ -7,6 +7,7 @@ const setupTest = deployments.createFixture(async ({deployments, getNamedAccount
     alice,
     bob,
     carol,
+    tom,
     treasury
   } = await getNamedAccounts();
 
@@ -34,6 +35,7 @@ const setupTest = deployments.createFixture(async ({deployments, getNamedAccount
       alice,
       bob,
       carol,
+      tom,
       treasury,
       drc,
       dai,

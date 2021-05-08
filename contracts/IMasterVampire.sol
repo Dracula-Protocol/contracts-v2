@@ -22,17 +22,19 @@ abstract contract IMasterVampire is Ownable, ReentrancyGuard {
 
     struct UserInfo {
         uint256 amount;
+        uint256 rewards;
         uint256 rewardDebt;
-        uint256 coolOffTime;
         uint256 poolShares;
     }
 
     struct PoolInfo {
         Victim victim;
         uint256 victimPoolId;
-        uint256 lastRewardBlock;
+        uint256 lastUpdateBlock;
         uint256 accWethPerShare;
         uint256 wethAccumulator;
+        uint256 rewardRate;
+        uint256 periodFinish;
         // Base amount of shares from user deposits for victims that return shares for the pool.
         uint256 basePoolShares;
         uint256 baseDeposits;
@@ -45,7 +47,6 @@ abstract contract IMasterVampire is Ownable, ReentrancyGuard {
     address public poolRewardUpdater;
     address public devAddress;
     uint256 public distributionPeriod = 6519; // Blocks in 24 hour period
-    uint256 public withdrawalPenalty = 10;
     uint256 public wethDrainModifier = 150;
 
     // Info of each pool

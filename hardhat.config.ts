@@ -87,6 +87,10 @@ const config: HardhatUserConfig = {
       default: 4,
       1: '0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE'
     },
+    tom: {
+      default: 5,
+      1: '0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE'
+    },
     chi: {
       1: '0x0000000000004946c0e9F43F4Dee607b0eF1fA1c'
     },
