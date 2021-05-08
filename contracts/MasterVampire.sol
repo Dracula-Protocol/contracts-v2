@@ -20,8 +20,10 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     //              " ` "
     event Deposit(address indexed user, uint256 indexed pid, uint256 amount);
     event Withdraw(address indexed user, uint256 indexed pid, uint256 amount);
+    event RewardClaimed(address indexed user, uint256 indexed pid, uint256 amount);
     event EmergencyWithdraw(address indexed user, uint256 indexed pid, uint256 amount);
     event ETHValue(uint256 amount);
+    event DrainedReward(uint256 indexed pid, uint256 amount);
 
     IWETH immutable weth;
 
@@ -32,6 +34,18 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
 
     modifier onlyRewardUpdater() {
         require(poolRewardUpdater == msg.sender, "not reward updater");
+        _;
+    }
+
+    modifier updateReward(uint256 _pid, address _user) {
+        PoolInfo storage pool = poolInfo[_pid];
+        pool.accWethPerShare = wethPerShare(_pid);
+        pool.lastUpdateBlock = lastTimeRewardApplicable(_pid);
+        if (_user != address(0)) {
+            UserInfo storage user = userInfo[_pid][_user];
+            user.rewards = pendingWeth(_pid, _user);
+            user.rewardDebt = pool.accWethPerShare;
+        }
         _;
     }
 
@@ -62,24 +76,46 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         poolInfo.push(PoolInfo({
             victim: _victim,
             victimPoolId: _victimPoolId,
-            lastRewardBlock: block.number,
+            lastUpdateBlock: 0,
             accWethPerShare: 0,
             wethAccumulator: 0,
+            rewardRate: 0,
+            periodFinish: 0,
             basePoolShares: 0,
             baseDeposits: 0
         }));
+    }
+
+    // Add multiple pools for one victim
+    function addBulk(Victim _victim, uint256[] memory victimPids) external onlyOwner {
+        for (uint i = 0; i < victimPids.length; i++) {
+            poolInfo.push(PoolInfo({
+                victim: _victim,
+                victimPoolId: victimPids[i],
+                lastUpdateBlock: 0,
+                accWethPerShare: 0,
+                wethAccumulator: 0,
+                rewardRate: 0,
+                periodFinish: 0,
+                basePoolShares: 0,
+                baseDeposits: 0
+            }));
+        }
     }
 
     function updateDistributionPeriod(uint256 _distributionPeriod) external onlyRewardUpdater {
         distributionPeriod = _distributionPeriod;
     }
 
-    function updateWithdrawPenalty(uint256 _withdrawalPenalty) external onlyRewardUpdater {
-        withdrawalPenalty = _withdrawalPenalty;
-    }
-
     function updateVictimAddress(uint256 _pid, address _victim) external onlyOwner {
         poolInfo[_pid].victim = Victim(_victim);
+    }
+
+    function updateVictimAddressBulk(uint256[] memory pids, address _victim) public onlyRewardUpdater {
+        for (uint i = 0; i < pids.length; i++) {
+            uint256 pid = pids[i];
+            poolInfo[pid].victim = Victim(_victim);
+        }
     }
 
     function updateVictimInfo(uint256 _pid, address _victim, uint256 _victimPoolId) external onlyOwner {
@@ -113,20 +149,45 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         poolRewardUpdater = _poolRewardUpdater;
     }
 
-    function pendingWeth(uint256 _pid, address _user) public view returns (uint256) {
+    function lastTimeRewardApplicable(uint256 _pid) public view returns (uint256) {
         PoolInfo storage pool = poolInfo[_pid];
-        UserInfo storage user = userInfo[_pid][_user];
-        uint256 accWethPerShare = pool.accWethPerShare;
-        uint256 lpSupply = pool.victim.lockedAmount(pool.victimPoolId);
-        if (block.number > pool.lastRewardBlock && lpSupply != 0) {
-            uint256 blocksToReward = Math.min(block.number.sub(pool.lastRewardBlock), distributionPeriod);
-            uint256 wethReward = Math.min(blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod), pool.wethAccumulator);
-            accWethPerShare = accWethPerShare.add(wethReward.mul(1e12).div(lpSupply));
-        }
-
-        return user.amount.mul(accWethPerShare).div(1e12).sub(user.rewardDebt);
+        return Math.min(block.number, pool.periodFinish);
     }
 
+    // WETH reward per staked share
+    function wethPerShare(uint256 _pid) public view returns (uint256) {
+        PoolInfo storage pool = poolInfo[_pid];
+        uint256 totalStaked = pool.victim.lockedAmount(pool.victimPoolId);
+        if (totalStaked == 0) {
+            return pool.accWethPerShare;
+        }
+        return
+            pool.accWethPerShare.add(
+                lastTimeRewardApplicable(_pid)
+                    .sub(pool.lastUpdateBlock)
+                    .mul(pool.rewardRate)
+                    .mul(1e18)
+                    .div(totalStaked)
+            );
+    }
+
+    // Total rewards to distribute for the duration
+    function rewardForDuration(uint256 _pid) external view returns (uint256) {
+        PoolInfo storage pool = poolInfo[_pid];
+        return pool.rewardRate.mul(distributionPeriod);
+    }
+
+    // Returns the interest-bearing ETH value
+    function pendingWeth(uint256 _pid, address _user) public view returns (uint256) {
+        UserInfo storage user = userInfo[_pid][_user];
+        return
+            user.amount
+                .mul(wethPerShare(_pid).sub(user.rewardDebt))
+                .div(1e18)
+                .add(user.rewards);
+    }
+
+    // Returns the actual WETH value (interest-bearing ETH converted)
     function pendingWethReal(uint256 _pid, address _user) external returns (uint256) {
         uint256 ibETH = pendingWeth(_pid, _user);
         uint256 ethVal = IIBVEth(IBVETH).ibETHValue(ibETH);
@@ -134,96 +195,56 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         return ethVal;
     }
 
+    // Returns the underlying pending rewards for a victim
     function pendingVictimReward(uint256 pid) external view returns (uint256) {
         PoolInfo storage pool = poolInfo[pid];
         return pool.victim.pendingReward(pid, pool.victimPoolId);
     }
 
+    // Returns the current drained/accumulated rewards for a pool
     function poolAccWeth(uint256 pid) external view returns (uint256) {
         PoolInfo storage pool = poolInfo[pid];
         return pool.wethAccumulator;
     }
 
-    function massUpdatePools() external {
-        uint256 length = poolInfo.length;
-        for (uint256 pid = 0; pid < length; ++pid) {
-            updatePool(pid);
-        }
-    }
-
-    function updatePool(uint256 pid) public {
-        PoolInfo storage pool = poolInfo[pid];
-        if (block.number <= pool.lastRewardBlock) {
-            return;
-        }
-        uint256 lpSupply = pool.victim.lockedAmount(pool.victimPoolId);
-        if (lpSupply == 0) {
-            pool.lastRewardBlock = block.number;
-            return;
-        }
-
-        uint256 blocksToReward = Math.min(block.number.sub(pool.lastRewardBlock), distributionPeriod);
-        uint256 wethReward = Math.min(blocksToReward.mul(pool.wethAccumulator).div(distributionPeriod), pool.wethAccumulator);
-        pool.accWethPerShare = pool.accWethPerShare.add(wethReward.mul(1e12).div(lpSupply));
-        pool.lastRewardBlock = block.number;
-        pool.wethAccumulator = pool.wethAccumulator.sub(wethReward);
-    }
-
-    function deposit(uint256 pid, uint256 amount, uint8 flag) external nonReentrant saveGas(flag) {
+    function deposit(uint256 pid, uint256 amount) external nonReentrant updateReward(pid, msg.sender) {
+        require(amount > 0, "Cannot deposit 0");
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
-        user.coolOffTime = block.timestamp + 24 hours;
 
-        updatePool(pid);
-        if (user.amount > 0) {
-            _claim(pid, false, flag);
+        pool.victim.lockableToken(pool.victimPoolId).safeTransferFrom(address(msg.sender), address(this), amount);
+        uint256 shares = pool.victim.deposit(pool.victimPoolId, amount);
+        if (shares > 0) {
+            pool.basePoolShares = pool.basePoolShares.add(shares);
+            pool.baseDeposits = pool.baseDeposits.add(amount);
+            user.poolShares = user.poolShares.add(shares);
         }
-
-        if (amount > 0) {
-            pool.victim.lockableToken(pool.victimPoolId).safeTransferFrom(address(msg.sender), address(this), amount);
-            uint256 shares = pool.victim.deposit(pool.victimPoolId, amount);
-            if (shares > 0) {
-                pool.basePoolShares = pool.basePoolShares.add(shares);
-                pool.baseDeposits = pool.baseDeposits.add(amount);
-                user.poolShares = user.poolShares.add(shares);
-            }
-            user.amount = user.amount.add(amount);
-        }
-
-        user.rewardDebt = user.amount.mul(pool.accWethPerShare).div(1e12);
+        user.amount = user.amount.add(amount);
         emit Deposit(msg.sender, pid, amount);
     }
 
-    function withdraw(uint256 pid, uint256 amount, uint8 flag) external nonReentrant saveGas(flag) {
+    function withdraw(uint256 pid, uint256 amount, uint8 flag) external nonReentrant updateReward(pid, msg.sender) {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
-        require(user.amount >= amount, "withdraw: not good");
-        updatePool(pid);
-        _claim(pid, true, flag);
+        require(amount > 0 && user.amount >= amount, "withdraw: not good");
 
-        if (amount > 0) {
-            user.amount = user.amount.sub(amount);
-            uint256 shares = pool.victim.withdraw(pool.victimPoolId, amount);
-            if (shares > 0) {
-                pool.basePoolShares = pool.basePoolShares.sub(shares);
-                pool.baseDeposits = pool.baseDeposits.sub(amount);
-                user.poolShares = user.poolShares.sub(shares);
-            }
-            pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), amount);
+        user.amount = user.amount.sub(amount);
+        uint256 shares = pool.victim.withdraw(pool.victimPoolId, amount);
+        if (shares > 0) {
+            pool.basePoolShares = pool.basePoolShares.sub(shares);
+            pool.baseDeposits = pool.baseDeposits.sub(amount);
+            user.poolShares = user.poolShares.sub(shares);
         }
-
-        user.rewardDebt = user.amount.mul(pool.accWethPerShare).div(1e12);
+        pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), amount);
+        _claim(pid, flag);
         emit Withdraw(msg.sender, pid, amount);
     }
 
-    function claim(uint256 pid, uint8 flag) external nonReentrant saveGas(flag) {
-        PoolInfo storage pool = poolInfo[pid];
-        UserInfo storage user = userInfo[pid][msg.sender];
-        updatePool(pid);
-        _claim(pid, false, flag);
-        user.rewardDebt = user.amount.mul(pool.accWethPerShare).div(1e12);
+    function claim(uint256 pid, uint8 flag) external nonReentrant updateReward(pid, msg.sender) {
+        _claim(pid, flag);
     }
 
+    // Withdraw in case of emergency. No rewards will be claimed.
     function emergencyWithdraw(uint256 pid) external nonReentrant {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
@@ -231,12 +252,13 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, pid, user.amount);
         user.amount = 0;
+        user.rewards = 0;
         user.rewardDebt = 0;
         user.poolShares = 0;
     }
 
     /// Can only be called by DrainController
-    function drain(uint256 pid) external {
+    function drain(uint256 pid) external updateReward(pid, address(0)) {
         require(drainController == msg.sender, "not drainctrl");
         PoolInfo storage pool = poolInfo[pid];
         Victim victim = pool.victim;
@@ -263,12 +285,20 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         (bool success,) = IBVETH.delegatecall(abi.encodeWithSignature("handleDrainedWETH(uint256)", wethReward));
         require(success, "handleDrainedWETH(uint256 amount) delegatecall failed.");
         uint256 ibethAfter = IIBVEth(IBVETH).balance(address(this));
+        uint256 newRewards = ibethAfter.sub(ibethBefore);
+        pool.wethAccumulator = pool.wethAccumulator.add(newRewards);
 
-        if (pool.wethAccumulator == 0) {
-            pool.wethAccumulator = ibethAfter;
+        if (block.number >= pool.periodFinish) {
+            pool.rewardRate = newRewards.div(distributionPeriod);
         } else {
-            pool.wethAccumulator = pool.wethAccumulator.add(ibethAfter.sub(ibethBefore));
+            uint256 remaining = pool.periodFinish.sub(block.number);
+            uint256 leftover = remaining.mul(pool.rewardRate);
+            pool.rewardRate = newRewards.add(leftover).div(distributionPeriod);
         }
+
+        pool.lastUpdateBlock = block.number;
+        pool.periodFinish = block.number.add(distributionPeriod);
+        emit DrainedReward(pid, newRewards);
     }
 
     /// This function allows owner to take unsupported tokens out of the contract.
@@ -286,29 +316,19 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     }
 
     /// Claim rewards from pool
-    function _claim(uint256 pid, bool withdrawing, uint8 flag) internal {
+    function _claim(uint256 pid, uint8 flag) internal {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
-
-        uint256 pending = user.amount.mul(pool.accWethPerShare).div(1e12).sub(user.rewardDebt);
+        uint256 pending = user.rewards;
         if (pending > 0) {
-            if (withdrawing && withdrawalPenalty > 0 && block.timestamp < user.coolOffTime) {
-                uint256 fee = pending.mul(withdrawalPenalty).div(1000);
-                pending = pending.sub(fee);
-                pool.wethAccumulator = pool.wethAccumulator.add(fee);
+            user.rewards = 0;
+            uint256 poolBalance = pool.wethAccumulator;
+            if (poolBalance < pending) {
+                pending = poolBalance; // Prevents contract from locking up
             }
-
             (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("handleClaim(uint256,uint8)", pending, flag));
             require(success, "handleClaim(uint256 pending, uint8 flag) delegatecall failed.");
-        }
-    }
-
-    function _safeWethTransfer(address to, uint256 amount) internal {
-        uint256 balance = weth.balanceOf(address(this));
-        if (amount > balance) {
-            weth.transfer(to, balance);
-        } else {
-            weth.transfer(to, amount);
+            emit RewardClaimed(msg.sender, pid, pending);
         }
     }
 }

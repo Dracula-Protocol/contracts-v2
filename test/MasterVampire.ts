@@ -20,6 +20,7 @@ describe('MasterVampire', () => {
       alice:SignerWithAddress,
       bob:SignerWithAddress,
       carol:SignerWithAddress,
+      tom:SignerWithAddress,
       treasury:SignerWithAddress,
       weth:Contract,
       drc:Contract,
@@ -36,6 +37,7 @@ describe('MasterVampire', () => {
     alice = await ethers.getSigner(config.alice);
     bob = await ethers.getSigner(config.bob);
     carol = await ethers.getSigner(config.carol);
+    tom = await ethers.getSigner(config.tom);
     treasury = await ethers.getSigner(config.treasury);
     weth = config.weth;
     drc = config.drc;
@@ -91,55 +93,16 @@ describe('MasterVampire', () => {
     });
   });
 
-  it('early withdrawal penalty works', async () => {
+  it('can withdraw', async () => {
     await mockLP.mint(alice.address, utils.parseEther('3000'));
 
     // Deposit the Mock LP into the Mock Adapter pool
     await mockLP.connect(alice).approve(masterVampire.address, utils.parseEther('1000'));
+    await masterVampire.connect(alice).deposit(0, utils.parseEther('1000'));
+    await masterVampire.connect(alice).withdraw(0, utils.parseEther('1000'), 0);
 
-    await masterVampire.updateWithdrawPenalty('500'); // 50% penalty
-    await masterVampire.connect(alice).deposit(0, utils.parseEther('1000'), 0);
-
-    // Cool off time should be 24 hours after deposit
-    const user_info = await masterVampire.userInfo(0, alice.address);
-    let current_block_time = await latestBlockTimestamp();
-    expect(user_info.coolOffTime).to.gte(current_block_time);
-    expect(user_info.coolOffTime).to.gte(current_block_time.add(duration.hours(23)));
-
-    await advanceBlocks(50);
-    await drainController.whitelist(carol.address);
-
-    const drainable = await drainController.isDrainable();
-    // Filter pools that haven't hit drain threshold
-    const filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
-    expect(filtered_drain.length).to.be.gt(0);
-    await drainController.connect(carol).drainPools(filtered_drain);
-
-    // Withdrawing before cool off incurs penalty
-    let pending_weth = await masterVampire.callStatic.pendingWethReal(0, alice.address);
-    let alice_eth_balance_before = await alice.getBalance();
-    let tx = await masterVampire.connect(alice).withdraw(0, utils.parseEther('1000'), 0);
-    let tx_receipt = await tx.wait();
-    let gas = tx_receipt.gasUsed.mul(tx.gasPrice);
-    let alice_eth_balance_after = await alice.getBalance();
-    expect(BigNumber.from(alice_eth_balance_after)).to.lt(BigNumber.from(alice_eth_balance_before.add(pending_weth).sub(gas)));
-
-    // Withdrawing after cool off incurs NO penalty
-    await mockLP.connect(alice).approve(masterVampire.address, utils.parseEther('1000'));
-    await masterVampire.connect(alice).deposit(0, utils.parseEther('1000'), 0);
-    await advanceBlocks(5);
-    await advanceBlockAndTime(current_block_time.add(duration.hours(24)).toNumber());
-
-    alice_eth_balance_before = await alice.getBalance();
-    pending_weth = await masterVampire.callStatic.pendingWethReal(0, alice.address);
-
-    tx = await masterVampire.connect(alice).withdraw(0, utils.parseEther('1000'), 0);
-    tx_receipt = await tx.wait();
-    gas = tx_receipt.gasUsed.mul(tx.gasPrice);
-    // Balance must be greater than previous balance + pending reward - gas
-    expect(await alice.getBalance()).to.be.gte(BigNumber.from(alice_eth_balance_before).add(BigNumber.from(pending_weth).sub(gas)));
+    // TODO check balances
   });
-
 
   describe('mock adapter should work with mastervampire', () => {
     it('rari capital ibeth strategy', async () => {
@@ -153,14 +116,16 @@ describe('MasterVampire', () => {
         await drainDistributor.distribute();
       }
 
+      await drainController.whitelist(carol.address);
+
       // Deposit the Mock LP into the Mock Adapter pool
       await mockLP.mint(alice.address, utils.parseEther('1000'));
       await mockLP.connect(alice).approve(masterVampire.address, utils.parseEther('1000'));
-      await masterVampire.connect(alice).deposit(0, utils.parseEther('1000'), 0);
+      await masterVampire.connect(alice).deposit(0, utils.parseEther('1000'));
 
       await mockLP.mint(bob.address, utils.parseEther('500'));
       await mockLP.connect(bob).approve(masterVampire.address, utils.parseEther('500'));
-      await masterVampire.connect(bob).deposit(0, utils.parseEther('500'), 0);
+      await masterVampire.connect(bob).deposit(0, utils.parseEther('500'));
 
       // Advanced blocks
       await advanceBlocks(10);
@@ -172,19 +137,9 @@ describe('MasterVampire', () => {
       await masterVampire.connect(bob).deposit(0, utils.parseEther('500'), 0);
       console.log("bob ate alice rewards");
 
-      // Expect to have 0.1 MOCK (0.01 per block)
-      //expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.1'));
-      /*console.log("Pending reward (alice): ", utils.formatEther((await mockMasterChef.pendingMock(0, masterVampire.address)).toString()));
-
-      console.log("Before Drain:");
-      console.log("      WETH Balance (MasterVampire): ", (await weth.balanceOf(masterVampire.address)).toString());
-      console.log("  WETH Balance (MockMasterVampire): ", (await weth.balanceOf(masterVampire.address)).toString());
-      console.log("               ETH Balance (Carol):", utils.formatEther(await carol.getBalance()).toString());*/
-
-      await drainController.whitelist(carol.address);
-
+      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.066666666'));
       await drain(drainController, drainDistributor);
-      //expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.01'));
+      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.006666666'));
 
       const StrategyRari = await deployments.get('StrategyRari');
       const strategyRari = await ethers.getContractAt('IBVEthRari', StrategyRari.address, deployer);
@@ -201,22 +156,33 @@ describe('MasterVampire', () => {
       console.log("  ETH Balance (Carol):", utils.formatEther(await carol.getBalance()).toString());
 
       console.log("  Victim Pool (0) Acc WETH: ", utils.formatEther((await masterVampire.poolAccWeth(0)).toString()));*/
-      let last_pending_weth = BigNumber.from(0);
+
+      let last_pending_weth_alice = BigNumber.from(0);
+      let last_pending_weth_bob = BigNumber.from(0);
       for (let b = 0; b < 10; b++) {
-        console.log("  Pending IBEth reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
         let pending_weth = await masterVampire.callStatic.pendingWethReal(0, alice.address);
-        expect(pending_weth).to.gt(last_pending_weth);
-        console.log("  Pending WETH reward (alice): ", utils.formatEther(pending_weth.toString()))
+        expect(pending_weth).to.gt(last_pending_weth_alice);
+        last_pending_weth_alice = pending_weth;
+
         pending_weth = await masterVampire.callStatic.pendingWethReal(0, bob.address);
-        console.log("  Pending WETH reward (bob): ", utils.formatEther(pending_weth.toString()))
+        expect(pending_weth).to.gt(last_pending_weth_bob);
+        last_pending_weth_bob = pending_weth;
         await advanceBlock();
       }
 
-      //expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.11'));
+      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.073333332'));
+
+      await mockLP.mint(tom.address, utils.parseEther('500'));
+      await mockLP.connect(tom).approve(masterVampire.address, utils.parseEther('500'));
+      await masterVampire.connect(tom).deposit(1, utils.parseEther('500'));
 
       await advanceBlocks(9000);
 
-      console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
+      // No stealing of rewards from other pools :/
+      await drainController.connect(carol).drainPools([1]);
+      await masterVampire.connect(tom).claim(1, 0);
+
+      /*console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
       console.log("  Pending reward (bob): ", utils.formatEther((await masterVampire.pendingWeth(0, bob.address)).toString()));
 
       const ethBeforeClaim = await alice.getBalance();
@@ -231,40 +197,50 @@ describe('MasterVampire', () => {
 
       console.log("Before Claim:");
       console.log("  Pending reward (bob): ", utils.formatEther((await masterVampire.pendingWeth(0, bob.address)).toString()));
-      console.log("  ETH Balance (bob):", utils.formatEther(await bob.getBalance()).toString());
+      console.log("  ETH Balance (bob):", utils.formatEther(await bob.getBalance()).toString());*/
       await masterVampire.connect(alice).claim(0, 0);
       await masterVampire.connect(bob).claim(0, 0);
-      console.log("After Claim:");
+      /*console.log("After Claim:");
       console.log("  Pending reward (bob): ", utils.formatEther((await masterVampire.pendingWeth(0, bob.address)).toString()));
-      console.log("  ETH Balance (bob):", utils.formatEther(await bob.getBalance()).toString());
-
-      //await advanceBlocks(100);
-      //expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('81.12'));
+      console.log("  ETH Balance (bob):", utils.formatEther(await bob.getBalance()).toString());*/
 
       await drain(drainController, drainDistributor);
-      //expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.01'));
+      expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.0049999995'));
 
       await advanceBlocks(2000);
 
-      last_pending_weth = BigNumber.from(0);
+      await drain(drainController, drainDistributor);
+
+      last_pending_weth_alice = BigNumber.from(0);
+      last_pending_weth_bob = BigNumber.from(0);
+      let last_pending_weth_tom = BigNumber.from(0);
       for (let b = 0; b < 10; b++) {
-        console.log("  Pending IBEth reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
+        //console.log("  Pending IBEth reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
         let pending_weth = await masterVampire.callStatic.pendingWethReal(0, alice.address);
-        expect(pending_weth).to.gt(last_pending_weth);
         console.log("  Pending WETH reward (alice): ", utils.formatEther(pending_weth.toString()))
+        expect(pending_weth).to.gt(last_pending_weth_alice);
+        last_pending_weth_alice = pending_weth;
+
         pending_weth = await masterVampire.callStatic.pendingWethReal(0, bob.address);
         console.log("  Pending WETH reward (bob): ", utils.formatEther(pending_weth.toString()))
+        expect(pending_weth).to.gt(last_pending_weth_bob);
+        last_pending_weth_bob = pending_weth;
+
+        pending_weth = await masterVampire.callStatic.pendingWethReal(1, tom.address);
+        console.log("  Pending WETH reward (tom): ", utils.formatEther(pending_weth.toString()))
+        expect(pending_weth).to.gt(last_pending_weth_tom);
+        last_pending_weth_tom = pending_weth;
         await advanceBlock();
       }
 
       expect(await drc.balanceOf(alice.address)).to.eq(0);
-      //console.log("Before Claim (DRC):");
-      //console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
-      //console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
+      console.log("Before Claim (DRC):");
+      console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
+      console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
       await masterVampire.connect(alice).claim(0, parseInt("0x2"));
-      //console.log("After Claim (DRC):");
-      //console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
-      //console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
+      console.log("After Claim (DRC):");
+      console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
+      console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
       expect(await drc.balanceOf(alice.address)).to.gt(0);
     });
   });

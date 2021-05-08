@@ -23,26 +23,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     DRCETHYFL = drcethyfl.address;
   }
 
-  const REWARD_DISTRIBUTION_DURATION_DAYS_IN_BLOCKS = 172800; // 2 days
+  const REWARD_DISTRIBUTION_DURATION_DAYS_SECS = 172800; // 2 days
   await deploy('UniRewardPool', {
     from: deployer,
     log: true,
     contract: 'RewardPool',
-    args: [WETH, DRCETHUNI, REWARD_DISTRIBUTION_DURATION_DAYS_IN_BLOCKS, deployer]
-  });
-
-  await deploy('YFLRewardPool', {
-    from: deployer,
-    log: true,
-    contract: 'RewardPool',
-    args: [WETH, DRCETHYFL, REWARD_DISTRIBUTION_DURATION_DAYS_IN_BLOCKS, deployer]
+    args: [WETH, DRCETHUNI, REWARD_DISTRIBUTION_DURATION_DAYS_SECS, deployer]
   });
 
   await deploy('DRCRewardPool', {
     from: deployer,
     log: true,
     contract: 'DRCRewardPool',
-    args: [WETH, DRC, REWARD_DISTRIBUTION_DURATION_DAYS_IN_BLOCKS, deployer]
+    args: [WETH, DRC, REWARD_DISTRIBUTION_DURATION_DAYS_SECS, deployer]
   });
 };
 
