@@ -129,13 +129,6 @@ describe('MasterVampire', () => {
 
       // Advanced blocks
       await advanceBlocks(10);
-      console.log("Bob withdraw");
-      await masterVampire.connect(bob).withdraw(0, utils.parseEther('500'), 0);
-      await advanceBlocks(250);
-      console.log("Bob deposit");
-      await mockLP.connect(bob).approve(masterVampire.address, utils.parseEther('500'));
-      await masterVampire.connect(bob).deposit(0, utils.parseEther('500'), 0);
-      console.log("bob ate alice rewards");
 
       expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.066666666'));
       await drain(drainController, drainDistributor);
