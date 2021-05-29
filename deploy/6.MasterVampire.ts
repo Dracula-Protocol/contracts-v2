@@ -21,7 +21,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const VampireAdapter = await deployments.get('VampireAdapter');
   const DrainController = await deployments.get('DrainController');
   const DrainDistributor = await deployments.get('DrainDistributor');
-  const StrategyRari = await deployments.get('StrategyRari');
+  const StrategyYearn = await deployments.get('StrategyYearn');
 
   const MasterVampire = await deploy('MasterVampire', {
     from: deployer,
@@ -30,7 +30,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     libraries: {
       VampireAdapter: VampireAdapter.address
     },
-    args: [DrainDistributor.address, DrainController.address, StrategyRari.address, WETH]
+    args: [DrainDistributor.address, DrainController.address, StrategyYearn.address, WETH]
   });
 
   if (MasterVampire.newlyDeployed) {
