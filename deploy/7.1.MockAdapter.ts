@@ -19,7 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const MockMasterChef = await deployments.get('MockMasterChef');
     const weth = await deployments.get('WETH');
     WETH = weth.address;
-    const Router = await deployments.get('MockUniswapRouter');
+    const Router = await deployments.get('MockArcherSwapRouter');
     uniRouter = Router.address;
     const MockUniswapFactory = await deployments.get('MockUniswapFactory');
 

@@ -13,7 +13,7 @@ contract DraculaHoard is ERC20("DraculaHoard", "xDRC"), Ownable {
     IERC20 public dracula;
     uint256 public burnRate = 10;
 
-    constructor(IERC20 _dracula) public {
+    constructor(IERC20 _dracula) {
         dracula = _dracula;
     }
 

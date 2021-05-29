@@ -6,7 +6,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const chainId = await getChainId();
 
-  let { deployer, DRC, WETH, DRCETHUNI, DRCETHYFL } = await getNamedAccounts();
+  let { deployer, DRC, WETH, DRCETHSLP } = await getNamedAccounts();
 
   /*if (chainId === '31337') {
     return;
@@ -17,25 +17,23 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     DRC = drc.address;
     const weth = await deployments.get('WETH');
     WETH = weth.address;
-    const drcethuni = await deployments.get('DRCETHUNI');
-    DRCETHUNI = drcethuni.address;
-    const drcethyfl = await deployments.get('DRCETHYFL');
-    DRCETHYFL = drcethyfl.address;
+    const drcethslp = await deployments.get('DRCETHSLP');
+    DRCETHSLP = drcethslp.address;
   }
 
   const REWARD_DISTRIBUTION_DURATION_DAYS_SECS = 172800; // 2 days
-  await deploy('UniRewardPool', {
+  await deploy('LPRewardPool', {
     from: deployer,
     log: true,
     contract: 'RewardPool',
-    args: [WETH, DRCETHUNI, REWARD_DISTRIBUTION_DURATION_DAYS_SECS, deployer]
+    args: [WETH, DRCETHSLP, REWARD_DISTRIBUTION_DURATION_DAYS_SECS, deployer]
   });
 
-  await deploy('DRCRewardPool', {
+  await deploy('DraculaHoard', {
     from: deployer,
     log: true,
-    contract: 'DRCRewardPool',
-    args: [WETH, DRC, REWARD_DISTRIBUTION_DURATION_DAYS_SECS, deployer]
+    contract: 'DraculaHoard',
+    args: [DRC]
   });
 };
 

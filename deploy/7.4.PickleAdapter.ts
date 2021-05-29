@@ -10,7 +10,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const POOL_JSON = __dirname + '/data/pools.json';
   const POOL_ID = 'pickle';
 
-  let { deployer, WETH, uniFactory } = await getNamedAccounts();
+  let { deployer, WETH, sushiFactory } = await getNamedAccounts();
 
   if (chainId === '31337') {
     return;
@@ -24,7 +24,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       from: deployer,
       log: true,
       contract: 'PickleAdapter',
-      args: [WETH, uniFactory, masterVampire.address]
+      args: [WETH, sushiFactory, masterVampire.address]
     });
 
     if (PickleAdapter.newlyDeployed) {

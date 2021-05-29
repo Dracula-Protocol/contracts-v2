@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const chainId = await getChainId();
 
-  let { deployer, WETH, treasury } = await getNamedAccounts();
+  let { deployer, WETH, treasury, archerRouter, sushiRouter } = await getNamedAccounts();
 
   /*if (chainId === '31337') {
     return;
@@ -16,21 +16,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (chainId != '1') {
     const weth = await deployments.get('WETH');
     WETH = weth.address;
+    const Router = await deployments.get('MockArcherSwapRouter');
+    archerRouter = Router.address;
+    sushiRouter = Router.address;
   }
 
   const DrainController = await deployments.get('DrainController');
   const drainController = await ethers.getContractAt('DrainController', DrainController.address, ethers.provider.getSigner(deployer));
 
-  const UniRewardPool = await deployments.get('UniRewardPool');
-  const uniRewardPool = await ethers.getContractAt('RewardPool', UniRewardPool.address, ethers.provider.getSigner(deployer));
-  const DRCRewardPool = await deployments.get('DRCRewardPool');
-  const drcRewardPool = await ethers.getContractAt('DRCRewardPool', DRCRewardPool.address, ethers.provider.getSigner(deployer));
+  const LPRewardPool = await deployments.get('LPRewardPool');
+  const lpRewardPool = await ethers.getContractAt('RewardPool', LPRewardPool.address, ethers.provider.getSigner(deployer));
+  const DraculaHoard = await deployments.get('DraculaHoard');
+  const draculaHoard = await ethers.getContractAt('DraculaHoard', DraculaHoard.address, ethers.provider.getSigner(deployer));
 
   const DrainDistributor = await deploy('DrainDistributor', {
     from: deployer,
     log: true,
     contract: 'DrainDistributor',
-    args: [WETH, treasury, uniRewardPool.address, drcRewardPool.address]
+    args: [WETH, treasury, lpRewardPool.address, draculaHoard.address, archerRouter, sushiRouter]
   });
 
   if (DrainDistributor.newlyDeployed) {
@@ -38,8 +41,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     await drainDistributor.changeDrainController(drainController.address);
 
-    await uniRewardPool.addRewardSupplier(drainDistributor.address);
-    await drcRewardPool.addRewardSupplier(drainDistributor.address);
+    await lpRewardPool.addRewardSupplier(drainDistributor.address);
   }
 };
 

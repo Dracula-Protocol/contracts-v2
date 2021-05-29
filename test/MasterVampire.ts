@@ -14,6 +14,15 @@ import {
   duration
 } from './helpers/Utils';
 
+async function drain(drainer:any, drainController:Contract, drainDistributor:Contract) {
+  let drainable = await drainController.isDrainable();
+  // Filter pools that haven't hit drain threshold
+  let filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
+  expect(filtered_drain.length).to.gt(0);
+  await drainController.connect(drainer).drainPools(filtered_drain);
+  await drainDistributor.distribute();
+}
+
 describe('MasterVampire', () => {
 
   let deployer:SignerWithAddress,
@@ -105,16 +114,7 @@ describe('MasterVampire', () => {
   });
 
   describe('mock adapter should work with mastervampire', () => {
-    it('rari capital ibeth strategy', async () => {
-
-      async function drain(drainController:Contract, drainDistributor:Contract) {
-        let drainable = await drainController.isDrainable();
-        // Filter pools that haven't hit drain threshold
-        let filtered_drain = drainable.filter(function(d:number) { return d !== -1 })
-        expect(filtered_drain.length).to.gt(0);
-        await drainController.connect(carol).drainPools(filtered_drain);
-        await drainDistributor.distribute();
-      }
+    it('yearn yvWETH strategy', async () => {
 
       await drainController.whitelist(carol.address);
 
@@ -131,12 +131,12 @@ describe('MasterVampire', () => {
       await advanceBlocks(10);
 
       expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.066666666'));
-      await drain(drainController, drainDistributor);
+      await drain(carol, drainController, drainDistributor);
       expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.006666666'));
 
-      const StrategyRari = await deployments.get('StrategyRari');
-      const strategyRari = await ethers.getContractAt('IBVEthRari', StrategyRari.address, deployer);
-      const ibToken = await ethers.getContractAt('IERC20', await strategyRari.ibToken(), deployer);
+      const StrategyYearn = await deployments.get('StrategyYearn');
+      const strategyYearn = await ethers.getContractAt('IBVEthRari', StrategyYearn.address, deployer);
+      const ibToken = await ethers.getContractAt('IERC20', await strategyYearn.ibToken(), deployer);
 
       expect(await ibToken.balanceOf(masterVampire.address)).to.gt(0);
       /*console.log("After Drain:");
@@ -197,12 +197,12 @@ describe('MasterVampire', () => {
       console.log("  Pending reward (bob): ", utils.formatEther((await masterVampire.pendingWeth(0, bob.address)).toString()));
       console.log("  ETH Balance (bob):", utils.formatEther(await bob.getBalance()).toString());*/
 
-      await drain(drainController, drainDistributor);
+      await drain(carol,drainController, drainDistributor);
       expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.0049999995'));
 
       await advanceBlocks(2000);
 
-      await drain(drainController, drainDistributor);
+      await drain(carol,drainController, drainDistributor);
 
       last_pending_weth_alice = BigNumber.from(0);
       last_pending_weth_bob = BigNumber.from(0);
