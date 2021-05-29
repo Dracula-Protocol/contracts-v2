@@ -37,18 +37,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       contract: 'MockWETH'
     });
 
-    await deploy('DRCETHUNI', {
+    await deploy('DRCETHSLP', {
       from: deployer,
       log: true,
       contract: 'MockERC20',
-      args: ['DRC-ETH UNI LP', 'UNI-V2', 18]
-    });
-
-    await deploy('DRCETHYFL', {
-      from: deployer,
-      log: true,
-      contract: 'MockERC20',
-      args: ['DRC-ETH YFL LP', 'LSLP', 18]
+      args: ['DRC-ETH SLP', 'SLP', 18]
     });
 
     await deploy('MockChiToken', {
@@ -79,7 +72,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       args: [treasury]
     });
 
-    const UniRouter = await deploy('MockUniswapRouter', {
+    const UniRouter = await deploy('MockArcherSwapRouter', {
       from: deployer,
       log: true,
       args: [MockUniswapFactory.address]
@@ -133,7 +126,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     );
 
     await execute(
-      'MockUniswapRouter',
+      'MockArcherSwapRouter',
       { from: deployer },
       'addLiquidity',
       WETH.address,
@@ -172,7 +165,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     );
 
     await execute(
-      'MockUniswapRouter',
+      'MockArcherSwapRouter',
       { from: deployer },
       'addLiquidity',
       WETH.address,

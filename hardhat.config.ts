@@ -100,8 +100,8 @@ const config: HardhatUserConfig = {
     DRCETHUNI: {
       1: '0x276E62C70e0B540262491199Bc1206087f523AF6'
     },
-    DRCETHYFL: {
-      1: '0xcEf225FE69B9B9c26c12f615581d4f77F44ECd2d'
+    DRCETHSLP: {
+      1: '0xc79faeed130816b38e5996b79b1b3b6568cc599f'
     },
     deployer: {
       default: 0,
@@ -113,15 +113,22 @@ const config: HardhatUserConfig = {
     },
     treasury: {
       default: 1,
-      1: '0xa896e4bd97a733F049b23d2AcEB091BcE01f298d',
-      42: '0xa896e4bd97a733F049b23d2AcEB091BcE01f298d'
+      1: '0x823Bf40F0FbCeB9832fB4f51eFc9aC19570b099a',
+      42: '0x823Bf40F0FbCeB9832fB4f51eFc9aC19570b099a'
     },
     rariFundManager: {
       1: '0xD6e194aF3d9674b62D1b30Ec676030C23961275e'
     },
+    archerRouter: {
+      1: '0x87535b160E251167FB7abE239d2467d1127219E4'
+    },
     sushiRouter: {
       1: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F',
       42: '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F'
+    },
+    sushiFactory: {
+      1: '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
+      42: '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac'
     },
     uniRouter: {
       1: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D',
@@ -133,9 +140,6 @@ const config: HardhatUserConfig = {
     },
     USDC: {
       1: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
-    },
-    USDT: {
-      1: '0xdAC17F958D2ee523a2206206994597C13D831ec7'
     },
     yvWETHVault: {
       1: '0xa9fE4601811213c340e850ea305481afF02f5b28'
