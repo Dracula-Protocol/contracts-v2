@@ -10,7 +10,7 @@ import "./DraculaToken.sol";
 
 contract DraculaHoard is ERC20("DraculaHoard", "xDRC"), Ownable {
     using SafeMath for uint256;
-    IERC20 public dracula;
+    IERC20 public immutable dracula;
     uint256 public burnRate = 10;
 
     constructor(IERC20 _dracula) {

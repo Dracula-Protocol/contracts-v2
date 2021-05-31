@@ -9,6 +9,8 @@ import "../interfaces/IUniswapV2Pair.sol";
 import "../libraries/UniswapV2Library.sol";
 import "./MockUniswapRouter.sol";
 
+import "hardhat/console.sol";
+
 contract MockArcherSwapRouter is MockUniswapRouter {
 
     /// @notice Trade details
@@ -34,6 +36,19 @@ contract MockArcherSwapRouter is MockUniswapRouter {
         uint256 /*minEth*/,
         uint32 /*tipPct*/
     ) external payable {
+        swapExactTokensForTokens(trade.amountIn, trade.amountOut, trade.path, trade.to, trade.deadline);
+    }
+
+    /**
+     * @notice Swap tokens for tokens and pay ETH amount as tip
+     * @param router Uniswap V2-compliant Router contract
+     * @param trade Trade details
+     */
+    function swapExactTokensForTokensWithTipAmount(
+        address router,
+        Trade calldata trade
+    ) external payable {
+        require(msg.value > 0, "tip amount must be > 0");
         swapExactTokensForTokens(trade.amountIn, trade.amountOut, trade.path, trade.to, trade.deadline);
     }
 }

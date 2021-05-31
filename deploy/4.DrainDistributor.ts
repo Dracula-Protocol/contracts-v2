@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const chainId = await getChainId();
 
-  let { deployer, WETH, treasury, archerRouter, sushiRouter } = await getNamedAccounts();
+  let { deployer, WETH, DRC, treasury, archerRouter, sushiRouter } = await getNamedAccounts();
 
   /*if (chainId === '31337') {
     return;
@@ -16,6 +16,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (chainId != '1') {
     const weth = await deployments.get('WETH');
     WETH = weth.address;
+    const drc = await deployments.get('DRC');
+    DRC = drc.address;
     const Router = await deployments.get('MockArcherSwapRouter');
     archerRouter = Router.address;
     sushiRouter = Router.address;
@@ -33,7 +35,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     log: true,
     contract: 'DrainDistributor',
-    args: [WETH, treasury, lpRewardPool.address, draculaHoard.address, archerRouter, sushiRouter]
+    args: [WETH, DRC, treasury, lpRewardPool.address, draculaHoard.address, archerRouter, sushiRouter]
   });
 
   if (DrainDistributor.newlyDeployed) {
