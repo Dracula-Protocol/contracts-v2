@@ -14,6 +14,9 @@ import {
   duration
 } from './helpers/Utils';
 
+import MockYearnV2 from '../artifacts/contracts/test/MockYearnV2.sol/MockYearnV2.json';
+import YearnV2Adapter from '../artifacts/contracts/adapters/yearn/YearnV2Adapter.sol/YearnV2Adapter.json';
+
 async function drain(drainer:any, drainController:Contract, drainDistributor:Contract) {
   let drainable = await drainController.isDrainable();
   // Filter pools that haven't hit drain threshold
@@ -197,7 +200,7 @@ describe('MasterVampire', () => {
       console.log("  Pending reward (bob): ", utils.formatEther((await masterVampire.pendingWeth(0, bob.address)).toString()));
       console.log("  ETH Balance (bob):", utils.formatEther(await bob.getBalance()).toString());*/
 
-      await drain(carol,drainController, drainDistributor);
+      await drain(carol, drainController, drainDistributor);
       expect((await mockMasterChef.pendingMock(0, masterVampire.address)).valueOf()).to.eq(utils.parseEther('0.0049999995'));
 
       await advanceBlocks(2000);
@@ -235,6 +238,30 @@ describe('MasterVampire', () => {
       console.log("  Pending reward (alice): ", utils.formatEther((await masterVampire.pendingWeth(0, alice.address)).toString()));
       console.log("  DRC Balance (Alice):", utils.formatEther(await drc.balanceOf(alice.address)).toString());
       expect(await drc.balanceOf(alice.address)).to.gt(0);
+    });
+
+
+    it('victim with token receipts work', async () => {
+      const MockYearnV2 = await deployments.get('MockYearnV2');
+      const mockYearnV2 = await ethers.getContractAt('MockYearnV2', MockYearnV2.address, deployer);
+
+      const uniFactory = await deployments.get('MockUniswapFactory');
+      const yearnAdapter:Contract = await deployContract(deployer, YearnV2Adapter, [weth.address, uniFactory.address, masterVampire.address, [mockYearnV2.address], [weth.address]]);
+
+      await masterVampire.add(yearnAdapter.address, 0);
+
+      await weth.connect(alice).deposit({value : utils.parseEther('1.5')});
+      expect(await weth.balanceOf(alice.address)).to.eq(utils.parseEther('1.5'));
+      await weth.connect(alice).approve(masterVampire.address, utils.parseEther('1.5'));
+      await masterVampire.connect(alice).deposit(2, utils.parseEther('1.5'));
+      expect(await weth.balanceOf(alice.address)).to.eq(0);
+
+      const userInfo = await masterVampire.userInfo(2, alice.address);
+      expect(userInfo.poolShares).to.eq(await mockYearnV2.totalSupply());
+      expect(userInfo.amount).to.eq(utils.parseEther('1.5'));
+
+      await masterVampire.connect(alice).withdraw(2, userInfo.amount, 0);
+      expect(await weth.balanceOf(alice.address)).to.eq(utils.parseEther('1.5'));
     });
   });
 });

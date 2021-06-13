@@ -22,7 +22,11 @@ contract MockYearnV2 is ERC20 {
     }
 
     function pricePerShare() public view returns (uint256) {
-        return balance().mul(1e18).div(totalSupply());
+        uint256 supply = totalSupply();
+        if (supply == 0) {
+            return 0;
+        }
+        return balance().mul(1e18).div(supply);
     }
 
     function deposit() external returns (uint256) {
