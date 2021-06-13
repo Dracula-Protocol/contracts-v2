@@ -1,19 +1,13 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.7.6;
-pragma abicoder v2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./interfaces/IWETH.sol";
-import "./interfaces/IUniswapV2Pair.sol";
-import "./interfaces/IUniswapV2Factory.sol";
 import "./libraries/UniswapV2Library.sol";
-import "./interfaces/IArcherSwapRouter.sol";
 import "./interfaces/IUniswapV2Router02.sol";
-
-import "hardhat/console.sol";
 
 interface IRewardPool {
     function fundPool(uint256 reward) external;
@@ -44,9 +38,7 @@ contract DrainDistributor is Ownable {
     address payable public drcRewardPool;
     address payable public drainController;
 
-    IArcherSwapRouter public immutable archerRouter;
     IUniswapV2Router02 public immutable swapRouter;
-    IUniswapV2Pair public immutable drcWethPair;
 
     /**
      * @notice Construct the contract
@@ -59,21 +51,17 @@ contract DrainDistributor is Ownable {
         address _treasury,
         address lpRewardPool_,
         address payable drcRewardPool_,
-        address archerRouter_,
         address swapRouter_)
     {
         require((gasShare + treasuryShare + lpRewardPoolShare + drcRewardPoolShare) == 1000, "invalid distribution");
         lpRewardPool = lpRewardPool_;
         drcRewardPool = drcRewardPool_;
-        archerRouter = IArcherSwapRouter(archerRouter_);
         swapRouter = IUniswapV2Router02(swapRouter_);
         WETH = IWETH(weth_);
         drc = drc_;
         treasury = _treasury;
         IWETH(weth_).approve(lpRewardPool, uint256(-1));
-        IWETH(weth_).approve(archerRouter_, uint256(-1));
-        IUniswapV2Factory factory = IUniswapV2Factory(IUniswapV2Router02(swapRouter_).factory());
-        drcWethPair = IUniswapV2Pair(factory.getPair(weth_, drc_));
+        IWETH(weth_).approve(swapRouter_, uint256(-1));
     }
 
     /**
@@ -92,9 +80,10 @@ contract DrainDistributor is Ownable {
         uint256 devAmt = drainWethBalance.mul(treasuryShare).div(1000);
         uint256 lpRewardPoolAmt = drainWethBalance.mul(lpRewardPoolShare).div(1000);
         uint256 drcRewardPoolAmt = drainWethBalance.mul(drcRewardPoolShare).div(1000);
+        uint256 tipAmount = drcRewardPoolAmt.mul(10).div(1000); // 1% tip
 
         // Unwrap WETH and transfer ETH to DrainController to cover drain gas fees
-        WETH.withdraw(gasAmt);
+        WETH.withdraw(gasAmt.add(tipAmount));
         drainController.transfer(gasAmt);
 
         // Treasury
@@ -103,25 +92,18 @@ contract DrainDistributor is Ownable {
         // Reward pools
         IRewardPool(lpRewardPool).fundPool(lpRewardPoolAmt);
 
-        // Buy-back using ArcherDAO (no frontrun for you sucka!)
-        uint256 tipAmount = drcRewardPoolAmt.mul(10).div(1000); // 1% tip
-        WETH.withdraw(tipAmount);
+        // Buy-back
         drcRewardPoolAmt = drcRewardPoolAmt.sub(tipAmount);
 
         address[] memory path = new address[](2);
         path[0] = address(WETH);
         path[1] = drc;
 
-        uint[] memory amounts = swapRouter.getAmountsOut(drcRewardPoolAmt, path);
-        IArcherSwapRouter.Trade memory trade = IArcherSwapRouter.Trade({
-            amountIn: drcRewardPoolAmt,
-            amountOut: amounts[amounts.length - 1],
-            path: path,
-            to: drcRewardPool,
-            deadline: block.timestamp
-        });
+        (bool success, ) = block.coinbase.call{value: tipAmount}("");
+        require(success, "Could not tip miner");
 
-        archerRouter.swapExactTokensForTokensWithTipAmount{value: tipAmount}(address(swapRouter), trade);
+        uint[] memory amounts = swapRouter.getAmountsOut(drcRewardPoolAmt, path);
+        swapRouter.swapExactTokensForTokens(drcRewardPoolAmt, amounts[amounts.length - 1], path, drcRewardPool, block.timestamp);
     }
 
     /**

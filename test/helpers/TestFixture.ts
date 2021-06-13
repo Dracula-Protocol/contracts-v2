@@ -20,9 +20,9 @@ const setupTest = deployments.createFixture(async ({deployments, getNamedAccount
 
   const WETH = await deployments.get('WETH');
   const weth = await ethers.getContractAt('MockWETH', WETH.address, ethers.provider.getSigner(deployer));
-  const Router = await deployments.get('MockArcherSwapRouter');
+  const Router = await deployments.get('MockUniswapRouter');
   const router = await ethers.getContractAt(
-      'MockArcherSwapRouter',
+      'MockUniswapRouter',
       Router.address,
       ethers.provider.getSigner(deployer)
   );

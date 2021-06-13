@@ -72,7 +72,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       args: [treasury]
     });
 
-    const UniRouter = await deploy('MockArcherSwapRouter', {
+    const UniRouter = await deploy('MockUniswapRouter', {
       from: deployer,
       log: true,
       args: [MockUniswapFactory.address]
@@ -126,7 +126,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     );
 
     await execute(
-      'MockArcherSwapRouter',
+      'MockUniswapRouter',
       { from: deployer },
       'addLiquidity',
       WETH.address,
@@ -165,7 +165,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     );
 
     await execute(
-      'MockArcherSwapRouter',
+      'MockUniswapRouter',
       { from: deployer },
       'addLiquidity',
       WETH.address,
