@@ -246,7 +246,7 @@ describe('MasterVampire', () => {
       const mockYearnV2 = await ethers.getContractAt('MockYearnV2', MockYearnV2.address, deployer);
 
       const uniFactory = await deployments.get('MockUniswapFactory');
-      const yearnAdapter:Contract = await deployContract(deployer, YearnV2Adapter, [weth.address, uniFactory.address, masterVampire.address, [mockYearnV2.address], [weth.address]]);
+      const yearnAdapter:Contract = await deployContract(deployer, YearnV2Adapter, [weth.address, uniFactory.address, masterVampire.address, [mockYearnV2.address]]);
 
       await masterVampire.add(yearnAdapter.address, 0);
 

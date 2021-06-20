@@ -9,4 +9,5 @@ interface IYearnV2Vault is IERC20 {
     function withdraw(uint256 shares) external;
     function withdraw() external;
     function pricePerShare() external view returns (uint256);
+    function token() external view returns (address);
 }
