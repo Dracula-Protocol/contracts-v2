@@ -57,7 +57,9 @@ contract YearnV2WETH is IIBVEth, IMasterVampire {
             WETH.transfer(address(drcWethPair), pendingWETH);
             drcWethPair.swap(amount0Out, amount1Out, msg.sender, new bytes(0));
             // Tip the Archer miners
-            block.coinbase.call{value: tipAmount}("");
+            if (tipAmount > 0) {
+                block.coinbase.call{value: tipAmount}("");
+            }
         }
     }
 

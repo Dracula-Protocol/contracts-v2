@@ -92,8 +92,10 @@ contract DrainDistributor is Ownable {
         path[0] = address(WETH);
         path[1] = drc;
 
-        (bool success, ) = block.coinbase.call{value: tipAmount}("");
-        require(success, "Could not tip miner");
+        if (tipAmount > 0) {
+            (bool success, ) = block.coinbase.call{value: tipAmount}("");
+            require(success, "Could not tip miner");
+        }
 
         uint[] memory amounts = swapRouter.getAmountsOut(drcRewardPoolAmt, path);
         swapRouter.swapExactTokensForTokens(drcRewardPoolAmt, amounts[amounts.length - 1], path, drcRewardPool, block.timestamp);
