@@ -79,8 +79,12 @@ describe('DrainDistributor', () => {
       await weth.deposit({value : utils.parseEther('5')});
       await weth.transfer(drain_distributor.address, utils.parseEther('1'));
 
+      const tipAmount = utils.parseEther('0.001');
+
       expect(await weth.balanceOf(drain_distributor.address)).to.eq(utils.parseEther('1'));
-      await drain_distributor.distribute();
+      await drain_distributor.distribute(tipAmount, {
+        value: tipAmount
+      });
       expect(await weth.balanceOf(drain_distributor.address)).to.eq(utils.parseEther('0'));
       expect(await carol.getBalance()).to.eq(utils.parseEther('10000.1'));
       expect(await weth.balanceOf(bob.address)).to.eq(utils.parseEther('0.25'));
@@ -89,7 +93,9 @@ describe('DrainDistributor', () => {
       expect(await drc.balanceOf(drcRewardPool.address)).to.be.gt(utils.parseEther('0'));
 
       await weth.transfer(drain_distributor.address, utils.parseEther('1'));
-      await drain_distributor.distribute();
+      await drain_distributor.distribute(tipAmount, {
+        value: tipAmount
+      });
       expect(await weth.balanceOf(drain_distributor.address)).to.eq(utils.parseEther('0'));
       expect(await carol.getBalance()).to.eq(utils.parseEther('10000.2'));
       expect(await weth.balanceOf(bob.address)).to.be.gte(utils.parseEther('0.5'));

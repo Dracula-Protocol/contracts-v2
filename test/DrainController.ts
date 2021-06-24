@@ -56,7 +56,7 @@ describe('DrainController', () => {
     });
     it('is drainable', async () => {
       const drainable = await drainController.isDrainable();
-      expect(drainable.length).to.eq(1);
+      expect(drainable.length).to.eq(2);
     });
     it('node gas fee is paid', async () => {
       await drainController.whitelist(bob.address);

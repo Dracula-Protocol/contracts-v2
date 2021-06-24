@@ -37,7 +37,7 @@ contract IBVEthRari is IIBVEth, IMasterVampire {
         fundManager.deposit{value: amount}();
     }
 
-    function handleClaim(uint256 pending, uint8 flag) external override {
+    function handleClaim(uint256 pending, uint256 tipAmount, uint8 flag) external payable override {
         // Convert REPT into ETH for withdrawal
         pending = ibETHValue(pending);
         uint256 _before = address(this).balance;

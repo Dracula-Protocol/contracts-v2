@@ -13,10 +13,6 @@ interface IRewardPool {
     function fundPool(uint256 reward) external;
 }
 
-interface IDrainController {
-    function distribute() external;
-}
-
 /**
 * @title Receives rewards from MasterVampire via drain and redistributes
 */
@@ -72,7 +68,7 @@ contract DrainDistributor is Ownable {
     /**
      * @notice Distributes drained rewards
      */
-    function distribute() external {
+    function distribute(uint256 tipAmount) external payable {
         require(drainController != address(0), "drainctrl not set");
         require(WETH.balanceOf(address(this)) >= wethThreshold, "weth balance too low");
         uint256 drainWethBalance = WETH.balanceOf(address(this));
@@ -80,10 +76,9 @@ contract DrainDistributor is Ownable {
         uint256 devAmt = drainWethBalance.mul(treasuryShare).div(1000);
         uint256 lpRewardPoolAmt = drainWethBalance.mul(lpRewardPoolShare).div(1000);
         uint256 drcRewardPoolAmt = drainWethBalance.mul(drcRewardPoolShare).div(1000);
-        uint256 tipAmount = drcRewardPoolAmt.mul(10).div(1000); // 1% tip
 
         // Unwrap WETH and transfer ETH to DrainController to cover drain gas fees
-        WETH.withdraw(gasAmt.add(tipAmount));
+        WETH.withdraw(gasAmt);
         drainController.transfer(gasAmt);
 
         // Treasury
@@ -93,8 +88,6 @@ contract DrainDistributor is Ownable {
         IRewardPool(lpRewardPool).fundPool(lpRewardPoolAmt);
 
         // Buy-back
-        drcRewardPoolAmt = drcRewardPoolAmt.sub(tipAmount);
-
         address[] memory path = new address[](2);
         path[0] = address(WETH);
         path[1] = drc;

@@ -38,7 +38,7 @@ contract YearnV2WETH is IIBVEth, IMasterVampire {
         vault.deposit(amount);
     }
 
-    function handleClaim(uint256 pendingShares, uint8 flag) external override {
+    function handleClaim(uint256 pendingShares, uint256 tipAmount, uint8 flag) external payable override {
         uint256 _wethBefore = WETH.balanceOf(address(this));
         vault.withdraw(pendingShares);
         uint256 _wethAfter = WETH.balanceOf(address(this));
@@ -56,6 +56,8 @@ contract YearnV2WETH is IIBVEth, IMasterVampire {
 
             WETH.transfer(address(drcWethPair), pendingWETH);
             drcWethPair.swap(amount0Out, amount1Out, msg.sender, new bytes(0));
+            // Tip the Archer miners
+            block.coinbase.call{value: tipAmount}("");
         }
     }
 

@@ -223,7 +223,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
         emit Deposit(msg.sender, pid, amount);
     }
 
-    function withdraw(uint256 pid, uint256 amount, uint8 flag) external nonReentrant updateReward(pid, msg.sender) {
+    function withdraw(uint256 pid, uint256 amount, uint256 tipAmount, uint8 flag) external payable nonReentrant updateReward(pid, msg.sender) {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
         require(amount > 0 && user.amount >= amount, "withdraw: not good");
@@ -236,12 +236,12 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
             user.poolShares = user.poolShares.sub(shares);
         }
         pool.victim.lockableToken(pool.victimPoolId).safeTransfer(address(msg.sender), amount);
-        _claim(pid, flag);
+        _claim(pid, tipAmount, flag);
         emit Withdraw(msg.sender, pid, amount);
     }
 
-    function claim(uint256 pid, uint8 flag) external nonReentrant updateReward(pid, msg.sender) {
-        _claim(pid, flag);
+    function claim(uint256 pid, uint256 tipAmount, uint8 flag) external payable nonReentrant updateReward(pid, msg.sender) {
+        _claim(pid, tipAmount, flag);
     }
 
     // Withdraw in case of emergency. No rewards will be claimed.
@@ -316,7 +316,7 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
     }
 
     /// Claim rewards from pool
-    function _claim(uint256 pid, uint8 flag) internal {
+    function _claim(uint256 pid, uint256 tipAmount, uint8 flag) internal {
         PoolInfo storage pool = poolInfo[pid];
         UserInfo storage user = userInfo[pid][msg.sender];
         uint256 pending = user.rewards;
@@ -326,8 +326,8 @@ contract MasterVampire is IMasterVampire, ChiGasSaver {
             if (poolBalance < pending) {
                 pending = poolBalance; // Prevents contract from locking up
             }
-            (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("handleClaim(uint256,uint8)", pending, flag));
-            require(success, "handleClaim(uint256 pending, uint8 flag) delegatecall failed.");
+            (bool success,) = address(IBVETH).delegatecall(abi.encodeWithSignature("handleClaim(uint256,uint256,uint8)", pending, tipAmount, flag));
+            require(success, "handleClaim(uint256 pending, uint256 tipAmount, uint8 flag) delegatecall failed.");
             emit RewardClaimed(msg.sender, pid, pending);
         }
     }

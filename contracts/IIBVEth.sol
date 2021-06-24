@@ -16,7 +16,7 @@ abstract contract IIBVEth  {
     }
 
     function handleDrainedWETH(uint256 amount) external virtual;
-    function handleClaim(uint256 pending, uint8 flag) external virtual;
+    function handleClaim(uint256 pending, uint256 tipAmount, uint8 flag) external payable virtual;
     function migrate() external virtual;
     function ibToken() external view virtual returns(IERC20);
     function balance(address account) external view virtual returns(uint256);
