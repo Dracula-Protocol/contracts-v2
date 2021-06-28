@@ -1,36 +1,42 @@
 {
   "dodo": {
-    "deployedAdapter": "0x680276CF3Ea6C52F0fCa4BA216C3353fe387EBdE",
+    "deployedAdapter": "0x028B1697b768D36cA457383741344F1BF9b6C9F5",
     "victimPools": [
       {
         "token": "ETH-USDC dodo LP (ETH)",
         "victimPID": 0,
-        "lp": "0xc11eCCDee225d644f873776A68A02eCD8c015697"
+        "lp": "0xc11eCCDee225d644f873776A68A02eCD8c015697",
+        "pid": 0
       },
       {
         "token": "ETH-USDC dodo LP (USDC)",
         "victimPID": 1,
-        "lp": "0x6a5Eb3555cBbD29016Ba6F6fFbCcEE28D57b2932"
+        "lp": "0x6a5Eb3555cBbD29016Ba6F6fFbCcEE28D57b2932",
+        "pid": 1
       },
       {
         "token": "WBTC-USDC dodo LP (WBTC) LP",
         "victimPID": 10,
-        "lp": "0x2eC2A42901c761b295a9e6b95200cd0BdAa474Eb"
+        "lp": "0x2eC2A42901c761b295a9e6b95200cd0BdAa474Eb",
+        "pid": 2
       },
       {
         "token": "WBTC-USDC dodo LP (USDC) LP",
         "victimPID": 11,
-        "lp": "0x0cDb21e20597d753C90458f5eF2083f6695eb794"
+        "lp": "0x0cDb21e20597d753C90458f5eF2083f6695eb794",
+        "pid": 3
       },
       {
         "token": "USDT-USDC dodo LP (USDC) LP",
         "victimPID": 15,
-        "lp": "0x05a54b466F01510E92c02d3a180BaE83A64BAab8"
+        "lp": "0x05a54b466F01510E92c02d3a180BaE83A64BAab8",
+        "pid": 4
       },
       {
         "token": "USDT-USDC dodo LP (USDT) LP",
         "victimPID": 16,
-        "lp": "0x50b11247bF14eE5116C855CDe9963fa376FceC86"
+        "lp": "0x50b11247bF14eE5116C855CDe9963fa376FceC86",
+        "pid": 5
       }
     ]
   },
@@ -168,7 +174,7 @@
         "lp": "0x6094367ea57ff4f545e2672e024393d82a1d3F28"
       }
     ]
-},
+  },
   "pickle": {
     "deployedAdapter": "0x8432BF53c68aed9E703ABCd78Be3810478F1eE36",
     "victimPools": [
