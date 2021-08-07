@@ -48,4 +48,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 export default func;
-func.tags = ['dracula', 'live'];
+func.tags = ['dracula'];

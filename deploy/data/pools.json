@@ -321,102 +321,122 @@
       {
         "lp": "0x06da0fd433c1a5d7a4faa01111c044910a184553",
         "token": "WETH-USDT",
-        "victimPID": 0
+        "victimPID": 0,
+        "pid": 6
       },
       {
         "lp": "0x397ff1542f962076d0bfe58ea045ffa2d347aca0",
         "token": "USDC-WETH",
-        "victimPID": 1
+        "victimPID": 1,
+        "pid": 7
       },
       {
         "lp": "0xc3d03e4f041fd4cd388c549ee2a29a9e5075882f",
         "token": "DAI-WETH",
-        "victimPID": 2
+        "victimPID": 2,
+        "pid": 8
       },
       {
         "lp": "0xf1f85b2c54a2bd284b1cf4141d64fd171bd85539",
         "token": "sUSD-WETH",
-        "victimPID": 3
+        "victimPID": 3,
+        "pid": 9
       },
       {
         "lp": "0x31503dcb60119a812fee820bb7042752019f2355",
         "token": "COMP-WETH",
-        "victimPID": 4
+        "victimPID": 4,
+        "pid": 10
       },
       {
         "lp": "0xa1d7b2d891e3a1f9ef4bbc5be20630c2feb1c470",
         "token": "SNX-WETH",
-        "victimPID": 6
+        "victimPID": 6,
+        "pid": 11
       },
       {
         "lp": "0x001b6450083e531a5a7bf310bd2c1af4247e23d4",
         "token": "UMA-WETH",
-        "victimPID": 7
+        "victimPID": 7,
+        "pid": 12
       },
       {
         "lp": "0xc40d16476380e4037e6b1a2594caf6a6cc8da967",
         "token": "LINK-WETH",
-        "victimPID": 8
+        "victimPID": 8,
+        "pid": 13
       },
       {
         "lp": "0xa75f7c2f025f470355515482bde9efa8153536a8",
         "token": "BAND-WETH",
-        "victimPID": 9
+        "victimPID": 9,
+        "pid": 14
       },
       {
         "lp": "0x088ee5007c98a9677165d78dd2109ae4a3d04d0c",
         "token": "YFI-WETH",
-        "victimPID": 11
+        "victimPID": 11,
+        "pid": 15
       },
       {
         "lp": "0x795065dcc9f64b5614c407a6efdc400da6221fb0",
         "token": "SUSHI-WETH",
-        "victimPID": 12
+        "victimPID": 12,
+        "pid": 16
       },
       {
         "lp": "0x611cde65dea90918c0078ac0400a72b0d25b9bb1",
         "token": "REN-WETH",
-        "victimPID": 13
+        "victimPID": 13,
+        "pid": 17
       },
       {
         "lp": "0x58dc5a51fe44589beb22e8ce67720b5bc5378009",
         "token": "WETH-CRV",
-        "victimPID": 17
+        "victimPID": 17,
+        "pid": 18
       },
       {
         "lp": "0xdafd66636e2561b0284edde37e42d192f2844d40",
         "token": "UNI-WETH",
-        "victimPID": 18
+        "victimPID": 18,
+        "pid": 19
       },
       {
         "lp": "0xceff51756c56ceffca006cd410b03ffc46dd3a58",
         "token": "WBTC-WETH",
-        "victimPID": 21
+        "victimPID": 21,
+        "pid": 20
       },
       {
         "lp": "0x382c4a5147fd4090f7be3a9ff398f95638f5d39e",
         "token": "yyDAI+yUSDC+yUSDT+yTUSD-WETH",
-        "victimPID": 25
+        "victimPID": 25,
+        "pid": 21
       },
       {
         "lp": "0xd75ea151a61d06868e31f8988d28dfe5e9df57b4",
         "token": "AAVE-WETH",
-        "victimPID": 37
+        "victimPID": 37,
+        "pid": 22
       },
       {
         "lp": "0x0f82e57804d0b1f6fab2370a43dcfad3c7cb239c",
         "token": "YAM-WETH",
-        "victimPID": 44
+        "victimPID": 44,
+        "pid": 23
       },
       {
         "lp": "0xaf988aff99d3d0cb870812c325c588d8d8cb7de8",
         "token": "KP3R-WETH",
-        "victimPID": 58
+        "victimPID": 58,
+        "pid": 24
       },
       {
         "lp": "0x66ae32178640813f3c32a9929520bfe4fef5d167",
         "token": "COVER-WETH",
-        "victimPID": 101
+        "victimPID": 101,
+        "pid": 25
       }
     ]
   },
@@ -471,127 +491,151 @@
     ]
   },
   "yearn": {
-    "deployedAdapter": "",
+    "deployedAdapter": "0xCd19Bc5BfB5b98F19711E9d26E6B6D6460724B31",
     "victimPools": [
       {
         "token": "WETH",
         "victimPID": 0,
-        "lp": "0xa9fE4601811213c340e850ea305481afF02f5b28"
+        "lp": "0xa9fE4601811213c340e850ea305481afF02f5b28",
+        "pid": 26
       },
       {
         "token": "YFI",
         "victimPID": 1,
-        "lp": "0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1"
+        "lp": "0xE14d13d8B3b85aF791b2AADD661cDBd5E6097Db1",
+        "pid": 27
       },
       {
         "token": "WBTC",
         "victimPID": 2,
-        "lp": "0xA696a63cc78DfFa1a63E9E50587C197387FF6C7E"
+        "lp": "0xA696a63cc78DfFa1a63E9E50587C197387FF6C7E",
+        "pid": 28
       },
       {
         "token": "DAI",
         "victimPID": 3,
-        "lp": "0x19D3364A399d251E894aC732651be8B0E4e85001"
+        "lp": "0x19D3364A399d251E894aC732651be8B0E4e85001",
+        "pid": 29
       },
       {
         "token": "USDC",
         "victimPID": 4,
-        "lp": "0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9"
+        "lp": "0x5f18C75AbDAe578b483E5F43f12a39cF75b973a9",
+        "pid": 30
       },
       {
         "token": "USDT",
         "victimPID": 5,
-        "lp": "0x7Da96a3891Add058AdA2E826306D812C638D87a7"
+        "lp": "0x7Da96a3891Add058AdA2E826306D812C638D87a7",
+        "pid": 31
       },
       {
         "token": "SNX",
         "victimPID": 6,
-        "lp": "0xF29AE508698bDeF169B89834F76704C3B205aedf"
+        "lp": "0xF29AE508698bDeF169B89834F76704C3B205aedf",
+        "pid": 32
       },
       {
         "token": "UNI",
         "victimPID": 7,
-        "lp": "0xFBEB78a723b8087fD2ea7Ef1afEc93d35E8Bed42"
+        "lp": "0xFBEB78a723b8087fD2ea7Ef1afEc93d35E8Bed42",
+        "pid": 33
       },
       {
         "token": "1INCH",
         "victimPID": 8,
-        "lp": "0xB8C3B7A2A618C552C23B1E4701109a9E756Bab67"
+        "lp": "0xB8C3B7A2A618C552C23B1E4701109a9E756Bab67",
+        "pid": 34
       },
       {
         "token": "crvEURS",
         "victimPID": 9,
-        "lp": "0x25212Df29073FfFA7A67399AcEfC2dd75a831A1A"
+        "lp": "0x25212Df29073FfFA7A67399AcEfC2dd75a831A1A",
+        "pid": 35
       },
       {
         "token": "crvAAVE",
         "victimPID": 10,
-        "lp": "0x39CAF13a104FF567f71fd2A4c68C026FDB6E740B"
+        "lp": "0x39CAF13a104FF567f71fd2A4c68C026FDB6E740B",
+        "pid": 36
       },
       {
         "token": "crvCOMP",
         "victimPID": 11,
-        "lp": "0xD6Ea40597Be05c201845c0bFd2e96A60bACde267"
+        "lp": "0xD6Ea40597Be05c201845c0bFd2e96A60bACde267",
+        "pid": 37
       },
       {
         "token": "crvFRAX",
         "victimPID": 12,
-        "lp": "0xB4AdA607B9d6b2c9Ee07A275e9616B84AC560139"
+        "lp": "0xB4AdA607B9d6b2c9Ee07A275e9616B84AC560139",
+        "pid": 38
       },
       {
         "token": "crvMUSD",
         "victimPID": 13,
-        "lp": "0x8cc94ccd0f3841a468184aCA3Cc478D2148E1757"
+        "lp": "0x8cc94ccd0f3841a468184aCA3Cc478D2148E1757",
+        "pid": 39
       },
       {
         "token": "crvTUSD",
         "victimPID": 14,
-        "lp": "0xf8768814b88281DE4F532a3beEfA5b85B69b9324"
+        "lp": "0xf8768814b88281DE4F532a3beEfA5b85B69b9324",
+        "pid": 40
       },
       {
         "token": "crvUSDN",
         "victimPID": 15,
-        "lp": "0x3B96d491f067912D18563d56858Ba7d6EC67a6fa"
+        "lp": "0x3B96d491f067912D18563d56858Ba7d6EC67a6fa",
+        "pid": 41
       },
       {
         "token": "crvUSDP",
         "victimPID": 16,
-        "lp": "0xC4dAf3b5e2A9e93861c3FBDd25f1e943B8D87417"
+        "lp": "0xC4dAf3b5e2A9e93861c3FBDd25f1e943B8D87417",
+        "pid": 42
       },
       {
         "token": "crvUST",
         "victimPID": 17,
-        "lp": "0x1C6a9783F812b3Af3aBbf7de64c3cD7CC7D1af44"
+        "lp": "0x1C6a9783F812b3Af3aBbf7de64c3cD7CC7D1af44",
+        "pid": 43
       },
       {
         "token": "crvAETH",
         "victimPID": 18,
-        "lp": "0x132d8D2C76Db3812403431fAcB00F3453Fc42125"
+        "lp": "0x132d8D2C76Db3812403431fAcB00F3453Fc42125",
+        "pid": 44
       },
       {
         "token": "crvRETH",
         "victimPID": 19,
-        "lp": "0xBfedbcbe27171C418CDabC2477042554b1904857"
+        "lp": "0xBfedbcbe27171C418CDabC2477042554b1904857",
+        "pid": 45
       },
       {
         "token": "crvPBTC",
         "victimPID": 19,
-        "lp": "0x3c5DF3077BcF800640B5DAE8c91106575a4826E6"
+        "lp": "0x3c5DF3077BcF800640B5DAE8c91106575a4826E6",
+        "pid": 46
       },
       {
         "token": "crvLINK",
         "victimPID": 19,
-        "lp": "0xf2db9a7c0ACd427A680D640F02d90f6186E71725"
+        "lp": "0xf2db9a7c0ACd427A680D640F02d90f6186E71725",
+        "pid": 47
       },
       {
         "token": "crvOBTC",
         "victimPID": 20,
-        "lp": "0xe9Dc63083c464d6EDcCFf23444fF3CFc6886f6FB"
+        "lp": "0xe9Dc63083c464d6EDcCFf23444fF3CFc6886f6FB",
+        "pid": 48
       },
       {
         "token": "crvDUSD",
         "victimPID": 21,
-        "lp": "0x30FCf7c6cDfC46eC237783D94Fc78553E79d4E9C"
+        "lp": "0x30FCf7c6cDfC46eC237783D94Fc78553E79d4E9C",
+        "pid": 49
       }
     ]
   }

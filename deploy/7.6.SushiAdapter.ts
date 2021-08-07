@@ -33,22 +33,24 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
       pools[POOL_ID].deployedAdapter = SushiAdapter.address;
 
-      if (!pools[POOL_ID].deployedAdapter || pools[POOL_ID].deployedAdapter.length === 0) {
+      //if (!pools[POOL_ID].deployedAdapter || pools[POOL_ID].deployedAdapter.length === 0) {
         let nextPID = (await masterVampire.poolLength()).toNumber();
+        const victimPIDS = [];
         for (let pool of pools[POOL_ID].victimPools) {
-          await masterVampire.add(SushiAdapter.address, pool.victimPID);
+          victimPIDS.push(pool.victimPID);
           if (pool.pid == undefined) {
             pool.pid = nextPID;
             nextPID++;
           }
         }
-      } else {
+        await masterVampire.addBulk(SushiAdapter.address, victimPIDS);
+      /*} else {
         console.log("Updating SUSHI adapter to:", SushiAdapter.address)
 
         for (let pool of pools[POOL_ID].victimPools) {
           await masterVampire.updateVictimAddress(pool.pid, SushiAdapter.address);
         }
-      }
+      }*/
 
       fs.writeFileSync(POOL_JSON, JSON.stringify(pools, null, 2));
     }
