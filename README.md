@@ -10,17 +10,17 @@ Dracula Protocol allows users to deposit their assets through its interface, whi
 
 ## Core contracts
 
-__MasterVampire__ [0xF8CD76Cb1bcD0c369DE896Acb592d92Cd823cA03](https://etherscan.io/address/0xF8CD76Cb1bcD0c369DE896Acb592d92Cd823cA03) implements the core logic behind Dracula Protocol.
+__MasterVampire__ [0xB58E80f655F451f4AD2278a7D806C475AcCdB8bd](https://etherscan.io/address/0xB58E80f655F451f4AD2278a7D806C475AcCdB8bd) implements the core logic behind Dracula Protocol.
 
 __DraculaToken__ [0xb78B3320493a4EFaa1028130C5Ba26f0B6085Ef8](https://etherscan.io/address/0xb78b3320493a4efaa1028130c5ba26f0b6085ef8) ERC20-interface compliant token with minter set to __MasterVampire__ and vote-delegating functionality.
 
-__DrainController__ [0xEB0E5D49C5504DFd850E9d28Eb69bA8d8cc02736](https://etherscan.io/address/0xEB0E5D49C5504DFd850E9d28Eb69bA8d8cc02736)
+__DrainController__ [0x4852a488F15AE544C75FED466908A2D1559EBAfa](https://etherscan.io/address/0x4852a488F15AE544C75FED466908A2D1559EBAfa)
 
-__DrainDistributor__ [0x1543e3d0d71a8Ed29019F4Eb7b57d319A7051b84](https://etherscan.io/address/0x1543e3d0d71a8Ed29019F4Eb7b57d319A7051b84)
+__DrainDistributor__ [0x62440aE6a5b861D01b0104D6ED77DbEDA29c4dc8](https://etherscan.io/address/0x62440aE6a5b861D01b0104D6ED77DbEDA29c4dc8)
 
-__DRCRewardPool__ [0xC8DFD57E82657f1e7EdEc5A9aA4906230C29A62A](https://etherscan.io/address/0xC8DFD57E82657f1e7EdEc5A9aA4906230C29A62A) DRC staking pool.
+__DRCRewardPool__ [0xcAABb5e44868F720924Aa2c8c4809d4F236Ed7Ee](https://etherscan.io/address/0xcAABb5e44868F720924Aa2c8c4809d4F236Ed7Ee) DRC staking pool.
 
-__UniRewardPool__ [0xB6e02FF600d8f7a6C057Dc262B84CFEf6010D99d](https://etherscan.io/address/0xB6e02FF600d8f7a6C057Dc262B84CFEf6010D99d) DRC/ETH UNI-LP staking pool.
+__LPRewardPool__ [0xcA329C19396DfB92F570FD19E6F468AF87c9a9c1](https://etherscan.io/address/0xcA329C19396DfB92F570FD19E6F468AF87c9a9c1) DRC/ETH UNI-LP staking pool.
 
 __IVampireAdapter__ interface that allows __Master Vampire__ to uniformly communicate with various target pools, effectively shadowing all the differences between them. Every victim's adapter smart-contract implements this interface. The interface also contains several informational methods that will be used in Governance for automatic reward redistribution.
 
