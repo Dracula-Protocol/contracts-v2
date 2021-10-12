@@ -1,0 +1,470 @@
+{
+  "address": "0xF5282A38e9012BA315585038Dd654A8fbA121512",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_weth",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_factory",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_masterVampire",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        }
+      ],
+      "name": "claimReward",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_adapter",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "deposit",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        }
+      ],
+      "name": "emergencyWithdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        }
+      ],
+      "name": "lockableToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        }
+      ],
+      "name": "lockedAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        }
+      ],
+      "name": "lockedValue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "contract IUniswapV2Pair",
+          "name": "lpToken",
+          "type": "address"
+        }
+      ],
+      "name": "lpTokenValue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        }
+      ],
+      "name": "normalizedAPY",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        }
+      ],
+      "name": "pendingReward",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "poolAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "poolCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "rewardToWethPool",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "rewardToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "poolId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "rewardValue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rewardAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        }
+      ],
+      "name": "sellRewardForWeth",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "sellableRewardAmount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        }
+      ],
+      "name": "totalLockedValue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "victimPID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdraw",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x5fce3fd6548a05a3227a21accc6e776408d67a9fe4397901a79903176dec5a8e",
+  "receipt": {
+    "to": null,
+    "from": "0x94627695F66Ab36Ae00c1995a30Bf5B30E139873",
+    "contractAddress": "0xF5282A38e9012BA315585038Dd654A8fbA121512",
+    "transactionIndex": 133,
+    "gasUsed": "2337679",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x08d3d8bf7fde6c4493a97ffa1039c5bac50eadb181f0f85be5121e12259096f9",
+    "transactionHash": "0x5fce3fd6548a05a3227a21accc6e776408d67a9fe4397901a79903176dec5a8e",
+    "logs": [],
+    "blockNumber": 12978999,
+    "cumulativeGasUsed": "10458470",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
+    "0xB58E80f655F451f4AD2278a7D806C475AcCdB8bd"
+  ],
+  "solcInputHash": "e166554613407b5e5de9c2eccf5906c7",
+  "metadata": "{\"compiler\":{\"version\":\"0.7.6+commit.7338295f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_weth\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_factory\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_masterVampire\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"}],\"name\":\"claimReward\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_adapter\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"deposit\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"}],\"name\":\"emergencyWithdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"}],\"name\":\"lockableToken\",\"outputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"}],\"name\":\"lockedAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"}],\"name\":\"lockedValue\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"contract IUniswapV2Pair\",\"name\":\"lpToken\",\"type\":\"address\"}],\"name\":\"lpTokenValue\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"}],\"name\":\"normalizedAPY\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"}],\"name\":\"pendingReward\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"poolAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"poolCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"rewardToWethPool\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"rewardToken\",\"outputs\":[{\"internalType\":\"contract IERC20\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"poolId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"rewardValue\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"rewardAmount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"}],\"name\":\"sellRewardForWeth\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"sellableRewardAmount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"}],\"name\":\"totalLockedValue\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"victimPID\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"lpTokenValue(uint256,address)\":{\"notice\":\"Calculates the WETH value of an LP token\"},\"rewardValue(uint256,uint256)\":{\"notice\":\"Calculates the WETH value for an amount of pool reward token\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/adapters/sushi/SushiAdapter.sol\":\"SushiAdapter\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":9999},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/math/SafeMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.7.0;\\n\\n/**\\n * @dev Wrappers over Solidity's arithmetic operations with added overflow\\n * checks.\\n *\\n * Arithmetic operations in Solidity wrap on overflow. This can easily result\\n * in bugs, because programmers usually assume that an overflow raises an\\n * error, which is the standard behavior in high level programming languages.\\n * `SafeMath` restores this intuition by reverting the transaction when an\\n * operation overflows.\\n *\\n * Using this library instead of the unchecked operations eliminates an entire\\n * class of bugs, so it's recommended to use it always.\\n */\\nlibrary SafeMath {\\n    /**\\n     * @dev Returns the addition of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        uint256 c = a + b;\\n        if (c < a) return (false, 0);\\n        return (true, c);\\n    }\\n\\n    /**\\n     * @dev Returns the substraction of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        if (b > a) return (false, 0);\\n        return (true, a - b);\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        // Gas optimization: this is cheaper than requiring 'a' not being zero, but the\\n        // benefit is lost if 'b' is also tested.\\n        // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522\\n        if (a == 0) return (true, 0);\\n        uint256 c = a * b;\\n        if (c / a != b) return (false, 0);\\n        return (true, c);\\n    }\\n\\n    /**\\n     * @dev Returns the division of two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        if (b == 0) return (false, 0);\\n        return (true, a / b);\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.\\n     *\\n     * _Available since v3.4._\\n     */\\n    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {\\n        if (b == 0) return (false, 0);\\n        return (true, a % b);\\n    }\\n\\n    /**\\n     * @dev Returns the addition of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `+` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Addition cannot overflow.\\n     */\\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\\n        uint256 c = a + b;\\n        require(c >= a, \\\"SafeMath: addition overflow\\\");\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting on\\n     * overflow (when the result is negative).\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\\n        require(b <= a, \\\"SafeMath: subtraction overflow\\\");\\n        return a - b;\\n    }\\n\\n    /**\\n     * @dev Returns the multiplication of two unsigned integers, reverting on\\n     * overflow.\\n     *\\n     * Counterpart to Solidity's `*` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Multiplication cannot overflow.\\n     */\\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\\n        if (a == 0) return 0;\\n        uint256 c = a * b;\\n        require(c / a == b, \\\"SafeMath: multiplication overflow\\\");\\n        return c;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\\n        require(b > 0, \\\"SafeMath: division by zero\\\");\\n        return a / b;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting when dividing by zero.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b) internal pure returns (uint256) {\\n        require(b > 0, \\\"SafeMath: modulo by zero\\\");\\n        return a % b;\\n    }\\n\\n    /**\\n     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on\\n     * overflow (when the result is negative).\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {trySub}.\\n     *\\n     * Counterpart to Solidity's `-` operator.\\n     *\\n     * Requirements:\\n     *\\n     * - Subtraction cannot overflow.\\n     */\\n    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b <= a, errorMessage);\\n        return a - b;\\n    }\\n\\n    /**\\n     * @dev Returns the integer division of two unsigned integers, reverting with custom message on\\n     * division by zero. The result is rounded towards zero.\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {tryDiv}.\\n     *\\n     * Counterpart to Solidity's `/` operator. Note: this function uses a\\n     * `revert` opcode (which leaves remaining gas untouched) while Solidity\\n     * uses an invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b > 0, errorMessage);\\n        return a / b;\\n    }\\n\\n    /**\\n     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),\\n     * reverting with custom message when dividing by zero.\\n     *\\n     * CAUTION: This function is deprecated because it requires allocating memory for the error\\n     * message unnecessarily. For custom revert reasons use {tryMod}.\\n     *\\n     * Counterpart to Solidity's `%` operator. This function uses a `revert`\\n     * opcode (which leaves remaining gas untouched) while Solidity uses an\\n     * invalid opcode to revert (consuming all remaining gas).\\n     *\\n     * Requirements:\\n     *\\n     * - The divisor cannot be zero.\\n     */\\n    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {\\n        require(b > 0, errorMessage);\\n        return a % b;\\n    }\\n}\\n\",\"keccak256\":\"0xe22a1fc7400ae196eba2ad1562d0386462b00a6363b742d55a2fd2021a58586f\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.7.0;\\n\\n/**\\n * @dev Interface of the ERC20 standard as defined in the EIP.\\n */\\ninterface IERC20 {\\n    /**\\n     * @dev Returns the amount of tokens in existence.\\n     */\\n    function totalSupply() external view returns (uint256);\\n\\n    /**\\n     * @dev Returns the amount of tokens owned by `account`.\\n     */\\n    function balanceOf(address account) external view returns (uint256);\\n\\n    /**\\n     * @dev Moves `amount` tokens from the caller's account to `recipient`.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transfer(address recipient, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Returns the remaining number of tokens that `spender` will be\\n     * allowed to spend on behalf of `owner` through {transferFrom}. This is\\n     * zero by default.\\n     *\\n     * This value changes when {approve} or {transferFrom} are called.\\n     */\\n    function allowance(address owner, address spender) external view returns (uint256);\\n\\n    /**\\n     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * IMPORTANT: Beware that changing an allowance with this method brings the risk\\n     * that someone may use both the old and the new allowance by unfortunate\\n     * transaction ordering. One possible solution to mitigate this race\\n     * condition is to first reduce the spender's allowance to 0 and set the\\n     * desired value afterwards:\\n     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address spender, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Moves `amount` tokens from `sender` to `recipient` using the\\n     * allowance mechanism. `amount` is then deducted from the caller's\\n     * allowance.\\n     *\\n     * Returns a boolean value indicating whether the operation succeeded.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);\\n\\n    /**\\n     * @dev Emitted when `value` tokens are moved from one account (`from`) to\\n     * another (`to`).\\n     *\\n     * Note that `value` may be zero.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 value);\\n\\n    /**\\n     * @dev Emitted when the allowance of a `spender` for an `owner` is set by\\n     * a call to {approve}. `value` is the new allowance.\\n     */\\n    event Approval(address indexed owner, address indexed spender, uint256 value);\\n}\\n\",\"keccak256\":\"0xbd74f587ab9b9711801baf667db1426e4a03fd2d7f15af33e0e0d0394e7cef76\",\"license\":\"MIT\"},\"contracts/BaseAdapter.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.7.6;\\n\\nimport \\\"@openzeppelin/contracts/math/SafeMath.sol\\\";\\nimport \\\"./interfaces/IUniswapV2Factory.sol\\\";\\nimport \\\"./libraries/UniswapV2Library.sol\\\";\\nimport \\\"./IVampireAdapter.sol\\\";\\n\\nabstract contract BaseAdapter is IVampireAdapter {\\n    using SafeMath for uint256;\\n\\n    IERC20 immutable weth;\\n    IUniswapV2Factory immutable factory;\\n\\n    constructor(address _weth, address _factory) {\\n        weth = IERC20(_weth);\\n        factory = IUniswapV2Factory(_factory);\\n    }\\n\\n    /**\\n     * @notice Calculates the WETH value of an LP token\\n     */\\n    function lpTokenValue(uint256 amount, IUniswapV2Pair lpToken) public virtual override view returns(uint256) {\\n        (uint256 token0Reserve, uint256 token1Reserve,) = lpToken.getReserves();\\n        address token0 = lpToken.token0();\\n        address token1 = lpToken.token1();\\n        if (token0 == address(weth)) {\\n            return amount.mul(token0Reserve).mul(2).div(lpToken.totalSupply());\\n        }\\n\\n        if (token1 == address(weth)) {\\n            return amount.mul(token1Reserve).mul(2).div(lpToken.totalSupply());\\n        }\\n\\n        if (IUniswapV2Factory(lpToken.factory()).getPair(token0, address(weth)) != address(0)) {\\n            (uint256 wethReserve0, uint256 token0ToWethReserve0) = UniswapV2Library.getReserves(lpToken.factory(), address(weth), token0);\\n            uint256 tmp0 = amount.mul(token0Reserve).mul(wethReserve0).mul(2);\\n            return tmp0.div(token0ToWethReserve0).div(lpToken.totalSupply());\\n        }\\n\\n        require(\\n            IUniswapV2Factory(lpToken.factory()).getPair(token1, address(weth)) != address(0),\\n            \\\"Neither token0-weth nor token1-weth pair exists\\\");\\n        (uint256 wethReserve1, uint256 token1ToWethReserve1) = UniswapV2Library.getReserves(lpToken.factory(), address(weth), token1);\\n        uint256 tmp1 = amount.mul(token1Reserve).mul(wethReserve1).mul(2);\\n        return tmp1.div(token1ToWethReserve1).div(lpToken.totalSupply());\\n    }\\n\\n    /**\\n     * @notice Calculates the WETH value for an amount of pool reward token\\n     */\\n    function rewardValue(uint256 poolId, uint256 amount) external virtual override view returns(uint256) {\\n        address token = address(rewardToken(poolId));\\n\\n        IUniswapV2Pair pair = IUniswapV2Pair(factory.getPair(address(token), address(weth)));\\n        if (address(pair) != address(0)) {\\n                (uint tokenReserve0, uint wethReserve0,) = pair.getReserves();\\n                return UniswapV2Library.getAmountOut(amount, tokenReserve0, wethReserve0);\\n        }\\n\\n        pair = IUniswapV2Pair(factory.getPair(address(weth), address(token)));\\n        require(\\n            address(pair) != address(0),\\n            \\\"Neither token-weth nor weth-token pair exists\\\");\\n        (uint wethReserve1, uint tokenReserve1,) = pair.getReserves();\\n        return UniswapV2Library.getAmountOut(amount, tokenReserve1, wethReserve1);\\n    }\\n\\n    function rewardToken(uint256) public virtual override view returns (IERC20) {\\n        return IERC20(0);\\n    }\\n}\\n\",\"keccak256\":\"0x87533914924e53acaff5b783c6799db5baad481d371691f10823e72d3ac6c9c0\",\"license\":\"MIT\"},\"contracts/IVampireAdapter.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.7.6;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\nimport \\\"./interfaces/IUniswapV2Pair.sol\\\";\\n\\ninterface IVampireAdapter {\\n    // Victim info\\n    function rewardToken(uint256 poolId) external view returns (IERC20);\\n    function rewardValue(uint256 poolId, uint256 amount) external view returns(uint256);\\n    function poolCount() external view returns (uint256);\\n    function sellableRewardAmount(uint256 poolId) external view returns (uint256);\\n\\n    // Victim actions, requires impersonation via delegatecall\\n    function sellRewardForWeth(address adapter, uint256 poolId, uint256 rewardAmount, address to) external returns(uint256);\\n\\n    // Pool info\\n    function lockableToken(uint256 poolId) external view returns (IERC20);\\n    function lockedAmount(address user, uint256 poolId) external view returns (uint256);\\n    function pendingReward(address adapter, uint256 poolId, uint256 victimPoolId) external view returns (uint256);\\n\\n    // Pool actions, requires impersonation via delegatecall\\n    function deposit(address adapter, uint256 poolId, uint256 amount) external returns (uint256);\\n    function withdraw(address adapter, uint256 poolId, uint256 amount) external returns (uint256);\\n    function claimReward(address adapter, uint256 poolId, uint256 victimPoolId) external;\\n\\n    function emergencyWithdraw(address adapter, uint256 poolId) external;\\n\\n    // Service methods\\n    function poolAddress(uint256 poolId) external view returns (address);\\n    function rewardToWethPool() external view returns (address);\\n\\n    // Governance info methods\\n    function lpTokenValue(uint256 amount, IUniswapV2Pair lpToken) external view returns(uint256);\\n    function lockedValue(address user, uint256 poolId) external view returns (uint256);\\n    function totalLockedValue(uint256 poolId) external view returns (uint256);\\n    function normalizedAPY(uint256 poolId) external view returns (uint256);\\n}\\n\",\"keccak256\":\"0xf78c34ad2141577cec68fd6231ead07d779536d6ae12305bfa4cd22e161a434e\",\"license\":\"MIT\"},\"contracts/adapters/sushi/IMasterChef.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.7.6;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\n\\ninterface IMasterChef{\\n    function poolInfo(uint256) external view returns (IERC20,uint256,uint256,uint256);\\n    function userInfo(uint256, address) external view returns (uint256,uint256);\\n    function poolLength() external view returns (uint256);\\n    function deposit(uint256 _pid, uint256 _amount) external;\\n    function withdraw(uint256 _pid, uint256 _amount) external;\\n    function emergencyWithdraw(uint256 _pid) external;\\n    function getMultiplier(uint256 _from, uint256 _to) external view returns (uint256);\\n    function sushiPerBlock() external view returns (uint256);\\n    function totalAllocPoint() external view returns (uint256);\\n    function pendingSushi(uint256 _pid, address _user) external view returns (uint256);\\n}\\n\",\"keccak256\":\"0xa3447f43671d446bcc4e4d0863eca2c3129c2e682112d4c7c0828af739b47f45\",\"license\":\"MIT\"},\"contracts/adapters/sushi/SushiAdapter.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.7.6;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC20/IERC20.sol\\\";\\nimport \\\"@openzeppelin/contracts/math/SafeMath.sol\\\";\\nimport \\\"../../interfaces/IUniswapV2Pair.sol\\\";\\nimport \\\"../../libraries/UniswapV2Library.sol\\\";\\nimport \\\"../../BaseAdapter.sol\\\";\\nimport \\\"./IMasterChef.sol\\\";\\n\\n\\ninterface ISushiBar is IERC20 {\\n    function enter(uint256 amount) external;\\n}\\n\\ncontract SushiAdapter is BaseAdapter {\\n    using SafeMath for uint256;\\n    IMasterChef constant SUSHI_MASTER_CHEF = IMasterChef(0xc2EdaD668740f1aA35E4D8f227fB8E17dcA888Cd);\\n    address immutable MASTER_VAMPIRE;\\n    address constant DEV_FUND = 0xa896e4bd97a733F049b23d2AcEB091BcE01f298d;\\n    IERC20 constant SUSHI = IERC20(0x6B3595068778DD592e39A122f4f5a5cF09C90fE2);\\n    ISushiBar constant SUSHI_BAR = ISushiBar(0x8798249c2E607446EfB7Ad49eC89dD1865Ff4272);\\n    IUniswapV2Pair constant SUSHI_WETH_PAIR = IUniswapV2Pair(0x795065dCc9f64b5614C407a6EFDC400DA6221FB0);\\n    uint256 constant BLOCKS_PER_YEAR = 2336000;\\n    uint256 constant DEV_SHARE = 20; // 2%\\n    // token 0 - SUSHI\\n    // token 1 - WETH\\n\\n    constructor(address _weth, address _factory, address _masterVampire)\\n        BaseAdapter(_weth, _factory)\\n    {\\n        MASTER_VAMPIRE = _masterVampire;\\n    }\\n\\n    // Victim info\\n    function rewardToken(uint256) public pure override returns (IERC20) {\\n        return SUSHI;\\n    }\\n\\n    function poolCount() external view override returns (uint256) {\\n        return SUSHI_MASTER_CHEF.poolLength();\\n    }\\n\\n    function sellableRewardAmount(uint256) external pure override returns (uint256) {\\n        return uint256(-1);\\n    }\\n\\n    // Victim actions, requires impersonation via delegatecall\\n    function sellRewardForWeth(address, uint256, uint256 rewardAmount, address to) external override returns(uint256) {\\n        uint256 devAmt = rewardAmount.mul(DEV_SHARE).div(1000);\\n        SUSHI.approve(address(SUSHI_BAR), devAmt);\\n        SUSHI_BAR.enter(devAmt);\\n        SUSHI_BAR.transfer(DEV_FUND, SUSHI_BAR.balanceOf(address(this)));\\n        rewardAmount = rewardAmount.sub(devAmt);\\n\\n        SUSHI.transfer(address(SUSHI_WETH_PAIR), rewardAmount);\\n        (uint sushiReserve, uint wethReserve,) = SUSHI_WETH_PAIR.getReserves();\\n        uint amountOutput = UniswapV2Library.getAmountOut(rewardAmount, sushiReserve, wethReserve);\\n        SUSHI_WETH_PAIR.swap(uint(0), amountOutput, to, new bytes(0));\\n        return amountOutput;\\n    }\\n\\n    // Pool info\\n    function lockableToken(uint256 victimPID) external view override returns (IERC20) {\\n        (IERC20 lpToken,,,) = SUSHI_MASTER_CHEF.poolInfo(victimPID);\\n        return lpToken;\\n    }\\n\\n    function lockedAmount(address user, uint256 victimPID) external view override returns (uint256) {\\n        (uint256 amount,) = SUSHI_MASTER_CHEF.userInfo(victimPID, user);\\n        return amount;\\n    }\\n\\n    function pendingReward(address, uint256, uint256 victimPID) external view override returns (uint256) {\\n        return SUSHI_MASTER_CHEF.pendingSushi(victimPID, MASTER_VAMPIRE);\\n    }\\n\\n    // Pool actions, requires impersonation via delegatecall\\n    function deposit(address _adapter, uint256 victimPID, uint256 amount) external override returns (uint256) {\\n        IVampireAdapter adapter = IVampireAdapter(_adapter);\\n        adapter.lockableToken(victimPID).approve(address(SUSHI_MASTER_CHEF), uint256(-1));\\n        SUSHI_MASTER_CHEF.deposit(victimPID, amount);\\n        return 0;\\n    }\\n\\n    function withdraw(address, uint256 victimPID, uint256 amount) external override returns (uint256) {\\n        SUSHI_MASTER_CHEF.withdraw(victimPID, amount);\\n        return 0;\\n    }\\n\\n    function claimReward(address, uint256, uint256 victimPID) external override {\\n        SUSHI_MASTER_CHEF.deposit(victimPID, 0);\\n    }\\n\\n    function emergencyWithdraw(address, uint256 victimPID) external override {\\n        SUSHI_MASTER_CHEF.emergencyWithdraw(victimPID);\\n    }\\n\\n    // Service methods\\n    function poolAddress(uint256) external pure override returns (address) {\\n        return address(SUSHI_MASTER_CHEF);\\n    }\\n\\n    function rewardToWethPool() external pure override returns (address) {\\n        return address(SUSHI_WETH_PAIR);\\n    }\\n\\n    function lockedValue(address user, uint256 victimPID) external override view returns (uint256) {\\n        SushiAdapter adapter = SushiAdapter(this);\\n        return adapter.lpTokenValue(adapter.lockedAmount(user, victimPID),IUniswapV2Pair(address(adapter.lockableToken(victimPID))));\\n    }\\n\\n    function totalLockedValue(uint256 victimPID) external override view returns (uint256) {\\n        SushiAdapter adapter = SushiAdapter(this);\\n        IUniswapV2Pair lockedToken = IUniswapV2Pair(address(adapter.lockableToken(victimPID)));\\n        return adapter.lpTokenValue(lockedToken.balanceOf(adapter.poolAddress(victimPID)), lockedToken);\\n    }\\n\\n    function normalizedAPY(uint256 victimPID) external override view returns (uint256) {\\n        SushiAdapter adapter = SushiAdapter(this);\\n        (,uint256 allocationPoints,,) = SUSHI_MASTER_CHEF.poolInfo(victimPID);\\n        uint256 sushiPerBlock = SUSHI_MASTER_CHEF.sushiPerBlock();\\n        uint256 totalAllocPoint = SUSHI_MASTER_CHEF.totalAllocPoint();\\n        uint256 multiplier = SUSHI_MASTER_CHEF.getMultiplier(block.number - 1, block.number);\\n        uint256 rewardPerBlock = multiplier.mul(sushiPerBlock).mul(allocationPoints).div(totalAllocPoint);\\n        (uint256 sushiReserve, uint256 wethReserve,) = SUSHI_WETH_PAIR.getReserves();\\n        uint256 valuePerYear = rewardPerBlock.mul(wethReserve).mul(BLOCKS_PER_YEAR).div(sushiReserve);\\n        return valuePerYear.mul(1 ether).div(adapter.totalLockedValue(victimPID));\\n    }\\n}\\n\",\"keccak256\":\"0x53f494728aa3a4fee373765cdedc32f5aa891d4973a16c2e296c1b51084171da\",\"license\":\"MIT\"},\"contracts/interfaces/IUniswapV2Factory.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity >=0.5.0;\\n\\ninterface IUniswapV2Factory {\\n    event PairCreated(address indexed token0, address indexed token1, address pair, uint);\\n\\n    function feeTo() external view returns (address);\\n    function feeToSetter() external view returns (address);\\n\\n    function getPair(address tokenA, address tokenB) external view returns (address pair);\\n    function allPairs(uint) external view returns (address pair);\\n    function allPairsLength() external view returns (uint);\\n\\n    function createPair(address tokenA, address tokenB) external returns (address pair);\\n\\n    function setFeeTo(address) external;\\n    function setFeeToSetter(address) external;\\n}\\n\",\"keccak256\":\"0xa7a60cac7084df79f5b6f5712cabadfc0bfcdb01b87fefa69ff826247b4ec4cd\",\"license\":\"MIT\"},\"contracts/interfaces/IUniswapV2Pair.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity >=0.5.0;\\n\\ninterface IUniswapV2Pair {\\n    event Approval(address indexed owner, address indexed spender, uint value);\\n    event Transfer(address indexed from, address indexed to, uint value);\\n\\n    function name() external pure returns (string memory);\\n    function symbol() external pure returns (string memory);\\n    function decimals() external pure returns (uint8);\\n    function totalSupply() external view returns (uint);\\n    function balanceOf(address owner) external view returns (uint);\\n    function allowance(address owner, address spender) external view returns (uint);\\n\\n    function approve(address spender, uint value) external returns (bool);\\n    function transfer(address to, uint value) external returns (bool);\\n    function transferFrom(address from, address to, uint value) external returns (bool);\\n\\n    function DOMAIN_SEPARATOR() external view returns (bytes32);\\n    function PERMIT_TYPEHASH() external pure returns (bytes32);\\n    function nonces(address owner) external view returns (uint);\\n\\n    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;\\n\\n    event Mint(address indexed sender, uint amount0, uint amount1);\\n    event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);\\n    event Swap(\\n        address indexed sender,\\n        uint amount0In,\\n        uint amount1In,\\n        uint amount0Out,\\n        uint amount1Out,\\n        address indexed to\\n    );\\n    event Sync(uint112 reserve0, uint112 reserve1);\\n\\n    function MINIMUM_LIQUIDITY() external pure returns (uint);\\n    function factory() external view returns (address);\\n    function token0() external view returns (address);\\n    function token1() external view returns (address);\\n    function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast);\\n    function price0CumulativeLast() external view returns (uint);\\n    function price1CumulativeLast() external view returns (uint);\\n    function kLast() external view returns (uint);\\n\\n    function mint(address to) external returns (uint liquidity);\\n    function burn(address to) external returns (uint amount0, uint amount1);\\n    function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external;\\n    function skim(address to) external;\\n    function sync() external;\\n\\n    function initialize(address, address) external;\\n}\",\"keccak256\":\"0xd4e586e825ca607778ddcee663920a76cbe340ddb0cb1d8363f2f4940f9a53e4\",\"license\":\"MIT\"},\"contracts/libraries/SafeMath.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.7.6;\\n\\n// a library for performing overflow-safe math, courtesy of DappHub (https://github.com/dapphub/ds-math)\\n\\nlibrary SafeMathUniswap {\\n    function add(uint x, uint y) internal pure returns (uint z) {\\n        require((z = x + y) >= x, \\\"ds-math-add-overflow\\\");\\n    }\\n\\n    function sub(uint x, uint y) internal pure returns (uint z) {\\n        require((z = x - y) <= x, \\\"ds-math-sub-underflow\\\");\\n    }\\n\\n    function mul(uint x, uint y) internal pure returns (uint z) {\\n        require(y == 0 || (z = x * y) / y == x, \\\"ds-math-mul-overflow\\\");\\n    }\\n}\\n\",\"keccak256\":\"0xd8dfd11d02f422c0a73f5a5585c9a7db17d61470428d56311da1de281da9b914\",\"license\":\"MIT\"},\"contracts/libraries/UniswapV2Library.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.7.6;\\n\\nimport \\\"../interfaces/IUniswapV2Pair.sol\\\";\\nimport \\\"./SafeMath.sol\\\";\\n\\nlibrary UniswapV2Library {\\n    using SafeMathUniswap for uint;\\n\\n    // returns sorted token addresses, used to handle return values from pairs sorted in this order\\n    function sortTokens(address tokenA, address tokenB) internal pure returns (address token0, address token1) {\\n        require(tokenA != tokenB, 'UniswapV2Library: IDENTICAL_ADDRESSES');\\n        (token0, token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);\\n        require(token0 != address(0), 'UniswapV2Library: ZERO_ADDRESS');\\n    }\\n\\n    // calculates the CREATE2 address for a pair without making any external calls\\n    function pairFor(address factory, address tokenA, address tokenB) internal pure returns (address pair) {\\n        (address token0, address token1) = sortTokens(tokenA, tokenB);\\n        pair = address(uint(keccak256(abi.encodePacked(\\n                hex'ff',\\n                factory,\\n                keccak256(abi.encodePacked(token0, token1)),\\n                hex'e18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303' // init code hash\\n            ))));\\n    }\\n\\n    // fetches and sorts the reserves for a pair\\n    function getReserves(address factory, address tokenA, address tokenB) internal view returns (uint reserveA, uint reserveB) {\\n        (address token0,) = sortTokens(tokenA, tokenB);\\n        (uint reserve0, uint reserve1,) = IUniswapV2Pair(pairFor(factory, tokenA, tokenB)).getReserves();\\n        (reserveA, reserveB) = tokenA == token0 ? (reserve0, reserve1) : (reserve1, reserve0);\\n    }\\n\\n    // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset\\n    function quote(uint amountA, uint reserveA, uint reserveB) internal pure returns (uint amountB) {\\n        require(amountA > 0, 'UniswapV2Library: INSUFFICIENT_AMOUNT');\\n        require(reserveA > 0 && reserveB > 0, 'UniswapV2Library: INSUFFICIENT_LIQUIDITY');\\n        amountB = amountA.mul(reserveB) / reserveA;\\n    }\\n\\n    // given an input amount of an asset and pair reserves, returns the maximum output amount of the other asset\\n    function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) internal pure returns (uint amountOut) {\\n        require(amountIn > 0, 'UniswapV2Library: INSUFFICIENT_INPUT_AMOUNT');\\n        require(reserveIn > 0 && reserveOut > 0, 'UniswapV2Library: INSUFFICIENT_LIQUIDITY');\\n        uint amountInWithFee = amountIn.mul(997);\\n        uint numerator = amountInWithFee.mul(reserveOut);\\n        uint denominator = reserveIn.mul(1000).add(amountInWithFee);\\n        amountOut = numerator / denominator;\\n    }\\n\\n    // given an output amount of an asset and pair reserves, returns a required input amount of the other asset\\n    function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut) internal pure returns (uint amountIn) {\\n        require(amountOut > 0, 'UniswapV2Library: INSUFFICIENT_OUTPUT_AMOUNT');\\n        require(reserveIn > 0 && reserveOut > 0, 'UniswapV2Library: INSUFFICIENT_LIQUIDITY');\\n        uint numerator = reserveIn.mul(amountOut).mul(1000);\\n        uint denominator = reserveOut.sub(amountOut).mul(997);\\n        amountIn = (numerator / denominator).add(1);\\n    }\\n\\n    // performs chained getAmountOut calculations on any number of pairs\\n    function getAmountsOut(address factory, uint amountIn, address[] memory path) internal view returns (uint[] memory amounts) {\\n        require(path.length >= 2, 'UniswapV2Library: INVALID_PATH');\\n        amounts = new uint[](path.length);\\n        amounts[0] = amountIn;\\n        for (uint i; i < path.length - 1; i++) {\\n            (uint reserveIn, uint reserveOut) = getReserves(factory, path[i], path[i + 1]);\\n            amounts[i + 1] = getAmountOut(amounts[i], reserveIn, reserveOut);\\n        }\\n    }\\n\\n    // performs chained getAmountIn calculations on any number of pairs\\n    function getAmountsIn(address factory, uint amountOut, address[] memory path) internal view returns (uint[] memory amounts) {\\n        require(path.length >= 2, 'UniswapV2Library: INVALID_PATH');\\n        amounts = new uint[](path.length);\\n        amounts[amounts.length - 1] = amountOut;\\n        for (uint i = path.length - 1; i > 0; i--) {\\n            (uint reserveIn, uint reserveOut) = getReserves(factory, path[i - 1], path[i]);\\n            amounts[i - 1] = getAmountIn(amounts[i], reserveIn, reserveOut);\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x01cdbffb1eb0f79a30f6d79a9d24fa1bdba87e4c94db6d14dca58422f87d420c\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60e060405234801561001057600080fd5b50604051612a4f380380612a4f8339818101604052606081101561003357600080fd5b50805160208201516040909201516001600160601b0319606092831b811660805292821b831660a052901b1660c05260805160601c60a05160601c60c05160601c6129906100bf60003980610426525080610abe5280610c35525080610aee5280610c64528061123052806112dc5280611434528061152d528061169552806117e052506129906000f3fe608060405234801561001057600080fd5b50600436106101365760003560e01c806392e77e77116100b2578063b5c5f67211610081578063da9da52611610066578063da9da526146103bc578063f525cb68146103d9578063fbb88fa1146103e157610136565b8063b5c5f6721461035e578063c2fc7d3e1461039057610136565b806392e77e771461029857806395ccea67146102d25780639d06fc9a14610300578063a61bb7641461033257610136565b8063509b6c3f116101095780636c261411116100ee5780636c2614111461023257806379b846fd1461024f5780639007b3ae1461026c57610136565b8063509b6c3f146101f25780635cde4b5d1461020f57610136565b8063039857381461013b57806309f08a591461017f5780630efe6a8b1461019c5780633d969aac146101ce575b600080fd5b61016d6004803603606081101561015157600080fd5b506001600160a01b0381351690602081013590604001356103fe565b60408051918252519081900360200190f35b61016d6004803603602081101561019557600080fd5b50356104bd565b61016d600480360360608110156101b257600080fd5b506001600160a01b0381351690602081013590604001356108a6565b6101d6610a7b565b604080516001600160a01b039092168252519081900360200190f35b6101d66004803603602081101561020857600080fd5b5035610a93565b61016d6004803603604081101561022557600080fd5b5080359060200135610aac565b61016d6004803603602081101561024857600080fd5b5035610dfc565b6101d66004803603602081101561026557600080fd5b5035611003565b61016d6004803603604081101561028257600080fd5b50803590602001356001600160a01b0316611091565b61016d600480360360808110156102ae57600080fd5b506001600160a01b0381358116916020810135916040820135916060013516611869565b6102fe600480360360408110156102e857600080fd5b506001600160a01b038135169060200135611da5565b005b6102fe6004803603606081101561031657600080fd5b506001600160a01b038135169060208101359060400135611e1b565b61016d6004803603604081101561034857600080fd5b506001600160a01b038135169060200135611ea9565b61016d6004803603606081101561037457600080fd5b506001600160a01b038135169060208101359060400135611f50565b61016d600480360360408110156103a657600080fd5b506001600160a01b038135169060200135611fd6565b6101d6600480360360208110156103d257600080fd5b5035612166565b61016d61217f565b61016d600480360360208110156103f757600080fd5b50356121ff565b600073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b031663195426ec837f00000000000000000000000000000000000000000000000000000000000000006040518363ffffffff1660e01b815260040180838152602001826001600160a01b031681526020019250505060206040518083038186803b15801561048957600080fd5b505afa15801561049d573d6000803e3d6000fd5b505050506040513d60208110156104b357600080fd5b5051949350505050565b600080309050600073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b0316631526fe27856040518263ffffffff1660e01b81526004018082815260200191505060806040518083038186803b15801561051d57600080fd5b505afa158015610531573d6000803e3d6000fd5b505050506040513d608081101561054757600080fd5b50602090810151604080517fb0bcf42a000000000000000000000000000000000000000000000000000000008152905191935060009273c2edad668740f1aa35e4d8f227fb8e17dca888cd9263b0bcf42a926004808201939291829003018186803b1580156105b557600080fd5b505afa1580156105c9573d6000803e3d6000fd5b505050506040513d60208110156105df57600080fd5b5051604080517f17caf6f1000000000000000000000000000000000000000000000000000000008152905191925060009173c2edad668740f1aa35e4d8f227fb8e17dca888cd916317caf6f1916004808301926020929190829003018186803b15801561064b57600080fd5b505afa15801561065f573d6000803e3d6000fd5b505050506040513d602081101561067557600080fd5b5051604080517f8dbb1e3a000000000000000000000000000000000000000000000000000000008152437fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff810160048301526024820152905191925060009173c2edad668740f1aa35e4d8f227fb8e17dca888cd91638dbb1e3a916044808301926020929190829003018186803b15801561070f57600080fd5b505afa158015610723573d6000803e3d6000fd5b505050506040513d602081101561073957600080fd5b50519050600061075d83610757876107518689612224565b90612224565b9061229e565b905060008073795065dcc9f64b5614c407a6efdc400da6221fb06001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b1580156107af57600080fd5b505afa1580156107c3573d6000803e3d6000fd5b505050506040513d60608110156107d957600080fd5b5080516020909101516dffffffffffffffffffffffffffff91821693501690506000610810836107576223a5006107518887612224565b9050610897896001600160a01b0316636c2614118d6040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b15801561085957600080fd5b505afa15801561086d573d6000803e3d6000fd5b505050506040513d602081101561088357600080fd5b505161075783670de0b6b3a7640000612224565b9b9a5050505050505050505050565b600080849050806001600160a01b03166379b846fd856040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b1580156108f057600080fd5b505afa158015610904573d6000803e3d6000fd5b505050506040513d602081101561091a57600080fd5b5051604080517f095ea7b300000000000000000000000000000000000000000000000000000000815273c2edad668740f1aa35e4d8f227fb8e17dca888cd60048201527fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602482015290516001600160a01b039092169163095ea7b3916044808201926020929091908290030181600087803b1580156109b957600080fd5b505af11580156109cd573d6000803e3d6000fd5b505050506040513d60208110156109e357600080fd5b5050604080517fe2bbb1580000000000000000000000000000000000000000000000000000000081526004810186905260248101859052905173c2edad668740f1aa35e4d8f227fb8e17dca888cd9163e2bbb15891604480830192600092919082900301818387803b158015610a5857600080fd5b505af1158015610a6c573d6000803e3d6000fd5b50600098975050505050505050565b73795065dcc9f64b5614c407a6efdc400da6221fb090565b50736b3595068778dd592e39a122f4f5a5cf09c90fe290565b600080610ab884610a93565b905060007f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663e6a43905837f00000000000000000000000000000000000000000000000000000000000000006040518363ffffffff1660e01b815260040180836001600160a01b03168152602001826001600160a01b031681526020019250505060206040518083038186803b158015610b5a57600080fd5b505afa158015610b6e573d6000803e3d6000fd5b505050506040513d6020811015610b8457600080fd5b505190506001600160a01b03811615610c3357600080826001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b158015610bd357600080fd5b505afa158015610be7573d6000803e3d6000fd5b505050506040513d6060811015610bfd57600080fd5b5080516020909101516dffffffffffffffffffffffffffff9182169350169050610c2886838361231f565b945050505050610df6565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663e6a439057f0000000000000000000000000000000000000000000000000000000000000000846040518363ffffffff1660e01b815260040180836001600160a01b03168152602001826001600160a01b031681526020019250505060206040518083038186803b158015610cd157600080fd5b505afa158015610ce5573d6000803e3d6000fd5b505050506040513d6020811015610cfb57600080fd5b505190506001600160a01b038116610d5e576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602d815260200180612866602d913960400191505060405180910390fd5b600080826001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b158015610d9a57600080fd5b505afa158015610dae573d6000803e3d6000fd5b505050506040513d6060811015610dc457600080fd5b5080516020909101516dffffffffffffffffffffffffffff9182169350169050610def86828461231f565b9450505050505b92915050565b6000803090506000816001600160a01b03166379b846fd856040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b158015610e4857600080fd5b505afa158015610e5c573d6000803e3d6000fd5b505050506040513d6020811015610e7257600080fd5b5051604080517fda9da5260000000000000000000000000000000000000000000000000000000081526004810187905290519192506001600160a01b0380851692639007b3ae92918516916370a0823191859163da9da526916024808301926020929190829003018186803b158015610eea57600080fd5b505afa158015610efe573d6000803e3d6000fd5b505050506040513d6020811015610f1457600080fd5b5051604080517fffffffff0000000000000000000000000000000000000000000000000000000060e085901b1681526001600160a01b039092166004830152516024808301926020929190829003018186803b158015610f7357600080fd5b505afa158015610f87573d6000803e3d6000fd5b505050506040513d6020811015610f9d57600080fd5b5051604080517fffffffff0000000000000000000000000000000000000000000000000000000060e085901b16815260048101929092526001600160a01b0385166024830152516044808301926020929190829003018186803b15801561048957600080fd5b60008073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b0316631526fe27846040518263ffffffff1660e01b81526004018082815260200191505060806040518083038186803b15801561105e57600080fd5b505afa158015611072573d6000803e3d6000fd5b505050506040513d608081101561108857600080fd5b50519392505050565b6000806000836001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b1580156110cf57600080fd5b505afa1580156110e3573d6000803e3d6000fd5b505050506040513d60608110156110f957600080fd5b508051602091820151604080517f0dfe168100000000000000000000000000000000000000000000000000000000815290516dffffffffffffffffffffffffffff93841696509290911693506000926001600160a01b03881692630dfe1681926004808201939291829003018186803b15801561117557600080fd5b505afa158015611189573d6000803e3d6000fd5b505050506040513d602081101561119f57600080fd5b5051604080517fd21220a700000000000000000000000000000000000000000000000000000000815290519192506000916001600160a01b0388169163d21220a7916004808301926020929190829003018186803b15801561120057600080fd5b505afa158015611214573d6000803e3d6000fd5b505050506040513d602081101561122a57600080fd5b505190507f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0390811690831614156112da57610c28866001600160a01b03166318160ddd6040518163ffffffff1660e01b815260040160206040518083038186803b15801561129f57600080fd5b505afa1580156112b3573d6000803e3d6000fd5b505050506040513d60208110156112c957600080fd5b505161075760026107518b89612224565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316816001600160a01b0316141561138b57610c28866001600160a01b03166318160ddd6040518163ffffffff1660e01b815260040160206040518083038186803b15801561135057600080fd5b505afa158015611364573d6000803e3d6000fd5b505050506040513d602081101561137a57600080fd5b505161075760026107518b88612224565b60006001600160a01b0316866001600160a01b031663c45a01556040518163ffffffff1660e01b815260040160206040518083038186803b1580156113cf57600080fd5b505afa1580156113e3573d6000803e3d6000fd5b505050506040513d60208110156113f957600080fd5b5051604080517fe6a439050000000000000000000000000000000000000000000000000000000081526001600160a01b0386811660048301527f0000000000000000000000000000000000000000000000000000000000000000811660248301529151919092169163e6a43905916044808301926020929190829003018186803b15801561148657600080fd5b505afa15801561149a573d6000803e3d6000fd5b505050506040513d60208110156114b057600080fd5b50516001600160a01b0316146115ec57600080611552886001600160a01b031663c45a01556040518163ffffffff1660e01b815260040160206040518083038186803b1580156114ff57600080fd5b505afa158015611513573d6000803e3d6000fd5b505050506040513d602081101561152957600080fd5b50517f00000000000000000000000000000000000000000000000000000000000000008661242b565b9092509050600061156a600261075185818e8c612224565b90506115de896001600160a01b03166318160ddd6040518163ffffffff1660e01b815260040160206040518083038186803b1580156115a857600080fd5b505afa1580156115bc573d6000803e3d6000fd5b505050506040513d60208110156115d257600080fd5b5051610757838561229e565b975050505050505050610df6565b60006001600160a01b0316866001600160a01b031663c45a01556040518163ffffffff1660e01b815260040160206040518083038186803b15801561163057600080fd5b505afa158015611644573d6000803e3d6000fd5b505050506040513d602081101561165a57600080fd5b5051604080517fe6a439050000000000000000000000000000000000000000000000000000000081526001600160a01b0385811660048301527f0000000000000000000000000000000000000000000000000000000000000000811660248301529151919092169163e6a43905916044808301926020929190829003018186803b1580156116e757600080fd5b505afa1580156116fb573d6000803e3d6000fd5b505050506040513d602081101561171157600080fd5b50516001600160a01b03161415611773576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602f815260200180612901602f913960400191505060405180910390fd5b600080611805886001600160a01b031663c45a01556040518163ffffffff1660e01b815260040160206040518083038186803b1580156117b257600080fd5b505afa1580156117c6573d6000803e3d6000fd5b505050506040513d60208110156117dc57600080fd5b50517f00000000000000000000000000000000000000000000000000000000000000008561242b565b9092509050600061181d600261075185818e8b612224565b905061185b896001600160a01b03166318160ddd6040518163ffffffff1660e01b815260040160206040518083038186803b1580156115a857600080fd5b9a9950505050505050505050565b60008061187d6103e8610757866014612224565b604080517f095ea7b3000000000000000000000000000000000000000000000000000000008152738798249c2e607446efb7ad49ec89dd1865ff42726004820152602481018390529051919250736b3595068778dd592e39a122f4f5a5cf09c90fe29163095ea7b3916044808201926020929091908290030181600087803b15801561190857600080fd5b505af115801561191c573d6000803e3d6000fd5b505050506040513d602081101561193257600080fd5b5050604080517fa59f3e0c000000000000000000000000000000000000000000000000000000008152600481018390529051738798249c2e607446efb7ad49ec89dd1865ff42729163a59f3e0c91602480830192600092919082900301818387803b1580156119a057600080fd5b505af11580156119b4573d6000803e3d6000fd5b5050604080517f70a082310000000000000000000000000000000000000000000000000000000081523060048201529051738798249c2e607446efb7ad49ec89dd1865ff4272935063a9059cbb925073a896e4bd97a733f049b23d2aceb091bce01f298d9184916370a0823191602480820192602092909190829003018186803b158015611a4157600080fd5b505afa158015611a55573d6000803e3d6000fd5b505050506040513d6020811015611a6b57600080fd5b5051604080517fffffffff0000000000000000000000000000000000000000000000000000000060e086901b1681526001600160a01b03909316600484015260248301919091525160448083019260209291908290030181600087803b158015611ad457600080fd5b505af1158015611ae8573d6000803e3d6000fd5b505050506040513d6020811015611afe57600080fd5b50611b0b905084826124f9565b604080517fa9059cbb00000000000000000000000000000000000000000000000000000000815273795065dcc9f64b5614c407a6efdc400da6221fb06004820152602481018390529051919550736b3595068778dd592e39a122f4f5a5cf09c90fe29163a9059cbb916044808201926020929091908290030181600087803b158015611b9657600080fd5b505af1158015611baa573d6000803e3d6000fd5b505050506040513d6020811015611bc057600080fd5b5050604080517f0902f1ac0000000000000000000000000000000000000000000000000000000081529051600091829173795065dcc9f64b5614c407a6efdc400da6221fb091630902f1ac916004808301926060929190829003018186803b158015611c2b57600080fd5b505afa158015611c3f573d6000803e3d6000fd5b505050506040513d6060811015611c5557600080fd5b5080516020909101516dffffffffffffffffffffffffffff91821693501690506000611c8287848461231f565b60408051600080825260208201928390527f022c0d9f00000000000000000000000000000000000000000000000000000000835260248201818152604483018590526001600160a01b038b166064840152608060848401908152835160a4850181905295965073795065dcc9f64b5614c407a6efdc400da6221fb09563022c0d9f95939488948e949193919260c4850191908083838b5b83811015611d31578181015183820152602001611d19565b50505050905090810190601f168015611d5e5780820380516001836020036101000a031916815260200191505b5095505050505050600060405180830381600087803b158015611d8057600080fd5b505af1158015611d94573d6000803e3d6000fd5b50929b9a5050505050505050505050565b73c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b0316635312ea8e826040518263ffffffff1660e01b815260040180828152602001915050600060405180830381600087803b158015611dff57600080fd5b505af1158015611e13573d6000803e3d6000fd5b505050505050565b604080517fe2bbb15800000000000000000000000000000000000000000000000000000000815260048101839052600060248201819052915173c2edad668740f1aa35e4d8f227fb8e17dca888cd9263e2bbb158926044808201939182900301818387803b158015611e8c57600080fd5b505af1158015611ea0573d6000803e3d6000fd5b50505050505050565b604080517f93f1a40b000000000000000000000000000000000000000000000000000000008152600481018390526001600160a01b03841660248201528151600092839273c2edad668740f1aa35e4d8f227fb8e17dca888cd926393f1a40b92604480840193919291829003018186803b158015611f2657600080fd5b505afa158015611f3a573d6000803e3d6000fd5b505050506040513d60408110156104b357600080fd5b600073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b031663441a3e7084846040518363ffffffff1660e01b81526004018083815260200182815260200192505050600060405180830381600087803b158015611fb457600080fd5b505af1158015611fc8573d6000803e3d6000fd5b506000979650505050505050565b604080517fa61bb7640000000000000000000000000000000000000000000000000000000081526001600160a01b038416600482015260248101839052905160009130918291639007b3ae91839163a61bb764916044808301926020929190829003018186803b15801561204957600080fd5b505afa15801561205d573d6000803e3d6000fd5b505050506040513d602081101561207357600080fd5b5051604080517f79b846fd0000000000000000000000000000000000000000000000000000000081526004810188905290516001600160a01b038616916379b846fd916024808301926020929190829003018186803b1580156120d557600080fd5b505afa1580156120e9573d6000803e3d6000fd5b505050506040513d60208110156120ff57600080fd5b5051604080517fffffffff0000000000000000000000000000000000000000000000000000000060e086901b16815260048101939093526001600160a01b039091166024830152516044808301926020929190829003018186803b15801561048957600080fd5b5073c2edad668740f1aa35e4d8f227fb8e17dca888cd90565b600073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b031663081e3eda6040518163ffffffff1660e01b815260040160206040518083038186803b1580156121ce57600080fd5b505afa1580156121e2573d6000803e3d6000fd5b505050506040513d60208110156121f857600080fd5b5051905090565b507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff90565b60008261223357506000610df6565b8282028284828161224057fe5b0414612297576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260218152602001806128e06021913960400191505060405180910390fd5b9392505050565b600080821161230e57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601a60248201527f536166654d6174683a206469766973696f6e206279207a65726f000000000000604482015290519081900360640190fd5b81838161231757fe5b049392505050565b6000808411612379576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602b815260200180612930602b913960400191505060405180910390fd5b6000831180156123895750600082115b6123de576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260288152602001806128b86028913960400191505060405180910390fd5b60006123ec856103e5612570565b905060006123fa8285612570565b905060006124148361240e886103e8612570565b906125f6565b905080828161241f57fe5b04979650505050505050565b600080600061243a8585612668565b50905060008061244b88888861277a565b6001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b15801561248357600080fd5b505afa158015612497573d6000803e3d6000fd5b505050506040513d60608110156124ad57600080fd5b5080516020909101516dffffffffffffffffffffffffffff91821693501690506001600160a01b03878116908416146124e75780826124ea565b81815b90999098509650505050505050565b60008282111561256a57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601e60248201527f536166654d6174683a207375627472616374696f6e206f766572666c6f770000604482015290519081900360640190fd5b50900390565b600081158061258b5750508082028282828161258857fe5b04145b610df657604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601460248201527f64732d6d6174682d6d756c2d6f766572666c6f77000000000000000000000000604482015290519081900360640190fd5b80820182811015610df657604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601460248201527f64732d6d6174682d6164642d6f766572666c6f77000000000000000000000000604482015290519081900360640190fd5b600080826001600160a01b0316846001600160a01b031614156126d6576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260258152602001806128936025913960400191505060405180910390fd5b826001600160a01b0316846001600160a01b0316106126f65782846126f9565b83835b90925090506001600160a01b03821661277357604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601e60248201527f556e697377617056324c6962726172793a205a45524f5f414444524553530000604482015290519081900360640190fd5b9250929050565b60008060006127898585612668565b604080517fffffffffffffffffffffffffffffffffffffffff000000000000000000000000606094851b811660208084019190915293851b81166034830152825160288184030181526048830184528051908501207fff0000000000000000000000000000000000000000000000000000000000000060688401529a90941b9093166069840152607d8301989098527fe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303609d808401919091528851808403909101815260bd90920190975280519601959095209594505050505056fe4e65697468657220746f6b656e2d77657468206e6f7220776574682d746f6b656e207061697220657869737473556e697377617056324c6962726172793a204944454e544943414c5f414444524553534553556e697377617056324c6962726172793a20494e53554646494349454e545f4c4951554944495459536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f774e65697468657220746f6b656e302d77657468206e6f7220746f6b656e312d77657468207061697220657869737473556e697377617056324c6962726172793a20494e53554646494349454e545f494e5055545f414d4f554e54a26469706673582212201229e15e0aed9b351eea10040fc351a88ad324cbf71c75338ee4146cb1d28c8764736f6c63430007060033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101365760003560e01c806392e77e77116100b2578063b5c5f67211610081578063da9da52611610066578063da9da526146103bc578063f525cb68146103d9578063fbb88fa1146103e157610136565b8063b5c5f6721461035e578063c2fc7d3e1461039057610136565b806392e77e771461029857806395ccea67146102d25780639d06fc9a14610300578063a61bb7641461033257610136565b8063509b6c3f116101095780636c261411116100ee5780636c2614111461023257806379b846fd1461024f5780639007b3ae1461026c57610136565b8063509b6c3f146101f25780635cde4b5d1461020f57610136565b8063039857381461013b57806309f08a591461017f5780630efe6a8b1461019c5780633d969aac146101ce575b600080fd5b61016d6004803603606081101561015157600080fd5b506001600160a01b0381351690602081013590604001356103fe565b60408051918252519081900360200190f35b61016d6004803603602081101561019557600080fd5b50356104bd565b61016d600480360360608110156101b257600080fd5b506001600160a01b0381351690602081013590604001356108a6565b6101d6610a7b565b604080516001600160a01b039092168252519081900360200190f35b6101d66004803603602081101561020857600080fd5b5035610a93565b61016d6004803603604081101561022557600080fd5b5080359060200135610aac565b61016d6004803603602081101561024857600080fd5b5035610dfc565b6101d66004803603602081101561026557600080fd5b5035611003565b61016d6004803603604081101561028257600080fd5b50803590602001356001600160a01b0316611091565b61016d600480360360808110156102ae57600080fd5b506001600160a01b0381358116916020810135916040820135916060013516611869565b6102fe600480360360408110156102e857600080fd5b506001600160a01b038135169060200135611da5565b005b6102fe6004803603606081101561031657600080fd5b506001600160a01b038135169060208101359060400135611e1b565b61016d6004803603604081101561034857600080fd5b506001600160a01b038135169060200135611ea9565b61016d6004803603606081101561037457600080fd5b506001600160a01b038135169060208101359060400135611f50565b61016d600480360360408110156103a657600080fd5b506001600160a01b038135169060200135611fd6565b6101d6600480360360208110156103d257600080fd5b5035612166565b61016d61217f565b61016d600480360360208110156103f757600080fd5b50356121ff565b600073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b031663195426ec837f00000000000000000000000000000000000000000000000000000000000000006040518363ffffffff1660e01b815260040180838152602001826001600160a01b031681526020019250505060206040518083038186803b15801561048957600080fd5b505afa15801561049d573d6000803e3d6000fd5b505050506040513d60208110156104b357600080fd5b5051949350505050565b600080309050600073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b0316631526fe27856040518263ffffffff1660e01b81526004018082815260200191505060806040518083038186803b15801561051d57600080fd5b505afa158015610531573d6000803e3d6000fd5b505050506040513d608081101561054757600080fd5b50602090810151604080517fb0bcf42a000000000000000000000000000000000000000000000000000000008152905191935060009273c2edad668740f1aa35e4d8f227fb8e17dca888cd9263b0bcf42a926004808201939291829003018186803b1580156105b557600080fd5b505afa1580156105c9573d6000803e3d6000fd5b505050506040513d60208110156105df57600080fd5b5051604080517f17caf6f1000000000000000000000000000000000000000000000000000000008152905191925060009173c2edad668740f1aa35e4d8f227fb8e17dca888cd916317caf6f1916004808301926020929190829003018186803b15801561064b57600080fd5b505afa15801561065f573d6000803e3d6000fd5b505050506040513d602081101561067557600080fd5b5051604080517f8dbb1e3a000000000000000000000000000000000000000000000000000000008152437fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff810160048301526024820152905191925060009173c2edad668740f1aa35e4d8f227fb8e17dca888cd91638dbb1e3a916044808301926020929190829003018186803b15801561070f57600080fd5b505afa158015610723573d6000803e3d6000fd5b505050506040513d602081101561073957600080fd5b50519050600061075d83610757876107518689612224565b90612224565b9061229e565b905060008073795065dcc9f64b5614c407a6efdc400da6221fb06001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b1580156107af57600080fd5b505afa1580156107c3573d6000803e3d6000fd5b505050506040513d60608110156107d957600080fd5b5080516020909101516dffffffffffffffffffffffffffff91821693501690506000610810836107576223a5006107518887612224565b9050610897896001600160a01b0316636c2614118d6040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b15801561085957600080fd5b505afa15801561086d573d6000803e3d6000fd5b505050506040513d602081101561088357600080fd5b505161075783670de0b6b3a7640000612224565b9b9a5050505050505050505050565b600080849050806001600160a01b03166379b846fd856040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b1580156108f057600080fd5b505afa158015610904573d6000803e3d6000fd5b505050506040513d602081101561091a57600080fd5b5051604080517f095ea7b300000000000000000000000000000000000000000000000000000000815273c2edad668740f1aa35e4d8f227fb8e17dca888cd60048201527fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff602482015290516001600160a01b039092169163095ea7b3916044808201926020929091908290030181600087803b1580156109b957600080fd5b505af11580156109cd573d6000803e3d6000fd5b505050506040513d60208110156109e357600080fd5b5050604080517fe2bbb1580000000000000000000000000000000000000000000000000000000081526004810186905260248101859052905173c2edad668740f1aa35e4d8f227fb8e17dca888cd9163e2bbb15891604480830192600092919082900301818387803b158015610a5857600080fd5b505af1158015610a6c573d6000803e3d6000fd5b50600098975050505050505050565b73795065dcc9f64b5614c407a6efdc400da6221fb090565b50736b3595068778dd592e39a122f4f5a5cf09c90fe290565b600080610ab884610a93565b905060007f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663e6a43905837f00000000000000000000000000000000000000000000000000000000000000006040518363ffffffff1660e01b815260040180836001600160a01b03168152602001826001600160a01b031681526020019250505060206040518083038186803b158015610b5a57600080fd5b505afa158015610b6e573d6000803e3d6000fd5b505050506040513d6020811015610b8457600080fd5b505190506001600160a01b03811615610c3357600080826001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b158015610bd357600080fd5b505afa158015610be7573d6000803e3d6000fd5b505050506040513d6060811015610bfd57600080fd5b5080516020909101516dffffffffffffffffffffffffffff9182169350169050610c2886838361231f565b945050505050610df6565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b031663e6a439057f0000000000000000000000000000000000000000000000000000000000000000846040518363ffffffff1660e01b815260040180836001600160a01b03168152602001826001600160a01b031681526020019250505060206040518083038186803b158015610cd157600080fd5b505afa158015610ce5573d6000803e3d6000fd5b505050506040513d6020811015610cfb57600080fd5b505190506001600160a01b038116610d5e576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602d815260200180612866602d913960400191505060405180910390fd5b600080826001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b158015610d9a57600080fd5b505afa158015610dae573d6000803e3d6000fd5b505050506040513d6060811015610dc457600080fd5b5080516020909101516dffffffffffffffffffffffffffff9182169350169050610def86828461231f565b9450505050505b92915050565b6000803090506000816001600160a01b03166379b846fd856040518263ffffffff1660e01b81526004018082815260200191505060206040518083038186803b158015610e4857600080fd5b505afa158015610e5c573d6000803e3d6000fd5b505050506040513d6020811015610e7257600080fd5b5051604080517fda9da5260000000000000000000000000000000000000000000000000000000081526004810187905290519192506001600160a01b0380851692639007b3ae92918516916370a0823191859163da9da526916024808301926020929190829003018186803b158015610eea57600080fd5b505afa158015610efe573d6000803e3d6000fd5b505050506040513d6020811015610f1457600080fd5b5051604080517fffffffff0000000000000000000000000000000000000000000000000000000060e085901b1681526001600160a01b039092166004830152516024808301926020929190829003018186803b158015610f7357600080fd5b505afa158015610f87573d6000803e3d6000fd5b505050506040513d6020811015610f9d57600080fd5b5051604080517fffffffff0000000000000000000000000000000000000000000000000000000060e085901b16815260048101929092526001600160a01b0385166024830152516044808301926020929190829003018186803b15801561048957600080fd5b60008073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b0316631526fe27846040518263ffffffff1660e01b81526004018082815260200191505060806040518083038186803b15801561105e57600080fd5b505afa158015611072573d6000803e3d6000fd5b505050506040513d608081101561108857600080fd5b50519392505050565b6000806000836001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b1580156110cf57600080fd5b505afa1580156110e3573d6000803e3d6000fd5b505050506040513d60608110156110f957600080fd5b508051602091820151604080517f0dfe168100000000000000000000000000000000000000000000000000000000815290516dffffffffffffffffffffffffffff93841696509290911693506000926001600160a01b03881692630dfe1681926004808201939291829003018186803b15801561117557600080fd5b505afa158015611189573d6000803e3d6000fd5b505050506040513d602081101561119f57600080fd5b5051604080517fd21220a700000000000000000000000000000000000000000000000000000000815290519192506000916001600160a01b0388169163d21220a7916004808301926020929190829003018186803b15801561120057600080fd5b505afa158015611214573d6000803e3d6000fd5b505050506040513d602081101561122a57600080fd5b505190507f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0390811690831614156112da57610c28866001600160a01b03166318160ddd6040518163ffffffff1660e01b815260040160206040518083038186803b15801561129f57600080fd5b505afa1580156112b3573d6000803e3d6000fd5b505050506040513d60208110156112c957600080fd5b505161075760026107518b89612224565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316816001600160a01b0316141561138b57610c28866001600160a01b03166318160ddd6040518163ffffffff1660e01b815260040160206040518083038186803b15801561135057600080fd5b505afa158015611364573d6000803e3d6000fd5b505050506040513d602081101561137a57600080fd5b505161075760026107518b88612224565b60006001600160a01b0316866001600160a01b031663c45a01556040518163ffffffff1660e01b815260040160206040518083038186803b1580156113cf57600080fd5b505afa1580156113e3573d6000803e3d6000fd5b505050506040513d60208110156113f957600080fd5b5051604080517fe6a439050000000000000000000000000000000000000000000000000000000081526001600160a01b0386811660048301527f0000000000000000000000000000000000000000000000000000000000000000811660248301529151919092169163e6a43905916044808301926020929190829003018186803b15801561148657600080fd5b505afa15801561149a573d6000803e3d6000fd5b505050506040513d60208110156114b057600080fd5b50516001600160a01b0316146115ec57600080611552886001600160a01b031663c45a01556040518163ffffffff1660e01b815260040160206040518083038186803b1580156114ff57600080fd5b505afa158015611513573d6000803e3d6000fd5b505050506040513d602081101561152957600080fd5b50517f00000000000000000000000000000000000000000000000000000000000000008661242b565b9092509050600061156a600261075185818e8c612224565b90506115de896001600160a01b03166318160ddd6040518163ffffffff1660e01b815260040160206040518083038186803b1580156115a857600080fd5b505afa1580156115bc573d6000803e3d6000fd5b505050506040513d60208110156115d257600080fd5b5051610757838561229e565b975050505050505050610df6565b60006001600160a01b0316866001600160a01b031663c45a01556040518163ffffffff1660e01b815260040160206040518083038186803b15801561163057600080fd5b505afa158015611644573d6000803e3d6000fd5b505050506040513d602081101561165a57600080fd5b5051604080517fe6a439050000000000000000000000000000000000000000000000000000000081526001600160a01b0385811660048301527f0000000000000000000000000000000000000000000000000000000000000000811660248301529151919092169163e6a43905916044808301926020929190829003018186803b1580156116e757600080fd5b505afa1580156116fb573d6000803e3d6000fd5b505050506040513d602081101561171157600080fd5b50516001600160a01b03161415611773576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602f815260200180612901602f913960400191505060405180910390fd5b600080611805886001600160a01b031663c45a01556040518163ffffffff1660e01b815260040160206040518083038186803b1580156117b257600080fd5b505afa1580156117c6573d6000803e3d6000fd5b505050506040513d60208110156117dc57600080fd5b50517f00000000000000000000000000000000000000000000000000000000000000008561242b565b9092509050600061181d600261075185818e8b612224565b905061185b896001600160a01b03166318160ddd6040518163ffffffff1660e01b815260040160206040518083038186803b1580156115a857600080fd5b9a9950505050505050505050565b60008061187d6103e8610757866014612224565b604080517f095ea7b3000000000000000000000000000000000000000000000000000000008152738798249c2e607446efb7ad49ec89dd1865ff42726004820152602481018390529051919250736b3595068778dd592e39a122f4f5a5cf09c90fe29163095ea7b3916044808201926020929091908290030181600087803b15801561190857600080fd5b505af115801561191c573d6000803e3d6000fd5b505050506040513d602081101561193257600080fd5b5050604080517fa59f3e0c000000000000000000000000000000000000000000000000000000008152600481018390529051738798249c2e607446efb7ad49ec89dd1865ff42729163a59f3e0c91602480830192600092919082900301818387803b1580156119a057600080fd5b505af11580156119b4573d6000803e3d6000fd5b5050604080517f70a082310000000000000000000000000000000000000000000000000000000081523060048201529051738798249c2e607446efb7ad49ec89dd1865ff4272935063a9059cbb925073a896e4bd97a733f049b23d2aceb091bce01f298d9184916370a0823191602480820192602092909190829003018186803b158015611a4157600080fd5b505afa158015611a55573d6000803e3d6000fd5b505050506040513d6020811015611a6b57600080fd5b5051604080517fffffffff0000000000000000000000000000000000000000000000000000000060e086901b1681526001600160a01b03909316600484015260248301919091525160448083019260209291908290030181600087803b158015611ad457600080fd5b505af1158015611ae8573d6000803e3d6000fd5b505050506040513d6020811015611afe57600080fd5b50611b0b905084826124f9565b604080517fa9059cbb00000000000000000000000000000000000000000000000000000000815273795065dcc9f64b5614c407a6efdc400da6221fb06004820152602481018390529051919550736b3595068778dd592e39a122f4f5a5cf09c90fe29163a9059cbb916044808201926020929091908290030181600087803b158015611b9657600080fd5b505af1158015611baa573d6000803e3d6000fd5b505050506040513d6020811015611bc057600080fd5b5050604080517f0902f1ac0000000000000000000000000000000000000000000000000000000081529051600091829173795065dcc9f64b5614c407a6efdc400da6221fb091630902f1ac916004808301926060929190829003018186803b158015611c2b57600080fd5b505afa158015611c3f573d6000803e3d6000fd5b505050506040513d6060811015611c5557600080fd5b5080516020909101516dffffffffffffffffffffffffffff91821693501690506000611c8287848461231f565b60408051600080825260208201928390527f022c0d9f00000000000000000000000000000000000000000000000000000000835260248201818152604483018590526001600160a01b038b166064840152608060848401908152835160a4850181905295965073795065dcc9f64b5614c407a6efdc400da6221fb09563022c0d9f95939488948e949193919260c4850191908083838b5b83811015611d31578181015183820152602001611d19565b50505050905090810190601f168015611d5e5780820380516001836020036101000a031916815260200191505b5095505050505050600060405180830381600087803b158015611d8057600080fd5b505af1158015611d94573d6000803e3d6000fd5b50929b9a5050505050505050505050565b73c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b0316635312ea8e826040518263ffffffff1660e01b815260040180828152602001915050600060405180830381600087803b158015611dff57600080fd5b505af1158015611e13573d6000803e3d6000fd5b505050505050565b604080517fe2bbb15800000000000000000000000000000000000000000000000000000000815260048101839052600060248201819052915173c2edad668740f1aa35e4d8f227fb8e17dca888cd9263e2bbb158926044808201939182900301818387803b158015611e8c57600080fd5b505af1158015611ea0573d6000803e3d6000fd5b50505050505050565b604080517f93f1a40b000000000000000000000000000000000000000000000000000000008152600481018390526001600160a01b03841660248201528151600092839273c2edad668740f1aa35e4d8f227fb8e17dca888cd926393f1a40b92604480840193919291829003018186803b158015611f2657600080fd5b505afa158015611f3a573d6000803e3d6000fd5b505050506040513d60408110156104b357600080fd5b600073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b031663441a3e7084846040518363ffffffff1660e01b81526004018083815260200182815260200192505050600060405180830381600087803b158015611fb457600080fd5b505af1158015611fc8573d6000803e3d6000fd5b506000979650505050505050565b604080517fa61bb7640000000000000000000000000000000000000000000000000000000081526001600160a01b038416600482015260248101839052905160009130918291639007b3ae91839163a61bb764916044808301926020929190829003018186803b15801561204957600080fd5b505afa15801561205d573d6000803e3d6000fd5b505050506040513d602081101561207357600080fd5b5051604080517f79b846fd0000000000000000000000000000000000000000000000000000000081526004810188905290516001600160a01b038616916379b846fd916024808301926020929190829003018186803b1580156120d557600080fd5b505afa1580156120e9573d6000803e3d6000fd5b505050506040513d60208110156120ff57600080fd5b5051604080517fffffffff0000000000000000000000000000000000000000000000000000000060e086901b16815260048101939093526001600160a01b039091166024830152516044808301926020929190829003018186803b15801561048957600080fd5b5073c2edad668740f1aa35e4d8f227fb8e17dca888cd90565b600073c2edad668740f1aa35e4d8f227fb8e17dca888cd6001600160a01b031663081e3eda6040518163ffffffff1660e01b815260040160206040518083038186803b1580156121ce57600080fd5b505afa1580156121e2573d6000803e3d6000fd5b505050506040513d60208110156121f857600080fd5b5051905090565b507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff90565b60008261223357506000610df6565b8282028284828161224057fe5b0414612297576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260218152602001806128e06021913960400191505060405180910390fd5b9392505050565b600080821161230e57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601a60248201527f536166654d6174683a206469766973696f6e206279207a65726f000000000000604482015290519081900360640190fd5b81838161231757fe5b049392505050565b6000808411612379576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602b815260200180612930602b913960400191505060405180910390fd5b6000831180156123895750600082115b6123de576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260288152602001806128b86028913960400191505060405180910390fd5b60006123ec856103e5612570565b905060006123fa8285612570565b905060006124148361240e886103e8612570565b906125f6565b905080828161241f57fe5b04979650505050505050565b600080600061243a8585612668565b50905060008061244b88888861277a565b6001600160a01b0316630902f1ac6040518163ffffffff1660e01b815260040160606040518083038186803b15801561248357600080fd5b505afa158015612497573d6000803e3d6000fd5b505050506040513d60608110156124ad57600080fd5b5080516020909101516dffffffffffffffffffffffffffff91821693501690506001600160a01b03878116908416146124e75780826124ea565b81815b90999098509650505050505050565b60008282111561256a57604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601e60248201527f536166654d6174683a207375627472616374696f6e206f766572666c6f770000604482015290519081900360640190fd5b50900390565b600081158061258b5750508082028282828161258857fe5b04145b610df657604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601460248201527f64732d6d6174682d6d756c2d6f766572666c6f77000000000000000000000000604482015290519081900360640190fd5b80820182811015610df657604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601460248201527f64732d6d6174682d6164642d6f766572666c6f77000000000000000000000000604482015290519081900360640190fd5b600080826001600160a01b0316846001600160a01b031614156126d6576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260258152602001806128936025913960400191505060405180910390fd5b826001600160a01b0316846001600160a01b0316106126f65782846126f9565b83835b90925090506001600160a01b03821661277357604080517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152601e60248201527f556e697377617056324c6962726172793a205a45524f5f414444524553530000604482015290519081900360640190fd5b9250929050565b60008060006127898585612668565b604080517fffffffffffffffffffffffffffffffffffffffff000000000000000000000000606094851b811660208084019190915293851b81166034830152825160288184030181526048830184528051908501207fff0000000000000000000000000000000000000000000000000000000000000060688401529a90941b9093166069840152607d8301989098527fe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303609d808401919091528851808403909101815260bd90920190975280519601959095209594505050505056fe4e65697468657220746f6b656e2d77657468206e6f7220776574682d746f6b656e207061697220657869737473556e697377617056324c6962726172793a204944454e544943414c5f414444524553534553556e697377617056324c6962726172793a20494e53554646494349454e545f4c4951554944495459536166654d6174683a206d756c7469706c69636174696f6e206f766572666c6f774e65697468657220746f6b656e302d77657468206e6f7220746f6b656e312d77657468207061697220657869737473556e697377617056324c6962726172793a20494e53554646494349454e545f494e5055545f414d4f554e54a26469706673582212201229e15e0aed9b351eea10040fc351a88ad324cbf71c75338ee4146cb1d28c8764736f6c63430007060033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "lpTokenValue(uint256,address)": {
+        "notice": "Calculates the WETH value of an LP token"
+      },
+      "rewardValue(uint256,uint256)": {
+        "notice": "Calculates the WETH value for an amount of pool reward token"
+      }
+    },
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
